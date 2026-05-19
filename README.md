@@ -13,9 +13,9 @@ Interfaz de usuario de **PetVission**, plataforma de gestión veterinaria para c
 |---|---|
 | [React 18](https://react.dev/) | UI declarativa por componentes |
 | [Vite](https://vitejs.dev/) | Bundler y dev server |
-| [React Router DOM v6](https://reactrouter.com/) | Navegación SPA |
+| [React Router DOM v7](https://reactrouter.com/) | Navegación SPA |
 | [Axios](https://axios-http.com/) | Comunicación con el backend |
-| [Zustand](https://zustand-demo.pmnd.rs/) | Estado global (auth, sesión) |
+| React Context API | Estado global de sesión (auth, usuario) |
 | CSS Modules | Estilos encapsulados por módulo |
 
 ---
@@ -110,7 +110,7 @@ La app estará disponible en `http://localhost:5173`
 Crear un archivo `.env` en la raíz del proyecto:
 
 ```env
-VITE_API_URL=http://localhost:8080/api
+VITE_API_URL=https://petvission-backend.onrender.com/api
 ```
 
 > ⚠️ El archivo `.env` **nunca** se sube al repositorio. Está incluido en `.gitignore`.
@@ -133,7 +133,7 @@ Las rutas de cada rol están protegidas por un componente `<PrivateRoute>` que v
 
 API REST disponible en `http://localhost:8080/api`
 
-Repositorio backend: [Proyecto-Integrador-Pet-Vission-BackEnd](#) *(enlace pendiente)*
+Repositorio backend: [Proyecto-Integrador-Pet-Vission-BackEnd](https://github.com/DiegoPenaG/Proyecto-Integrador-Pet-vission-BackEnd)
 
 ---
 
@@ -204,4 +204,4 @@ npm run lint      # Linter ESLint
 
 ---
 
-*Proyecto Integrador · Java Generation Colombia · Cohorte 24*
+*Proyecto Integrador · Java Generation Chile · Cohorte 24*
