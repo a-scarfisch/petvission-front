@@ -194,8 +194,13 @@ npm run lint      # Linter ESLint
 
 | Nombre | GitHub |
 |---|---|
+| Arantxa Fischer | [@a'scarfisch](https://github.com/a-scarfisch) |
+| Cristian Diaz | [@Cristian-DH](https://github.com/Cristian-DH) |
+| Cristopher Contreras | [@cristophercontrerasinformatica-dev](https://github.com/cristophercontrerasinformatica-dev) |
 | Diego Peña | [@DiegoPenaG](https://github.com/DiegoPenaG) |
-| *(agregar compañeros)* | |
+| Manuel Labrador | [@MannuDLab](https://github.com/MannuDLab) |
+| Natalia Medel | [@NataliaMedelM](https://github.com/NataliaMedelM) |
+| Sabrina Jeria | [@sabrinacecilajeria-cmyk](https://github.com/sabrinaceciliajeria-cmyk) |
 
 ---
 
