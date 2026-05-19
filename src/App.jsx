@@ -2,22 +2,37 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import LoginForm from '@/modules/auth/components/LoginForm'
 import RegisterForm from '@/modules/auth/components/RegisterForm'
 import PrivateRoute from '@/modules/core/components/PrivateRoute'
+import ClientDashboard from '@/modules/client/components/ClientDashboard'
+import { ClientProvider } from '@/modules/client/states/ClientContext'
+import MascotaList from '@/modules/mascotas/components/MascotaList'
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
 
+        <Route path="/login" element={<LoginForm />} />
+        
+        <Route path="/register" element={<RegisterForm />} />
+        
+        
+        {/* Rutas cliente envueltas en ClientProvider */}
         <Route
-          path="/client/dashboard"
+          path="/client/*"
           element={
             <PrivateRoute allowedRoles={['CLIENTE']}>
-              <div>Dashboard Cliente</div>
+              <ClientProvider>
+                <Routes>
+                  {/* dentro de <Routes> del client*/}
+                  <Route path="mascotas" element={<MascotaList />} />
+                  <Route path="dashboard" element={<ClientDashboard />} />
+                </Routes>
+              </ClientProvider>
             </PrivateRoute>
           }
         />
+
         <Route
           path="/vet/dashboard"
           element={
@@ -26,6 +41,7 @@ function App() {
             </PrivateRoute>
           }
         />
+
         <Route
           path="/admin/dashboard"
           element={
@@ -36,6 +52,7 @@ function App() {
         />
 
         <Route path="*" element={<Navigate to="/login" />} />
+
       </Routes>
     </BrowserRouter>
   )
