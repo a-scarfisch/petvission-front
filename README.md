@@ -80,7 +80,7 @@ src/
 
 ### Requisitos previos
 - Node.js >= 18
-- npm >= 9
+- pnpm >= 9
 - Backend corriendo en `http://localhost:8080`
 
 ### Pasos
@@ -133,7 +133,7 @@ Las rutas de cada rol están protegidas por un componente `<PrivateRoute>` que v
 
 API REST disponible en `http://localhost:8080/api`
 
-Repositorio backend: [Proyecto-Integrador-Pet-Vission-BackEnd](https://github.com/DiegoPenaG/Proyecto-Integrador-Pet-vission-BackEnd)
+Repositorio backend: [Proyecto-Integrador-Pet-Vission-BackEnd](#) *(enlace pendiente)*
 
 ---
 
@@ -171,10 +171,10 @@ modules/mi-modulo/
 ## 📦 Scripts disponibles
 
 ```bash
-npm run dev       # Servidor de desarrollo
-npm run build     # Build de producción
-npm run preview   # Preview del build
-npm run lint      # Linter ESLint
+pnpm dev       # Servidor de desarrollo
+pnpm build     # Build de producción
+pnpm preview   # Preview del build
+pnpm lint      # Linter ESLint
 ```
 
 ---
@@ -194,7 +194,7 @@ npm run lint      # Linter ESLint
 
 | Nombre | GitHub |
 |---|---|
-| Arantxa Fischer | [@a'scarfisch](https://github.com/a-scarfisch) |
+| Arantxa Fischer | [@a-scarfisch](https://github.com/a-scarfisch) |
 | Cristian Diaz | [@Cristian-DH](https://github.com/Cristian-DH) |
 | Cristopher Contreras | [@cristophercontrerasinformatica-dev](https://github.com/cristophercontrerasinformatica-dev) |
 | Diego Peña | [@DiegoPenaG](https://github.com/DiegoPenaG) |
