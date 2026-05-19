@@ -16,7 +16,7 @@ const LoginForm = () => {
       // redirigir según rol
       if (data.rol === 'CLIENTE') window.location.href = '/client/dashboard'
       if (data.rol === 'VETERINARIO') window.location.href = '/vet/dashboard'
-      if (data.rol === 'ADMIN') window.location.href = '/admin/dashboard'
+      if (data.rol === 'ADMINISTRADOR') window.location.href = '/admin/dashboard'
     }
   }
 
