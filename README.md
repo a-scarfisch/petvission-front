@@ -126,7 +126,7 @@ Las rutas de cada rol están protegidas por un componente `<PrivateRoute>` que v
 
 API REST disponible en `http://localhost:8080/api`
 
-Repositorio backend: [Proyecto-Integrador-Pet-Vission-BackEnd](#) *(enlace pendiente)*
+Repositorio backend: [Proyecto-Integrador-Pet-Vission-BackEnd](https://github.com/DiegoPenaG/Proyecto-Integrador-Pet-vission-BackEnd)
 
 ---
 
