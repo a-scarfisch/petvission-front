@@ -12,6 +12,8 @@ import VetDashboard from '@/modules/vet/components/VetDashboard'
 import { VetProvider } from '@/modules/vet/states/VetContext'
 import VetCitas from '@/modules/vet/components/VetCitas'
 import VetHorarios from '@/modules/vet/components/VetHorarios'
+import AdminDashboard from '@/modules/admin/components/AdminDashboard'
+import { AdminProvider } from '@/modules/admin/states/AdminContext'
 
 function App() {
   return (
@@ -19,10 +21,10 @@ function App() {
       <Routes>
 
         <Route path="/login" element={<LoginForm />} />
-        
+
         <Route path="/register" element={<RegisterForm />} />
-        
-        
+
+
         {/* Rutas cliente envueltas en ClientProvider */}
         <Route
           path="/client/*"
@@ -57,10 +59,14 @@ function App() {
         />
 
         <Route
-          path="/admin/dashboard"
+          path="/admin/*"
           element={
             <PrivateRoute allowedRoles={['ADMINISTRADOR']}>
-              <div>Dashboard Admin</div>
+              <AdminProvider>
+                <Routes>
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                </Routes>
+              </AdminProvider>
             </PrivateRoute>
           }
         />
