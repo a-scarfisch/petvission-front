@@ -1,24 +1,17 @@
-# 🐾 PetVission — Frontend (React + Vite)
+# React + Vite
 
-> Proyecto Integrador · Cohorte 24 · Javalimos  
-> Escuadrón Alpha Mango (ETM)
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Interfaz de usuario de **PetVission**, plataforma de gestión veterinaria para clientes, veterinarios y administradores. Este repositorio es la migración oficial del frontend original (HTML/CSS/JS vanilla) a **React 18 + Vite**, siguiendo **Screaming Architecture** por módulos de dominio.
+Currently, two official plugins are available:
 
----
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 🚀 Tech Stack
+## React Compiler
 
-| Herramienta | Uso |
-|---|---|
-| [React 18](https://react.dev/) | UI declarativa por componentes |
-| [Vite](https://vitejs.dev/) | Bundler y dev server |
-| [React Router DOM v7](https://reactrouter.com/) | Navegación SPA |
-| [Axios](https://axios-http.com/) | Comunicación con el backend |
-| React Context API | Estado global de sesión (auth, usuario) |
-| CSS Modules | Estilos encapsulados por módulo |
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
----
+## Expanding the ESLint configuration
 
 ## 📁 Estructura del proyecto
 
