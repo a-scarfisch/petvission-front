@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+
 import LoginForm from '@/modules/auth/components/LoginForm'
 import RegisterForm from '@/modules/auth/components/RegisterForm'
 import PrivateRoute from '@/modules/core/components/PrivateRoute'
@@ -7,6 +8,15 @@ import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
 import MisCitas from '@/modules/client/components/MisCitas'
 import Agendamiento from '@/modules/client/components/Agendamiento'
+import VetDashboard from '@/modules/vet/components/VetDashboard'
+import { VetProvider } from '@/modules/vet/states/VetContext'
+import VetCitas from '@/modules/vet/components/VetCitas'
+import VetHorarios from '@/modules/vet/components/VetHorarios'
+import AdminDashboard from '@/modules/admin/components/AdminDashboard'
+import { AdminProvider } from '@/modules/admin/states/AdminContext'
+import AdminUsuarios from '@/modules/admin/components/AdminUsuarios'
+import AdminCitas from '@/modules/admin/components/AdminCitas'
+import LandingPage from '@/modules/landing/components/LandingPage'
 
 
 function App() {
@@ -15,10 +25,11 @@ function App() {
       <Routes>
 
         <Route path="/login" element={<LoginForm />} />
-        
+
         <Route path="/register" element={<RegisterForm />} />
-        
-        
+
+        <Route path="/" element={<LandingPage />} />
+
         {/* Rutas cliente envueltas en ClientProvider */}
         <Route
           path="/client/*"
@@ -38,19 +49,32 @@ function App() {
         />
 
         <Route
-          path="/vet/dashboard"
+          path="/vet/*"
           element={
             <PrivateRoute allowedRoles={['VETERINARIO']}>
-              <div>Dashboard Veterinario</div>
+              <VetProvider>
+                <Routes>
+                  <Route path="dashboard" element={<VetDashboard />} />
+                  <Route path="citas" element={<VetCitas />} />
+                  <Route path="horarios" element={<VetHorarios />} />
+                </Routes>
+              </VetProvider>
             </PrivateRoute>
           }
         />
 
         <Route
-          path="/admin/dashboard"
+          path="/admin/*"
           element={
             <PrivateRoute allowedRoles={['ADMINISTRADOR']}>
-              <div>Dashboard Admin</div>
+              <AdminProvider>
+                <Routes>
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="usuarios" element={<AdminUsuarios />} />
+                  <Route path="citas" element={<AdminCitas />} />
+
+                </Routes>
+              </AdminProvider>
             </PrivateRoute>
           }
         />
