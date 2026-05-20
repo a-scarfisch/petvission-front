@@ -14,6 +14,9 @@ import VetCitas from '@/modules/vet/components/VetCitas'
 import VetHorarios from '@/modules/vet/components/VetHorarios'
 import AdminDashboard from '@/modules/admin/components/AdminDashboard'
 import { AdminProvider } from '@/modules/admin/states/AdminContext'
+import AdminUsuarios from '@/modules/admin/components/AdminUsuarios'
+
+
 
 function App() {
   return (
@@ -65,6 +68,7 @@ function App() {
               <AdminProvider>
                 <Routes>
                   <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="usuarios" element={<AdminUsuarios />} />
                 </Routes>
               </AdminProvider>
             </PrivateRoute>
