@@ -5,6 +5,7 @@ import PrivateRoute from '@/modules/core/components/PrivateRoute'
 import ClientDashboard from '@/modules/client/components/ClientDashboard'
 import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
+import MisCitas from '@/modules/client/components/MisCitas'
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                   {/* dentro de <Routes> del client*/}
                   <Route path="mascotas" element={<MascotaList />} />
                   <Route path="dashboard" element={<ClientDashboard />} />
+                  <Route path="citas" element={<MisCitas />} />
                 </Routes>
               </ClientProvider>
             </PrivateRoute>
