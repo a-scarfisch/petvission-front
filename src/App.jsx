@@ -16,7 +16,7 @@ import AdminDashboard from '@/modules/admin/components/AdminDashboard'
 import { AdminProvider } from '@/modules/admin/states/AdminContext'
 import AdminUsuarios from '@/modules/admin/components/AdminUsuarios'
 import AdminCitas from '@/modules/admin/components/AdminCitas'
-
+import LandingPage from '@/modules/landing/components/LandingPage'
 
 
 function App() {
@@ -28,6 +28,7 @@ function App() {
 
         <Route path="/register" element={<RegisterForm />} />
 
+        <Route path="/" element={<LandingPage />} />
 
         {/* Rutas cliente envueltas en ClientProvider */}
         <Route
