@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+
 import LoginForm from '@/modules/auth/components/LoginForm'
 import RegisterForm from '@/modules/auth/components/RegisterForm'
 import PrivateRoute from '@/modules/core/components/PrivateRoute'
@@ -7,7 +8,10 @@ import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
 import MisCitas from '@/modules/client/components/MisCitas'
 import Agendamiento from '@/modules/client/components/Agendamiento'
-
+import VetDashboard from '@/modules/vet/components/VetDashboard'
+import { VetProvider } from '@/modules/vet/states/VetContext'
+import VetCitas from '@/modules/vet/components/VetCitas'
+import VetHorarios from '@/modules/vet/components/VetHorarios'
 
 function App() {
   return (
@@ -38,10 +42,16 @@ function App() {
         />
 
         <Route
-          path="/vet/dashboard"
+          path="/vet/*"
           element={
             <PrivateRoute allowedRoles={['VETERINARIO']}>
-              <div>Dashboard Veterinario</div>
+              <VetProvider>
+                <Routes>
+                  <Route path="dashboard" element={<VetDashboard />} />
+                  <Route path="citas" element={<VetCitas />} />
+                  <Route path="horarios" element={<VetHorarios />} />
+                </Routes>
+              </VetProvider>
             </PrivateRoute>
           }
         />
