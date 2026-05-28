@@ -27,3 +27,8 @@ export const cancelarCita = async (idCita) => {
   const { data } = await apiClient.patch(`/citas/${idCita}/cancelar`)
   return data.data
 }
+
+export const reprogramarCita = async (idCita, fecha, hora) => {
+  const { data } = await apiClient.patch(`/citas/${idCita}/reprogramar`, { fecha, hora })
+  return data.data
+}
