@@ -1,0 +1,527 @@
+/* ── Page shell ──────────────────────────────────────── */
+.ag-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--gray-bg);
+}
+
+/* ── Top bar ─────────────────────────────────────────── */
+.ag-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  background: #fff;
+  border-bottom: 1px solid var(--gray-border);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ag-topbar__brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--teal);
+}
+
+.ag-topbar__back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+
+.ag-topbar__back:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+/* ── Banner ──────────────────────────────────────────── */
+.ag-banner {
+  background: var(--teal);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ag-banner__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  opacity: .85;
+  white-space: nowrap;
+}
+
+.ag-banner__chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ag-chip {
+  padding: 5px 14px;
+  border-radius: 99px;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,.28);
+  white-space: nowrap;
+}
+
+/* ── Body / container ────────────────────────────────── */
+.ag-body {
+  flex: 1;
+  padding: 32px;
+}
+
+.ag-container {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ag-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 16px;
+}
+
+/* ── Stepper ─────────────────────────────────────────── */
+.ag-stepper {
+  background: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+}
+
+.ag-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ag-step__circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--gray-border);
+  color: var(--text-light);
+  transition: background .2s, box-shadow .2s;
+}
+
+.ag-step__label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.ag-step__connector {
+  flex: 1;
+  height: 2px;
+  background: var(--gray-border);
+  margin: 0 6px;
+  margin-bottom: 20px;
+  transition: background .2s;
+}
+
+.ag-step__connector--done {
+  background: var(--teal);
+}
+
+.ag-step--done .ag-step__circle {
+  background: var(--teal);
+  color: #fff;
+}
+
+.ag-step--done .ag-step__label {
+  color: var(--teal);
+}
+
+.ag-step--active .ag-step__circle {
+  background: var(--teal);
+  color: #fff;
+  box-shadow: 0 0 0 5px var(--teal-mid);
+}
+
+.ag-step--active .ag-step__label {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+/* ── Content card ────────────────────────────────────── */
+.ag-content-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 28px;
+}
+
+/* ── Generic selectable card ─────────────────────────── */
+.ag-card {
+  border: 2px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+
+.ag-card:hover {
+  border-color: var(--teal-mid);
+  box-shadow: var(--shadow-sm);
+}
+
+.ag-card--selected {
+  border-color: var(--teal);
+  background: var(--teal-light);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Paso Paciente ───────────────────────────────────── */
+.ag-mascota-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.ag-mascota-card {
+  text-align: center;
+  padding: 20px 16px;
+}
+
+.ag-mascota-card__emoji {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--teal-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 10px;
+  transition: background .15s;
+}
+
+.ag-mascota-card--selected .ag-mascota-card__emoji {
+  background: var(--teal-mid);
+}
+
+.ag-mascota-card__name {
+  margin: 0 0 4px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.ag-mascota-card__meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+/* ── Paso Servicio ───────────────────────────────────── */
+.ag-servicio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.ag-servicio-tile {
+  text-align: center;
+  padding: 22px 14px;
+}
+
+.ag-servicio-tile__icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ag-servicio-tile__name {
+  margin: 0 0 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+.ag-servicio-tile__price {
+  margin: 0;
+  font-size: 13px;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+/* ── Paso Profesional ────────────────────────────────── */
+.ag-vet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ag-vet-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+.ag-vet-card__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+
+.ag-card--selected .ag-vet-card__avatar {
+  background: var(--teal-dark);
+}
+
+.ag-vet-card__name {
+  margin: 0 0 3px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.ag-vet-card__esp {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* ── Paso Día y Hora ─────────────────────────────────── */
+.ag-day-nav {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 24px;
+}
+
+.ag-day-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-border);
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color .15s, background .15s;
+}
+
+.ag-day-btn:hover {
+  border-color: var(--teal-mid);
+}
+
+.ag-day-btn--active {
+  border-color: var(--teal);
+  background: var(--teal-light);
+}
+
+.ag-day-btn__name {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.ag-day-btn--active .ag-day-btn__name {
+  color: var(--teal);
+}
+
+.ag-day-btn__num {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.ag-day-btn--active .ag-day-btn__num {
+  color: var(--teal);
+}
+
+.ag-slots-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: 0 0 12px;
+}
+
+.ag-slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ag-slot-btn {
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--teal);
+  background: #fff;
+  color: var(--teal);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.ag-slot-btn:hover {
+  background: var(--teal-light);
+}
+
+.ag-slot-btn--active {
+  background: var(--teal);
+  color: #fff;
+}
+
+.ag-no-slots {
+  color: var(--text-light);
+  font-size: 14px;
+  padding: 20px 0;
+  margin: 0;
+}
+
+/* ── Paso Confirmar ──────────────────────────────────── */
+.ag-confirm-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.ag-confirm-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.ag-confirm-row:last-child {
+  border-bottom: none;
+}
+
+.ag-confirm-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  min-width: 120px;
+}
+
+.ag-confirm-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.ag-confirm-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* ── Footer navigation ───────────────────────────────── */
+.ag-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ag-btn-secondary {
+  padding: 11px 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-border);
+  background: #fff;
+  color: var(--text-mid);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+
+.ag-btn-secondary:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.ag-btn-primary {
+  padding: 11px 28px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--teal);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+}
+
+.ag-btn-primary:hover:not(:disabled) {
+  background: var(--teal-dark);
+}
+
+.ag-btn-primary:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+/* ── Misc ────────────────────────────────────────────── */
+.ag-error {
+  color: var(--red);
+  font-size: 13px;
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  background: #fdf2f2;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--red);
+}
+
+.ag-empty {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--text-light);
+}
+
+.ag-empty__icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 10px;
+}
