@@ -1,0 +1,40 @@
+:root {
+  --teal:       #1a9e8f;
+  --teal-dark:  #137a6e;
+  --teal-light: #e6f7f5;
+  --teal-mid:   #b2e8e2;
+  --amber:      #f5a623;
+  --green:      #4caf7d;
+  --green-light:#e8f8ef;
+  --red:        #e05252;
+  --gray-bg:    #f4f6f8;
+  --gray-border:#dde3ea;
+  --text-dark:  #1a2535;
+  --text-mid:   #4a5568;
+  --text-light: #8a97a8;
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --shadow-sm:  0 2px 8px rgba(26,158,143,.10);
+  --shadow-md:  0 4px 20px rgba(26,158,143,.14);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: var(--gray-bg);
+  color: var(--text-dark);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}

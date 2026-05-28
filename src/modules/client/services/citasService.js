@@ -1,10 +1,7 @@
 import apiClient from '@/modules/core/lib/apiClient'
 
-
-
-
 export const getCitasByUsuario = async (idUsuario) => {
-  const { data } = await apiClient.get(`/citas/usuario/${idUsuario}`)
+  const { data } = await apiClient.get(`/reservas/usuario/${idUsuario}`)
   return data.data ?? []
 }
 
@@ -14,16 +11,21 @@ export const getVeterinarios = async () => {
 }
 
 export const getDisponibilidadVeterinario = async () => {
-  const { data } = await apiClient.get('/citas/disponibilidad')
+  const { data } = await apiClient.get('/reservas/disponibilidad')
   return data ?? []
 }
 
 export const agendarCita = async (citaData) => {
-  const { data } = await apiClient.post('/citas', citaData)
+  const { data } = await apiClient.post('/reservas', citaData)
   return data
 }
 
 export const cancelarCita = async (idCita) => {
-  const { data } = await apiClient.patch(`/citas/${idCita}/cancelar`)
+  const { data } = await apiClient.patch(`/reservas/${idCita}/cancelar`)
+  return data.data
+}
+
+export const reprogramarCita = async (idCita, fecha, hora) => {
+  const { data } = await apiClient.patch(`/reservas/${idCita}/reprogramar`, { fecha, hora })
   return data.data
 }

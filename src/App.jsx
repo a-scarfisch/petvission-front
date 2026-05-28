@@ -7,7 +7,7 @@ import ClientDashboard from '@/modules/client/components/ClientDashboard'
 import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
 import MisCitas from '@/modules/client/components/MisCitas'
-import Agendamiento from '@/modules/client/components/Agendamiento'
+import Agendamiento from '@/modules/client/pages/Agendamiento'
 import VetDashboard from '@/modules/vet/components/VetDashboard'
 import { VetProvider } from '@/modules/vet/states/VetContext'
 import VetCitas from '@/modules/vet/components/VetCitas'
@@ -17,6 +17,10 @@ import { AdminProvider } from '@/modules/admin/states/AdminContext'
 import AdminUsuarios from '@/modules/admin/components/AdminUsuarios'
 import AdminCitas from '@/modules/admin/components/AdminCitas'
 import LandingPage from '@/modules/landing/components/LandingPage'
+import MiPerfil from '@/modules/client/components/MiPerfil'
+import MisReservas from '@/modules/client/components/MisReservas'
+import NuevaMascota from '@/modules/mascotas/components/NuevaMascota'
+import MiConfiguracion from '@/modules/client/components/MiConfiguracion'
 
 
 function App() {
@@ -39,9 +43,13 @@ function App() {
                 <Routes>
                   {/* dentro de <Routes> del client*/}
                   <Route path="mascotas" element={<MascotaList />} />
+                  <Route path="mascotas/nueva" element={<NuevaMascota />} />
                   <Route path="dashboard" element={<ClientDashboard />} />
                   <Route path="citas" element={<MisCitas />} />
                   <Route path="citas/nueva" element={<Agendamiento />} />
+                  <Route path="reservas" element={<MisReservas />} />
+                  <Route path="configuracion" element={<MiConfiguracion />} />
+                  <Route path="perfil" element={<MiPerfil />} />
                 </Routes>
               </ClientProvider>
             </PrivateRoute>

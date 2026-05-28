@@ -18,7 +18,7 @@ export const ClientProvider = ({ children }) => {
       try {
         const [mascotasData, citasRes] = await Promise.all([
           getMascotasByUsuario(user.idUsuario),
-          apiClient.get(`/citas/usuario/${user.idUsuario}`),
+          apiClient.get(`/reservas/usuario/${user.idUsuario}`),
         ])
         setMascotas(mascotasData)
         setCitas(citasRes.data.data ?? [])
@@ -32,7 +32,6 @@ export const ClientProvider = ({ children }) => {
     fetchAll()
   }, [user])
 
-  // helpers para actualizar caché localmente sin llamar al backend
   const addMascota = (mascota) => setMascotas((prev) => [...prev, mascota])
   const updateMascota = (updated) => setMascotas((prev) =>
     prev.map((m) => m.idMascota === updated.idMascota ? updated : m)
@@ -40,6 +39,7 @@ export const ClientProvider = ({ children }) => {
   const removeMascota = (id) => setMascotas((prev) =>
     prev.filter((m) => m.idMascota !== id)
   )
+
   const addCita = (cita) => setCitas((prev) => [...prev, cita])
   const updateCita = (updated) => setCitas((prev) =>
     prev.map((c) => c.idCita === updated.idCita ? updated : c)
