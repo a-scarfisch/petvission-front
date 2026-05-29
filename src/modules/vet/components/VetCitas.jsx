@@ -13,7 +13,7 @@ const estadoEstilo = {
 }
 
 const VetCitas = () => {
-  const { citas, updateCita } = useVetContext()
+  const { citas, loading, updateCita } = useVetContext()
   const [filtro, setFiltro] = useState('Todas')
   const [loadingId, setLoadingId] = useState(null)
   const [reprogramando, setReprogramando] = useState(null)
@@ -30,7 +30,7 @@ const VetCitas = () => {
     if (!confirm('¿Estás seguro de cancelar esta cita?')) return
     setLoadingId(idCita)
     try {
-      const { data } = await apiClient.patch(`/citas/${idCita}/cancelar`)
+      const { data } = await apiClient.patch(`/reservas/${idCita}/cancelar`)
       updateCita(data.data)
     } catch {
       alert('Error al cancelar la cita')
@@ -43,7 +43,7 @@ const VetCitas = () => {
     if (!nuevaFecha || !nuevaHora) return
     setLoadingId(idCita)
     try {
-      const { data } = await apiClient.patch(`/citas/${idCita}/reprogramar`, {
+      const { data } = await apiClient.patch(`/reservas/${idCita}/reprogramar`, {
         nuevaFecha,
         nuevaHora: `${nuevaHora}:00`,
       })
@@ -57,6 +57,8 @@ const VetCitas = () => {
       setLoadingId(null)
     }
   }
+
+  if (loading) return <VetLayout><p>Cargando...</p></VetLayout>
 
   return (
     <VetLayout>
