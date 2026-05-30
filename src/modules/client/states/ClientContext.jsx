@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
 import { getMascotasByUsuario } from '@/modules/mascotas/services/mascotasService'
 import apiClient from '@/modules/core/lib/apiClient'
+import { handleError } from '@/modules/core/lib/errorHandler'
 
 const ClientContext = createContext(null)
 
@@ -23,7 +24,7 @@ export const ClientProvider = ({ children }) => {
         setMascotas(mascotasData)
         setCitas(citasRes.data.data ?? [])
       } catch (err) {
-        console.error('Error cargando datos del cliente:', err)
+        console.error('Error cargando datos del cliente:', handleError(err))
       } finally {
         setLoading(false)
       }

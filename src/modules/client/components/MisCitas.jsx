@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import ClientLayout from './ClientLayout'
 import apiClient from '@/modules/core/lib/apiClient'
+import { handleError } from '@/modules/core/lib/errorHandler'
 
 const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA']
 
@@ -27,7 +28,7 @@ const MisCitas = () => {
       const { data } = await apiClient.patch(`/reservas/${idReserva}/cancelar`)
       updateCita(data.data)
     } catch (err) {
-      alert('Error al cancelar la cita')
+      alert(handleError(err))
     } finally {
       setLoadingId(null)
     }
