@@ -161,6 +161,7 @@ const Agendamiento = () => {
             {paso === 2 && (
               <PasoServicio
                 categoriaReserva={seleccion.categoriaReserva}
+                mascota={seleccion.mascota}
                 servicios={servicios}
                 seleccion={seleccion.servicio}
                 motivo={seleccion.motivo}

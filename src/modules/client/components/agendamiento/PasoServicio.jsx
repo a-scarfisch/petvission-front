@@ -1,7 +1,17 @@
 const formatCLP = (precio) =>
   precio != null ? `$${Number(precio).toLocaleString('es-CL')}` : 'Consultar precio'
 
-const PasoServicio = ({ categoriaReserva, servicios, seleccion, motivo, onSelect, onMotivo }) => {
+const FILTROS_VACUNA = {
+  PERRO: (nombre) => /Canina|Cachorro|KC|Óctuple|Séxtuple|Plan|Refuerzo/i.test(nombre),
+  GATO:  (nombre) => /Felina|Leucemia|Plan|Refuerzo/i.test(nombre),
+}
+
+const filtrarPorEspecie = (servicios, especie) => {
+  const fn = FILTROS_VACUNA[especie?.toUpperCase()]
+  return fn ? servicios.filter((s) => fn(s.nombre)) : servicios
+}
+
+const PasoServicio = ({ categoriaReserva, mascota, servicios, seleccion, motivo, onSelect, onMotivo }) => {
   if (categoriaReserva === 'CONSULTA') {
     return (
       <div>
@@ -17,18 +27,22 @@ const PasoServicio = ({ categoriaReserva, servicios, seleccion, motivo, onSelect
     )
   }
 
+  const serviciosVisibles = categoriaReserva === 'VACUNACION'
+    ? filtrarPorEspecie(servicios, mascota?.especie)
+    : servicios
+
   return (
     <div>
       <p className="ag-section-title">Selecciona el servicio</p>
 
-      {servicios.length === 0 ? (
+      {serviciosVisibles.length === 0 ? (
         <div className="ag-empty">
           <span className="ag-empty__icon">🏥</span>
           <p>No hay servicios disponibles.</p>
         </div>
       ) : (
         <div className="ag-servicio-grid">
-          {servicios.map((s) => (
+          {serviciosVisibles.map((s) => (
             <div
               key={s.idServicio}
               onClick={() => onSelect(s)}
