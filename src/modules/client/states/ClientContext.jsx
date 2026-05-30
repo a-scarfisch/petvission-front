@@ -42,7 +42,7 @@ export const ClientProvider = ({ children }) => {
 
   const addCita = (cita) => setCitas((prev) => [...prev, cita])
   const updateCita = (updated) => setCitas((prev) =>
-    prev.map((c) => c.idCita === updated.idCita ? updated : c)
+    prev.map((c) => c.idReserva === updated.idReserva ? updated : c)
   )
 
   return (

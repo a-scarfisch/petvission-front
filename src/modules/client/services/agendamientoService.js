@@ -17,5 +17,5 @@ export const getAgendaVeterinario = async (idVeterinario) => {
 
 export const agendarReserva = async (payload) => {
   const { data } = await apiClient.post('/reservas', payload)
-  return data
+  return data.data
 }

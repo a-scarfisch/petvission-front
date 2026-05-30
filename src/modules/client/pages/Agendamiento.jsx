@@ -96,7 +96,7 @@ const Agendamiento = () => {
         hora:           seleccion.hora,
         motivo:         seleccion.servicio.nombre,
       })
-      addCita(res.data ?? res)
+      addCita(res)
       navigate('/client/citas')
     } catch {
       setError('No se pudo agendar la reserva. Intenta de nuevo.')
