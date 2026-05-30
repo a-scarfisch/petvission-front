@@ -16,3 +16,8 @@ export const register = async (userData) => {
   })
   return data.data
 }
+
+export const loginConGoogle = async (accessToken) => {
+  const { data } = await apiClient.post('/auth/google', { token: accessToken })
+  return data.data
+}
