@@ -8,7 +8,6 @@ const ClientLayout = ({ children }) => {
   const navItems = [
     { label: 'Dashboard', path: '/client/dashboard', icon: '⊞' },
     { label: 'Mis Mascotas', path: '/client/mascotas', icon: '🐾' },
-    { label: 'Mis Citas', path: '/client/citas', icon: '📅' },
     { label: 'Mis Reservas', path: '/client/reservas', icon: '🗓️' },
     { label: 'Mi Perfil', path: '/client/perfil', icon: '👤' },
     { label: 'Configuración', path: '/client/configuracion', icon: '⚙️' },

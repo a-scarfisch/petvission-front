@@ -6,7 +6,6 @@ import PrivateRoute from '@/modules/core/components/PrivateRoute'
 import ClientDashboard from '@/modules/client/components/ClientDashboard'
 import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
-import MisCitas from '@/modules/client/components/MisCitas'
 import Agendamiento from '@/modules/client/pages/Agendamiento'
 import VetDashboard from '@/modules/vet/components/VetDashboard'
 import { VetProvider } from '@/modules/vet/states/VetContext'
@@ -45,7 +44,6 @@ function App() {
                   <Route path="mascotas" element={<MascotaList />} />
                   <Route path="mascotas/nueva" element={<NuevaMascota />} />
                   <Route path="dashboard" element={<ClientDashboard />} />
-                  <Route path="citas" element={<MisCitas />} />
                   <Route path="citas/nueva" element={<Agendamiento />} />
                   <Route path="reservas" element={<MisReservas />} />
                   <Route path="configuracion" element={<MiConfiguracion />} />

@@ -208,7 +208,6 @@ const MiPerfil = () => {
                 value={form.telefono}
                 onChange={(v) => setForm((f) => ({ ...f, telefono: v }))}
               />
-              <FieldGroup label="Rol" disabled value={user?.rol ?? ''} onChange={() => {}} />
             </div>
           )}
 
