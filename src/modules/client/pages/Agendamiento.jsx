@@ -116,7 +116,7 @@ const Agendamiento = () => {
         motivo:           esConsulta ? seleccion.motivo : seleccion.servicio.nombre,
       })
       addCita(res)
-      navigate('/client/citas')
+      navigate('/client/reservas')
     } catch (err) {
       setError(handleError(err))
     } finally {
