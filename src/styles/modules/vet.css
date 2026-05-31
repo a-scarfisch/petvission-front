@@ -288,6 +288,13 @@
 .vet-bottom-nav__item--active { color: #2a9d8f; }
 .vet-bottom-nav__icon { font-size: 20px; line-height: 1; }
 .vet-bottom-nav__label { font-size: 10px; font-weight: 500; }
+.vet-bottom-nav__logout {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px; border: none; background: none;
+  color: rgba(255,255,255,0.45); font-size: inherit;
+  font-family: inherit; cursor: pointer; padding: 0;
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {

@@ -78,6 +78,10 @@ const VetLayout = ({ children }) => {
             <span className="vet-bottom-nav__label">{item.label}</span>
           </Link>
         ))}
+        <button className="vet-bottom-nav__logout" onClick={clearUser}>
+          <span className="vet-bottom-nav__icon">🚪</span>
+          <span className="vet-bottom-nav__label">Salir</span>
+        </button>
       </nav>
     </div>
   )
