@@ -105,7 +105,7 @@ const ClientDashboard = () => {
             <p style={{ color: '#9ca3af', fontSize: '14px' }}>No tienes citas próximas.</p>
           ) : (
             proximasCitas.map((c) => (
-              <div key={c.idCita} style={{ padding: '12px 0', borderBottom: '1px solid #f3f4f6' }}>
+              <div key={c.idReserva} style={{ padding: '12px 0', borderBottom: '1px solid #f3f4f6' }}>
                 <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '14px' }}>{c.motivo ?? 'Consulta'}</p>
                 <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>{c.fecha} · {c.hora}</p>
                 <span style={{

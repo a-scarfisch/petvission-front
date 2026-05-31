@@ -277,13 +277,33 @@
 /* ===== LOADING ===== */
 .vet-loading { padding: 48px; text-align: center; color: #6b7280; }
 
+/* ===== BOTTOM NAV (hidden on desktop) ===== */
+.vet-bottom-nav { display: none; }
+
+.vet-bottom-nav__item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px; text-decoration: none; color: rgba(255,255,255,0.45);
+}
+.vet-bottom-nav__item--active { color: #2a9d8f; }
+.vet-bottom-nav__icon { font-size: 20px; line-height: 1; }
+.vet-bottom-nav__label { font-size: 10px; font-weight: 500; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .vet-sidebar { display: none; }
-  .vet-main { padding: 16px; }
+  .vet-main { padding: 16px; padding-bottom: 70px; }
+  .vet-section { overflow-x: auto; }
   .vet-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .vet-modal__grid { grid-template-columns: 1fr; }
   .vet-page-header { flex-direction: column; gap: 12px; }
   .vet-btn-primary { width: 100%; text-align: center; }
   .vet-ficha { flex-direction: column; align-items: center; text-align: center; }
+
+  .vet-bottom-nav {
+    display: flex;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 60px; background: #1a2332;
+    border-top: 1px solid #2d3561; z-index: 100; align-items: stretch;
+  }
 }

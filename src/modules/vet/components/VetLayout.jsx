@@ -2,6 +2,13 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
 import '@/styles/modules/vet.css'
 
+const BOTTOM_NAV = [
+  { label: 'Dashboard', path: '/vet/dashboard', icon: '📅' },
+  { label: 'Citas',     path: '/vet/citas',     icon: '🗓️' },
+  { label: 'Pacientes', path: '/vet/pacientes', icon: '👥' },
+  { label: 'Historial', path: '/vet/historial', icon: '📋' },
+]
+
 const NAV_ITEMS = [
   { label: 'Dashboard',       path: '/vet/dashboard', icon: '📅' },
   { label: 'Mis Citas',       path: '/vet/citas',     icon: '🗓️' },
@@ -58,6 +65,20 @@ const VetLayout = ({ children }) => {
       <main className="vet-main">
         {children}
       </main>
+
+      {/* Bottom nav — móvil */}
+      <nav className="vet-bottom-nav">
+        {BOTTOM_NAV.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`vet-bottom-nav__item${location.pathname === item.path ? ' vet-bottom-nav__item--active' : ''}`}
+          >
+            <span className="vet-bottom-nav__icon">{item.icon}</span>
+            <span className="vet-bottom-nav__label">{item.label}</span>
+          </Link>
+        ))}
+      </nav>
     </div>
   )
 }

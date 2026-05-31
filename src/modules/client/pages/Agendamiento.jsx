@@ -64,11 +64,13 @@ const Agendamiento = () => {
   // Carga agenda cuando se elige veterinario
   useEffect(() => {
     if (!seleccion.veterinario) return
+    let cancelled = false
     setAgenda([])
     setSeleccion((prev) => ({ ...prev, turnoDetalle: null, fecha: null, hora: null }))
     getAgendaVeterinario(seleccion.veterinario.idUsuario)
-      .then(setAgenda)
-      .catch((err) => setError(handleError(err)))
+      .then((data) => { if (!cancelled) setAgenda(data) })
+      .catch((err) => { if (!cancelled) setError(handleError(err)) })
+    return () => { cancelled = true }
   }, [seleccion.veterinario?.idUsuario])
 
   const setField = (field) => (value) =>

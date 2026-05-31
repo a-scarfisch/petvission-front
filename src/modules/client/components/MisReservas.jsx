@@ -185,7 +185,7 @@ const MisReservas = () => {
             const badge = estadoBadge[c.estado] ?? { bg: '#f3f4f6', color: '#374151' }
             const activa = c.estado !== 'CANCELADA'
             return (
-              <div key={c.idCita} style={{
+              <div key={c.idReserva} style={{
                 background: '#fff', borderRadius: '12px', padding: '20px 24px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 display: 'flex', alignItems: 'center', gap: '20px',

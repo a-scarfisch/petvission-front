@@ -76,6 +76,10 @@ const ClientLayout = ({ children }) => {
             <span className="cl-bottom-nav__label">{item.label}</span>
           </Link>
         ))}
+        <button className="cl-bottom-nav__logout" onClick={clearUser}>
+          <span className="cl-bottom-nav__icon">🚪</span>
+          <span className="cl-bottom-nav__label">Salir</span>
+        </button>
       </nav>
     </div>
   )
