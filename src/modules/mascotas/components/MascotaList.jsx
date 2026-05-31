@@ -117,9 +117,12 @@ const MascotaList = () => {
                     <td>
                       <div className="mascotas-mascota-cell">
                         <div className="mascotas-avatar">{especieEmoji(m.especie)}</div>
-                        <span className="mascotas-mascota-nombre">
-                          {m.nombre}{m.animalGuia && ' 🦮'}
-                        </span>
+                        <div className="mascotas-nombre-col">
+                          <span className="mascotas-mascota-nombre">{m.nombre}</span>
+                          {m.animalGuia && (
+                            <div className="mascotas-guia-badge">🦮 Animal guía</div>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td>{m.especie}</td>
@@ -146,7 +149,10 @@ const MascotaList = () => {
             {mascotas.map((m) => (
               <div key={m.idMascota} className="mascotas-card">
                 <div className="mascotas-card__avatar">{especieEmoji(m.especie)}</div>
-                <div className="mascotas-card__nombre">{m.nombre}{m.animalGuia && ' 🦮'}</div>
+                <div className="mascotas-card__nombre">{m.nombre}</div>
+                {m.animalGuia && (
+                  <div className="mascotas-guia-badge">🦮 Animal guía</div>
+                )}
                 <div className="mascotas-card__meta">{m.especie}{m.raza ? ` · ${m.raza}` : ''}</div>
                 <div className="mascotas-card__chips">
                   {m.sexo && <span className="mascotas-chip">{m.sexo}</span>}
