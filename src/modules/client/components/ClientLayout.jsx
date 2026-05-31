@@ -1,58 +1,43 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
+import '@/styles/modules/client-layout.css'
+
+const NAV_ITEMS = [
+  { label: 'Dashboard',     path: '/client/dashboard',     icon: '⊞' },
+  { label: 'Mis Mascotas',  path: '/client/mascotas',      icon: '🐾' },
+  { label: 'Mis Reservas',  path: '/client/reservas',      icon: '🗓️' },
+  { label: 'Mi Perfil',     path: '/client/perfil',        icon: '👤' },
+  { label: 'Configuración', path: '/client/configuracion', icon: '⚙️' },
+]
+
+const BOTTOM_NAV = [
+  { label: 'Inicio',   path: '/client/dashboard', icon: '🏠' },
+  { label: 'Mascotas', path: '/client/mascotas',  icon: '🐾' },
+  { label: 'Reservas', path: '/client/reservas',  icon: '📅' },
+  { label: 'Perfil',   path: '/client/perfil',    icon: '👤' },
+]
 
 const ClientLayout = ({ children }) => {
   const { user, clearUser } = useAuthContext()
   const location = useLocation()
-
-  const navItems = [
-    { label: 'Dashboard', path: '/client/dashboard', icon: '⊞' },
-    { label: 'Mis Mascotas', path: '/client/mascotas', icon: '🐾' },
-    { label: 'Mis Reservas', path: '/client/reservas', icon: '🗓️' },
-    { label: 'Mi Perfil', path: '/client/perfil', icon: '👤' },
-    { label: 'Configuración', path: '/client/configuracion', icon: '⚙️' },
-  ]
 
   const initials = user
     ? `${user.nombres?.[0] ?? ''}${user.apellidos?.[0] ?? ''}`
     : 'U'
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <aside style={{
-        width: '220px',
-        background: '#fff',
-        borderRight: '1px solid #e5e7eb',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '24px 0',
-      }}>
-        {/* Logo */}
-        <div style={{ padding: '0 24px 24px', fontWeight: 700, fontSize: '18px', color: '#2a9d8f' }}>
-          🐾 PetVission
-        </div>
+    <div className="cl-layout">
+      {/* Sidebar — desktop */}
+      <aside className="cl-sidebar">
+        <div className="cl-sidebar__logo">🐾 PetVission</div>
 
-        {/* Nav */}
         <nav style={{ flex: 1 }}>
-          <p style={{ padding: '0 24px', fontSize: '11px', color: '#9ca3af', fontWeight: 600, marginBottom: '8px' }}>
-            PRINCIPAL
-          </p>
-          {navItems.map((item) => (
+          <p className="cl-sidebar__nav-label">PRINCIPAL</p>
+          {NAV_ITEMS.map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '10px 24px',
-                color: location.pathname === item.path ? '#2a9d8f' : '#374151',
-                background: location.pathname === item.path ? '#f0faf9' : 'transparent',
-                textDecoration: 'none',
-                fontWeight: location.pathname === item.path ? 600 : 400,
-                fontSize: '14px',
-              }}
+              className={`cl-sidebar__link${location.pathname === item.path ? ' cl-sidebar__link--active' : ''}`}
             >
               <span>{item.icon}</span>
               {item.label}
@@ -60,39 +45,38 @@ const ClientLayout = ({ children }) => {
           ))}
         </nav>
 
-        {/* User + logout */}
-        <div style={{ padding: '16px 24px', borderTop: '1px solid #e5e7eb' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-            <div style={{
-              width: '36px', height: '36px', borderRadius: '50%',
-              background: '#2a9d8f', color: '#fff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 700, fontSize: '14px',
-            }}>
-              {initials}
-            </div>
+        <div className="cl-sidebar__footer">
+          <div className="cl-sidebar__user">
+            <div className="cl-sidebar__avatar">{initials}</div>
             <div>
-              <p style={{ margin: 0, fontSize: '13px', fontWeight: 600 }}>{user?.nombres}</p>
-              <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>{user?.correo}</p>
+              <p className="cl-sidebar__user-name">{user?.nombres}</p>
+              <p className="cl-sidebar__user-email">{user?.correo}</p>
             </div>
           </div>
-          <button
-            onClick={clearUser}
-            style={{
-              width: '100%', padding: '8px', border: 'none',
-              background: 'none', color: '#ef4444', cursor: 'pointer',
-              textAlign: 'left', fontSize: '13px',
-            }}
-          >
+          <button className="cl-sidebar__logout" onClick={clearUser}>
             🚪 Cerrar sesión
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <main style={{ flex: 1, background: '#f9fafb', padding: '32px' }}>
+      <main className="cl-main">
         {children}
       </main>
+
+      {/* Bottom nav — móvil */}
+      <nav className="cl-bottom-nav">
+        {BOTTOM_NAV.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`cl-bottom-nav__item${location.pathname === item.path ? ' cl-bottom-nav__item--active' : ''}`}
+          >
+            <span className="cl-bottom-nav__icon">{item.icon}</span>
+            <span className="cl-bottom-nav__label">{item.label}</span>
+          </Link>
+        ))}
+      </nav>
     </div>
   )
 }

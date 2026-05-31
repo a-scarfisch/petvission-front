@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import ClientLayout from './ClientLayout'
+import '@/styles/modules/client-layout.css'
 
 const ClientDashboard = () => {
   const { user } = useAuthContext()
@@ -23,23 +24,14 @@ const ClientDashboard = () => {
   return (
     <ClientLayout>
       {/* Saludo */}
-      <div style={{
-        background: '#2a9d8f', color: '#fff',
-        borderRadius: '12px', padding: '24px 32px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginBottom: '24px',
-      }}>
+      <div className="cl-banner">
         <div>
           <h2 style={{ margin: 0, fontSize: '22px' }}>¡Hola, {user?.nombres}! 👋</h2>
           <p style={{ margin: '4px 0 0', opacity: 0.85, fontSize: '14px' }}>
             Aquí tienes un resumen del estado de tus mascotas
           </p>
         </div>
-        <Link to="/client/citas/nueva" style={{
-          background: '#fff', color: '#2a9d8f',
-          padding: '10px 20px', borderRadius: '8px',
-          textDecoration: 'none', fontWeight: 600, fontSize: '14px',
-        }}>
+        <Link to="/client/citas/nueva" className="cl-banner__btn">
           📅 Nueva cita
         </Link>
       </div>
