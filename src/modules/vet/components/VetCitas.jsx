@@ -30,7 +30,7 @@ const VetCitas = () => {
     if (!confirm('¿Estás seguro de cancelar esta cita?')) return
     setLoadingId(idReserva)
     try {
-      const { data } = await apiClient.patch(`/reservas/${idCita}/cancelar`)
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/cancelar`)
       updateCita(data.data)
     } catch {
       alert('Error al cancelar la cita')
@@ -43,7 +43,7 @@ const VetCitas = () => {
     if (!nuevaFecha || !nuevaHora) return
     setLoadingId(idReserva)
     try {
-      const { data } = await apiClient.patch(`/reservas/${idCita}/reprogramar`, {
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/reprogramar`, {
         nuevaFecha,
         nuevaHora: `${nuevaHora}:00`,
       })
