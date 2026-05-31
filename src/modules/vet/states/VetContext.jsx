@@ -39,8 +39,12 @@ export const VetProvider = ({ children }) => {
     prev.map((c) => c.idReserva === updated.idReserva ? updated : c)
   )
 
+  const removeCita = (idReserva) => setCitas((prev) =>
+    prev.filter((c) => c.idReserva !== idReserva)
+  )
+
   return (
-    <VetContext.Provider value={{ reservasHoy, pacientes, citas, loading, updateCita }}>
+    <VetContext.Provider value={{ reservasHoy, pacientes, citas, loading, updateCita, removeCita }}>
       {children}
     </VetContext.Provider>
   )

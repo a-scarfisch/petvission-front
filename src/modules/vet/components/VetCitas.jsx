@@ -3,17 +3,18 @@ import { useVetContext } from '@/modules/vet/states/VetContext'
 import VetLayout from './VetLayout'
 import apiClient from '@/modules/core/lib/apiClient'
 
-const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA', 'REPROGRAMADA']
+const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA', 'REPROGRAMADA', 'COMPLETADA']
 
 const estadoEstilo = {
-  CONFIRMADA: { background: '#d1fae5', color: '#065f46' },
-  PENDIENTE: { background: '#fef3c7', color: '#92400e' },
-  CANCELADA: { background: '#fee2e2', color: '#991b1b' },
-  REPROGRAMADA: { background: '#e0e7ff', color: '#3730a3' },
+  CONFIRMADA:  { background: '#d1fae5', color: '#065f46' },
+  PENDIENTE:   { background: '#fef3c7', color: '#92400e' },
+  CANCELADA:   { background: '#fee2e2', color: '#991b1b' },
+  REPROGRAMADA:{ background: '#e0e7ff', color: '#3730a3' },
+  COMPLETADA:  { background: '#f3f4f6', color: '#374151' },
 }
 
 const VetCitas = () => {
-  const { citas, loading, updateCita } = useVetContext()
+  const { citas, loading, updateCita, removeCita } = useVetContext()
   const [filtro, setFiltro] = useState('Todas')
   const [loadingId, setLoadingId] = useState(null)
   const [reprogramando, setReprogramando] = useState(null)
@@ -21,17 +22,41 @@ const VetCitas = () => {
   const [nuevaHora, setNuevaHora] = useState('')
 
   const citasFiltradas = filtro === 'Todas'
-    ? citas
+    ? citas.filter((c) => c.estado !== 'CANCELADA')
     : citas.filter((c) => c.estado === filtro)
 
   const formatHora = (hora) => hora?.slice(0, 5) ?? '—'
+
+  const handleConfirmar = async (idReserva) => {
+    setLoadingId(idReserva)
+    try {
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/confirmar`)
+      updateCita(data.data)
+    } catch {
+      alert('Error al confirmar la cita')
+    } finally {
+      setLoadingId(null)
+    }
+  }
+
+  const handleCompletar = async (idReserva) => {
+    setLoadingId(idReserva)
+    try {
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/completar`)
+      updateCita(data.data)
+    } catch {
+      alert('Error al completar la cita')
+    } finally {
+      setLoadingId(null)
+    }
+  }
 
   const handleCancelar = async (idReserva) => {
     if (!confirm('¿Estás seguro de cancelar esta cita?')) return
     setLoadingId(idReserva)
     try {
-      const { data } = await apiClient.patch(`/reservas/${idReserva}/cancelar`)
-      updateCita(data.data)
+      await apiClient.patch(`/reservas/${idReserva}/cancelar`)
+      removeCita(idReserva)
     } catch {
       alert('Error al cancelar la cita')
     } finally {
@@ -98,7 +123,7 @@ const VetCitas = () => {
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
           }}>
             <p style={{ fontSize: '32px', margin: '0 0 8px' }}>📅</p>
-            <p>No hay citas {filtro !== 'Todas' ? filtro.toLowerCase() + 's' : ''}.</p>
+            <p>No hay citas {filtro !== 'Todas' ? `con estado ${filtro.toLowerCase()}` : ''}.</p>
           </div>
         ) : (
           citasFiltradas.map((c) => (
@@ -139,30 +164,71 @@ const VetCitas = () => {
                   {c.estado}
                 </span>
 
-                {/* Acciones */}
-                {c.estado !== 'CANCELADA' && (
+                {/* Acciones por estado */}
+                {c.estado === 'PENDIENTE' && (
                   <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
                     <button
-                      onClick={() => setReprogramando(reprogramando === c.idReserva ? null : c.idReserva)}
+                      onClick={() => handleConfirmar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
                       style={{
-                        background: 'none', border: '1px solid #2a9d8f',
-                        color: '#2a9d8f', padding: '7px 14px',
-                        borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
+                        background: '#2a9d8f', border: 'none', color: '#fff',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
                       }}
                     >
-                      📅 Reprogramar
+                      {loadingId === c.idReserva ? 'Confirmando...' : '✓ Confirmar'}
                     </button>
                     <button
                       onClick={() => handleCancelar(c.idReserva)}
                       disabled={loadingId === c.idReserva}
                       style={{
-                        background: 'none', border: '1px solid #ef4444',
-                        color: '#ef4444', padding: '7px 14px',
-                        borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
+                        background: 'none', border: '1px solid #ef4444', color: '#ef4444',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px',
                         opacity: loadingId === c.idReserva ? 0.6 : 1,
                       }}
                     >
-                      {loadingId === c.idReserva ? 'Cancelando...' : '✕ Cancelar'}
+                      ✕ Cancelar
+                    </button>
+                  </div>
+                )}
+
+                {c.estado === 'CONFIRMADA' && (
+                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => setReprogramando(reprogramando === c.idReserva ? null : c.idReserva)}
+                      style={{
+                        background: 'none', border: '1px solid #2a9d8f', color: '#2a9d8f',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px',
+                      }}
+                    >
+                      📅 Reprogramar
+                    </button>
+                    <button
+                      onClick={() => handleCompletar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
+                      style={{
+                        background: '#2a9d8f', border: 'none', color: '#fff',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
+                      }}
+                    >
+                      {loadingId === c.idReserva ? 'Completando...' : '✓ Completar'}
+                    </button>
+                    <button
+                      onClick={() => handleCancelar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
+                      style={{
+                        background: 'none', border: '1px solid #ef4444', color: '#ef4444',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px',
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
+                      }}
+                    >
+                      ✕ Cancelar
                     </button>
                   </div>
                 )}
