@@ -26,9 +26,9 @@ const VetCitas = () => {
 
   const formatHora = (hora) => hora?.slice(0, 5) ?? '—'
 
-  const handleCancelar = async (idCita) => {
+  const handleCancelar = async (idReserva) => {
     if (!confirm('¿Estás seguro de cancelar esta cita?')) return
-    setLoadingId(idCita)
+    setLoadingId(idReserva)
     try {
       const { data } = await apiClient.patch(`/reservas/${idCita}/cancelar`)
       updateCita(data.data)
@@ -39,9 +39,9 @@ const VetCitas = () => {
     }
   }
 
-  const handleReprogramar = async (idCita) => {
+  const handleReprogramar = async (idReserva) => {
     if (!nuevaFecha || !nuevaHora) return
-    setLoadingId(idCita)
+    setLoadingId(idReserva)
     try {
       const { data } = await apiClient.patch(`/reservas/${idCita}/reprogramar`, {
         nuevaFecha,
@@ -102,7 +102,7 @@ const VetCitas = () => {
           </div>
         ) : (
           citasFiltradas.map((c) => (
-            <div key={c.idCita}>
+            <div key={c.idReserva}>
               <div style={{
                 background: '#fff', borderRadius: '12px', padding: '20px 24px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
@@ -143,7 +143,7 @@ const VetCitas = () => {
                 {c.estado !== 'CANCELADA' && (
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
-                      onClick={() => setReprogramando(reprogramando === c.idCita ? null : c.idCita)}
+                      onClick={() => setReprogramando(reprogramando === c.idReserva ? null : c.idReserva)}
                       style={{
                         background: 'none', border: '1px solid #2a9d8f',
                         color: '#2a9d8f', padding: '7px 14px',
@@ -153,23 +153,23 @@ const VetCitas = () => {
                       📅 Reprogramar
                     </button>
                     <button
-                      onClick={() => handleCancelar(c.idCita)}
-                      disabled={loadingId === c.idCita}
+                      onClick={() => handleCancelar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
                       style={{
                         background: 'none', border: '1px solid #ef4444',
                         color: '#ef4444', padding: '7px 14px',
                         borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-                        opacity: loadingId === c.idCita ? 0.6 : 1,
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
                       }}
                     >
-                      {loadingId === c.idCita ? 'Cancelando...' : '✕ Cancelar'}
+                      {loadingId === c.idReserva ? 'Cancelando...' : '✕ Cancelar'}
                     </button>
                   </div>
                 )}
               </div>
 
               {/* Form reprogramar */}
-              {reprogramando === c.idCita && (
+              {reprogramando === c.idReserva && (
                 <div style={{
                   background: '#f9fafb', borderRadius: '0 0 12px 12px',
                   padding: '16px 24px', border: '1px solid #e5e7eb',
@@ -198,8 +198,8 @@ const VetCitas = () => {
                     />
                   </div>
                   <button
-                    onClick={() => handleReprogramar(c.idCita)}
-                    disabled={loadingId === c.idCita || !nuevaFecha || !nuevaHora}
+                    onClick={() => handleReprogramar(c.idReserva)}
+                    disabled={loadingId === c.idReserva || !nuevaFecha || !nuevaHora}
                     style={{
                       background: '#2a9d8f', color: '#fff', border: 'none',
                       padding: '9px 20px', borderRadius: '8px',
@@ -207,7 +207,7 @@ const VetCitas = () => {
                       opacity: !nuevaFecha || !nuevaHora ? 0.5 : 1,
                     }}
                   >
-                    {loadingId === c.idCita ? 'Guardando...' : 'Confirmar'}
+                    {loadingId === c.idReserva ? 'Guardando...' : 'Confirmar'}
                   </button>
                   <button
                     onClick={() => setReprogramando(null)}

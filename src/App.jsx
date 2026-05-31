@@ -11,6 +11,8 @@ import VetDashboard from '@/modules/vet/components/VetDashboard'
 import { VetProvider } from '@/modules/vet/states/VetContext'
 import VetCitas from '@/modules/vet/components/VetCitas'
 import VetHorarios from '@/modules/vet/components/VetHorarios'
+import MisPacientes from '@/modules/vet/components/MisPacientes'
+import HistorialClinico from '@/modules/vet/components/HistorialClinico'
 import AdminDashboard from '@/modules/admin/components/AdminDashboard'
 import { AdminProvider } from '@/modules/admin/states/AdminContext'
 import AdminUsuarios from '@/modules/admin/components/AdminUsuarios'
@@ -63,6 +65,8 @@ function App() {
                   <Route path="dashboard" element={<VetDashboard />} />
                   <Route path="citas" element={<VetCitas />} />
                   <Route path="horarios" element={<VetHorarios />} />
+                  <Route path="pacientes" element={<MisPacientes />} />
+                  <Route path="historial" element={<HistorialClinico />} />
                 </Routes>
               </VetProvider>
             </PrivateRoute>

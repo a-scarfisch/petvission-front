@@ -1,0 +1,289 @@
+/* ===== LAYOUT ===== */
+.vet-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.vet-sidebar {
+  width: 240px;
+  background: #1a2332;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  flex-shrink: 0;
+}
+
+.vet-sidebar__logo { padding: 0 24px 8px; }
+.vet-sidebar__logo-title { margin: 0; font-weight: 700; font-size: 16px; color: #fff; }
+.vet-sidebar__logo-sub { margin: 2px 0 0; font-size: 11px; color: #6b7db3; }
+.vet-sidebar__divider { height: 1px; background: #2d3561; margin: 16px 0; }
+
+.vet-sidebar__nav { flex: 1; }
+
+.vet-sidebar__link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 24px;
+  color: #8892b0; background: transparent;
+  text-decoration: none; font-size: 14px; font-weight: 400;
+}
+.vet-sidebar__link--active {
+  color: #fff; background: rgba(255,255,255,0.1); font-weight: 600;
+}
+.vet-sidebar__link:hover:not(.vet-sidebar__link--active) {
+  color: #cdd3e0; background: rgba(255,255,255,0.05);
+}
+
+.vet-sidebar__footer { padding: 16px 24px; border-top: 1px solid #2d3561; }
+.vet-sidebar__user { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.vet-sidebar__avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #2a9d8f; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; flex-shrink: 0;
+}
+.vet-sidebar__user-name { margin: 0; font-size: 13px; font-weight: 600; color: #fff; }
+.vet-sidebar__user-email { margin: 0; font-size: 11px; color: #6b7db3; }
+.vet-sidebar__logout {
+  width: 100%; padding: 8px; border: none;
+  background: none; color: #ef4444;
+  cursor: pointer; text-align: left; font-size: 13px;
+}
+
+.vet-main { flex: 1; background: #f0f4f8; padding: 32px; overflow-y: auto; }
+
+/* ===== PAGE HEADER ===== */
+.vet-page-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 24px;
+}
+.vet-page-title { margin: 0; font-size: 22px; color: #1a2535; }
+.vet-page-subtitle { margin: 4px 0 0; color: #6b7280; font-size: 14px; }
+
+/* ===== STATS GRID ===== */
+.vet-stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; margin-bottom: 24px;
+}
+.vet-stat-card {
+  background: #fff; border-radius: 12px;
+  padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.vet-stat-card__label { margin: 0 0 8px; font-size: 13px; color: #6b7280; }
+.vet-stat-card__row { display: flex; align-items: center; gap: 12px; }
+.vet-stat-card__icon { font-size: 24px; }
+.vet-stat-card__value { font-size: 28px; font-weight: 700; }
+
+/* ===== SECTION CARD ===== */
+.vet-section {
+  background: #fff; border-radius: 12px;
+  padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+.vet-section__header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 20px;
+}
+.vet-section__title { margin: 0; font-size: 16px; font-weight: 700; color: #1a2535; }
+.vet-section__link { color: #2a9d8f; font-size: 13px; text-decoration: none; }
+
+/* ===== TABLE ===== */
+.vet-table { width: 100%; border-collapse: collapse; }
+.vet-table thead tr { background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+.vet-table th {
+  padding: 12px 16px; text-align: left;
+  font-size: 12px; color: #6b7280; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.vet-table tbody tr { border-bottom: 1px solid #f3f4f6; }
+.vet-table tbody tr:last-child { border-bottom: none; }
+.vet-table td { padding: 14px 16px; font-size: 14px; color: #374151; }
+
+/* ===== HORA ===== */
+.vet-hora { font-weight: 700; color: #2a9d8f; font-size: 15px; }
+
+/* ===== MASCOTA CELL ===== */
+.vet-mascota-cell { display: flex; align-items: center; gap: 10px; }
+.vet-mascota-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: #e8f5f0; display: flex; align-items: center;
+  justify-content: center; font-size: 17px; flex-shrink: 0;
+}
+.vet-mascota-nombre-col { display: flex; flex-direction: column; align-items: flex-start; }
+.vet-mascota-nombre { font-weight: 600; }
+
+/* ===== ESTADO BADGES ===== */
+.vet-estado {
+  display: inline-block; padding: 4px 10px;
+  border-radius: 99px; font-size: 12px; font-weight: 600;
+}
+.vet-estado--PENDIENTE    { background: #fef3c7; color: #92400e; }
+.vet-estado--CONFIRMADA   { background: #d1fae5; color: #065f46; }
+.vet-estado--CANCELADA    { background: #fee2e2; color: #991b1b; }
+.vet-estado--COMPLETADA   { background: #f3f4f6; color: #374151; }
+.vet-estado--REPROGRAMADA { background: #e0e7ff; color: #3730a3; }
+
+/* ===== ANIMAL GUÍA BADGE ===== */
+.vet-guia-badge {
+  display: inline-block; margin-top: 3px;
+  background: #f0faf8; border: 1px solid #1a9e8f;
+  color: #1a9e8f; border-radius: 20px;
+  padding: 2px 8px; font-size: 11px; font-weight: 500;
+}
+
+/* ===== EMPTY STATE ===== */
+.vet-empty { padding: 48px; text-align: center; color: #9ca3af; }
+.vet-empty__icon { font-size: 32px; margin: 0 0 8px; }
+
+/* ===== BUTTONS ===== */
+.vet-btn-primary {
+  background: #2a9d8f; color: #fff; border: none;
+  padding: 10px 20px; border-radius: 8px;
+  cursor: pointer; font-weight: 600; font-size: 14px;
+}
+.vet-btn-primary:disabled { opacity: 0.65; cursor: default; }
+.vet-btn-secondary {
+  background: #fff; color: #374151;
+  border: 1px solid #e5e7eb; padding: 10px 18px;
+  border-radius: 8px; cursor: pointer; font-size: 14px;
+}
+.vet-btn-danger {
+  background: none; border: 1px solid #ef4444;
+  color: #ef4444; padding: 6px 12px;
+  border-radius: 6px; cursor: pointer; font-size: 13px;
+}
+
+/* ===== FILTROS Y BUSCADOR ===== */
+.vet-toolbar {
+  display: flex; gap: 12px; align-items: center;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.vet-filtro-btn {
+  padding: 7px 16px; border-radius: 99px; font-size: 13px;
+  cursor: pointer; border: 1px solid #e5e7eb;
+  background: #fff; color: #374151;
+}
+.vet-filtro-btn--active {
+  background: #2a9d8f; color: #fff; border-color: #2a9d8f; font-weight: 600;
+}
+.vet-search {
+  padding: 8px 14px; border: 1px solid #e5e7eb;
+  border-radius: 8px; font-size: 14px; min-width: 220px;
+  outline: none; color: #1a2535;
+}
+.vet-search:focus { border-color: #2a9d8f; }
+
+/* ===== HISTORIAL — FICHA MASCOTA ===== */
+.vet-ficha {
+  background: #fff; border-radius: 12px;
+  padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 24px; display: flex; gap: 20px; align-items: flex-start;
+}
+.vet-ficha__avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #e8f5f0; display: flex; align-items: center;
+  justify-content: center; font-size: 32px; flex-shrink: 0;
+}
+.vet-ficha__nombre { margin: 0 0 4px; font-size: 20px; font-weight: 700; color: #1a2535; }
+.vet-ficha__meta { margin: 0 0 12px; font-size: 14px; color: #6b7280; }
+.vet-ficha__chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.vet-chip {
+  background: #f3f4f6; color: #374151;
+  padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 500;
+}
+
+/* ===== HISTORIAL — TIMELINE ===== */
+.vet-timeline { display: flex; flex-direction: column; gap: 16px; }
+.vet-timeline-item {
+  background: #fff; border-radius: 12px;
+  padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border-left: 4px solid #2a9d8f;
+}
+.vet-timeline-item__meta {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 12px;
+}
+.vet-timeline-item__fecha { font-size: 13px; color: #6b7280; }
+.vet-timeline-item__vet { font-size: 13px; color: #2a9d8f; font-weight: 600; }
+.vet-timeline-item__titulo { margin: 0 0 6px; font-size: 15px; font-weight: 700; color: #1a2535; }
+.vet-timeline-item__body { font-size: 14px; color: #374151; line-height: 1.6; margin: 0; }
+.vet-timeline-item__section { margin-top: 12px; }
+.vet-timeline-item__section-label {
+  font-size: 11px; font-weight: 700; color: #6b7280;
+  text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
+}
+.vet-vacuna-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;
+  border-radius: 99px; padding: 3px 10px; font-size: 12px;
+}
+
+/* ===== MODAL NUEVA CONSULTA ===== */
+.vet-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; padding: 16px;
+}
+.vet-modal {
+  background: #fff; border-radius: 16px;
+  width: 100%; max-width: 600px;
+  max-height: 90vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.vet-modal__header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px 16px; border-bottom: 1px solid #f3f4f6;
+}
+.vet-modal__title { margin: 0; font-size: 18px; font-weight: 700; color: #1a2535; }
+.vet-modal__close {
+  background: none; border: none; font-size: 22px;
+  color: #9ca3af; cursor: pointer; padding: 0 4px; line-height: 1;
+}
+.vet-modal__close:hover { color: #374151; }
+.vet-modal__body {
+  padding: 20px 24px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.vet-modal__footer {
+  display: flex; gap: 10px; justify-content: flex-end;
+  padding: 16px 24px 20px; border-top: 1px solid #f3f4f6;
+}
+.vet-modal__field { display: flex; flex-direction: column; gap: 5px; }
+.vet-modal__field label {
+  font-size: 12px; font-weight: 600; color: #6b7280;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.vet-modal__field input,
+.vet-modal__field select,
+.vet-modal__field textarea {
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  border: 1px solid #e5e7eb; font-size: 14px;
+  color: #1a2535; background: #fff; box-sizing: border-box; outline: none;
+}
+.vet-modal__field input:focus,
+.vet-modal__field select:focus,
+.vet-modal__field textarea:focus { border-color: #2a9d8f; }
+.vet-modal__field textarea { resize: vertical; }
+.vet-modal__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.vet-modal__checkbox { display: flex; align-items: center; gap: 10px; }
+.vet-modal__checkbox input[type='checkbox'] {
+  width: 16px; height: 16px; cursor: pointer; accent-color: #2a9d8f;
+}
+.vet-modal__checkbox label { font-size: 14px; color: #374151; cursor: pointer; }
+.vet-modal__error { margin: 0; font-size: 13px; color: #ef4444; }
+.vet-modal__divider { height: 1px; background: #f3f4f6; }
+
+/* ===== LOADING ===== */
+.vet-loading { padding: 48px; text-align: center; color: #6b7280; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .vet-sidebar { display: none; }
+  .vet-main { padding: 16px; }
+  .vet-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .vet-modal__grid { grid-template-columns: 1fr; }
+  .vet-page-header { flex-direction: column; gap: 12px; }
+  .vet-btn-primary { width: 100%; text-align: center; }
+  .vet-ficha { flex-direction: column; align-items: center; text-align: center; }
+}
