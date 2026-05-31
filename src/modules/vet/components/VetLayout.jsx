@@ -6,7 +6,7 @@ const BOTTOM_NAV = [
   { label: 'Dashboard', path: '/vet/dashboard', icon: '📅' },
   { label: 'Citas',     path: '/vet/citas',     icon: '🗓️' },
   { label: 'Pacientes', path: '/vet/pacientes', icon: '👥' },
-  { label: 'Historial', path: '/vet/historial', icon: '📋' },
+  { label: 'Horarios',  path: '/vet/horarios',  icon: '🕐' },
 ]
 
 const NAV_ITEMS = [
