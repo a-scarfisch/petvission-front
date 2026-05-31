@@ -23,6 +23,33 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* ===== CARDS DE RESERVAS (cliente y veterinario) ===== */
+.reserva-card {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .reserva-card {
+    flex-wrap: wrap;
+  }
+
+  .reserva-card__acciones {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .reserva-card__acciones button {
+    width: 100%;
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;

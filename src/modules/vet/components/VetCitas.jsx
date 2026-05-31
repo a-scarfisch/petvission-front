@@ -103,7 +103,7 @@ const VetCitas = () => {
         ) : (
           citasFiltradas.map((c) => (
             <div key={c.idReserva}>
-              <div style={{
+              <div className="reserva-card" style={{
                 background: '#fff', borderRadius: '12px', padding: '20px 24px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 display: 'flex', alignItems: 'center', gap: '20px',
@@ -141,7 +141,7 @@ const VetCitas = () => {
 
                 {/* Acciones */}
                 {c.estado !== 'CANCELADA' && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
                     <button
                       onClick={() => setReprogramando(reprogramando === c.idReserva ? null : c.idReserva)}
                       style={{

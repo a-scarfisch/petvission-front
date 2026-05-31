@@ -185,7 +185,7 @@ const MisReservas = () => {
             const badge = estadoBadge[c.estado] ?? { bg: '#f3f4f6', color: '#374151' }
             const activa = c.estado !== 'CANCELADA'
             return (
-              <div key={c.idReserva} style={{
+              <div key={c.idReserva} className="reserva-card" style={{
                 background: '#fff', borderRadius: '12px', padding: '20px 24px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 display: 'flex', alignItems: 'center', gap: '20px',
@@ -228,7 +228,7 @@ const MisReservas = () => {
 
                 {/* Acciones */}
                 {activa && (
-                  <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                     <button
                       onClick={() => openReprog(c)}
                       disabled={loadingId === c.idCita}
