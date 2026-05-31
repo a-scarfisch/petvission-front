@@ -13,7 +13,7 @@ export const AdminProvider = ({ children }) => {
             try {
                 const [usuariosRes, citasRes] = await Promise.all([
                     apiClient.get('/usuarios'),
-                    apiClient.get('/citas'),
+                    apiClient.get('/reservas'),
                 ])
                 setUsuarios(usuariosRes.data.data ?? [])
                 setCitas(citasRes.data.data ?? [])
