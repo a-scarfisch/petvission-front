@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useVetContext } from '@/modules/vet/states/VetContext'
 import VetLayout from './VetLayout'
 import apiClient from '@/modules/core/lib/apiClient'
+import { handleError } from '@/modules/core/lib/errorHandler'
 
 const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA', 'REPROGRAMADA', 'COMPLETADA']
 
@@ -57,8 +58,8 @@ const VetCitas = () => {
     try {
       await apiClient.patch(`/reservas/${idReserva}/cancelar`)
       removeCita(idReserva)
-    } catch {
-      alert('Error al cancelar la cita')
+    } catch (err) {
+      alert(handleError(err))
     } finally {
       setLoadingId(null)
     }
