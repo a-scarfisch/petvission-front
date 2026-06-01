@@ -35,7 +35,7 @@ body {
   overflow: hidden;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .reserva-card {
     flex-wrap: wrap;
   }
@@ -43,6 +43,7 @@ body {
   .reserva-card__acciones {
     flex-direction: column;
     width: 100%;
+    flex-shrink: 1 !important;
   }
 
   .reserva-card__acciones button {
