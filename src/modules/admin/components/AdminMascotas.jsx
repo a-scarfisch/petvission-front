@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import apiClient from '@/modules/core/lib/apiClient'
 import { handleError } from '@/modules/core/lib/errorHandler'
 import AdminLayout from './AdminLayout'
+import TablaResponsiva from './TablaResponsiva'
 
 const FILTROS = ['Todas', 'PERRO', 'GATO', 'Inactivas']
 
@@ -10,13 +11,51 @@ const especieEmoji = (especie) => {
   return map[especie?.toUpperCase()] ?? '🐶'
 }
 
+const COLUMNAS = [
+  {
+    key: 'nombre',
+    label: 'Mascota',
+    primary: true,
+    render: (m) => (
+      <div className="tbl-card__ident">
+        <div className="adm-avatar adm-avatar--mascota">{especieEmoji(m.especie)}</div>
+        <div>
+          <span className="tbl-card__name">{m.nombre}</span>
+          {m.animalGuia && (
+            <span className="adm-badge adm-badge--activo adm-badge--sm">🦮 Guía</span>
+          )}
+        </div>
+      </div>
+    ),
+  },
+  { key: 'especie', label: 'Especie' },
+  { key: 'raza', label: 'Raza', render: (m) => m.raza ?? '—' },
+  {
+    key: 'nombreUsuario',
+    label: 'Dueño',
+    primary: true,
+    render: (m) => (
+      <span><span className="tbl-card__hint">Dueño: </span>{m.nombreUsuario}</span>
+    ),
+  },
+  {
+    key: 'estado',
+    label: 'Estado',
+    primary: true,
+    render: (m) => (
+      <span className={`adm-badge adm-badge--${m.estado ? 'activo' : 'inactivo'}`}>
+        {m.estado ? 'Activo' : 'Inactivo'}
+      </span>
+    ),
+  },
+]
+
 const AdminMascotas = () => {
   const [mascotas, setMascotas]               = useState([])
   const [loading, setLoading]                 = useState(true)
   const [filtro, setFiltro]                   = useState('Todas')
   const [busqueda, setBusqueda]               = useState('')
 
-  // Modal reasignar
   const [mascotaSel, setMascotaSel]           = useState(null)
   const [clientes, setClientes]               = useState([])
   const [loadingClientes, setLoadingClientes] = useState(false)
@@ -45,7 +84,6 @@ const AdminMascotas = () => {
     setBusquedaCli('')
     setClienteSel(null)
     setErrorModal('')
-
     if (!clientesCargados.current) {
       setLoadingClientes(true)
       try {
@@ -102,9 +140,9 @@ const AdminMascotas = () => {
 
   return (
     <AdminLayout>
-      <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ margin: 0, fontSize: '22px' }}>🐾 Mascotas</h2>
-        <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '14px' }}>
+      <div className="adm-page-header">
+        <h2 className="adm-page-header__title">🐾 Mascotas</h2>
+        <p className="adm-page-header__sub">
           Todas las mascotas registradas en el sistema ({mascotas.length})
         </p>
       </div>
@@ -128,58 +166,18 @@ const AdminMascotas = () => {
         ))}
       </div>
 
-      <div className="adm-table-wrapper">
-        {filtradas.length === 0 ? (
-          <div className="adm-empty">
-            <p className="adm-empty__icon">🐾</p>
-            <p>No se encontraron mascotas.</p>
-          </div>
-        ) : (
-          <table className="adm-table">
-            <thead>
-              <tr>
-                {['Mascota', 'Especie', 'Raza', 'Dueño', 'Estado', ''].map((h) => (
-                  <th key={h}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtradas.map((m) => (
-                <tr key={m.idMascota}>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div className="adm-avatar" style={{ background: '#e8f5f0', color: '#2a9d8f', fontSize: '17px' }}>
-                        {especieEmoji(m.especie)}
-                      </div>
-                      <div>
-                        <span style={{ fontWeight: 600 }}>{m.nombre}</span>
-                        {m.animalGuia && (
-                          <span className="adm-badge adm-badge--activo" style={{ marginLeft: '6px', fontSize: '11px' }}>
-                            🦮 Guía
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                  <td>{m.especie}</td>
-                  <td>{m.raza ?? '—'}</td>
-                  <td>{m.nombreUsuario}</td>
-                  <td>
-                    <span className={`adm-badge adm-badge--${m.estado ? 'activo' : 'inactivo'}`}>
-                      {m.estado ? 'Activo' : 'Inactivo'}
-                    </span>
-                  </td>
-                  <td>
-                    <button className="adm-btn-secondary" onClick={() => abrirReasignar(m)}>
-                      ✏️ Reasignar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <TablaResponsiva
+        columnas={COLUMNAS}
+        datos={filtradas}
+        keyField="idMascota"
+        acciones={(m) => (
+          <button className="adm-btn-secondary" onClick={() => abrirReasignar(m)}>
+            ✏️ Reasignar
+          </button>
         )}
-      </div>
+        emptyIcon="🐾"
+        emptyMessage="No se encontraron mascotas."
+      />
 
       {mascotaSel && (
         <div className="adm-modal-overlay" onClick={cerrarModal}>
