@@ -24,7 +24,7 @@ const LandingPage = () => {
           }}>
             Iniciar sesión
           </Link>
-          <Link to="/register" style={{
+          <Link to="/register" className="lp-nav__btn" style={{
             padding: '8px 16px', borderRadius: '8px',
             background: '#2a9d8f', color: '#fff',
             textDecoration: 'none', fontSize: '14px', fontWeight: 600,
