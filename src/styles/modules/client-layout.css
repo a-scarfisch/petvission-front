@@ -216,4 +216,8 @@
     width: 100%;
     text-align: center;
   }
+
+  .perfil-grid {
+    grid-template-columns: 1fr !important;
+  }
 }

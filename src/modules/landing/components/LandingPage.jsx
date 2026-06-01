@@ -7,13 +7,13 @@ const LandingPage = () => {
     <div style={{ fontFamily: 'system-ui, sans-serif', color: '#1f2937' }}>
 
       {/* Navbar */}
-      <nav style={{
+      <nav className="lp-nav" style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         padding: '16px 64px', background: '#fff',
         borderBottom: '1px solid #f3f4f6', position: 'sticky', top: 0, zIndex: 100,
       }}>
         <span style={{ fontWeight: 700, fontSize: '18px', color: '#2a9d8f' }}>🐾 PetVission</span>
-        <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
+        <div className="lp-nav__links" style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
           <a href="#servicios" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Servicios</a>
           <a href="#nosotros" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Nosotros</a>
           <a href="#contacto" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Contacto</a>
@@ -35,7 +35,7 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero */}
-      <section style={{
+      <section className="lp-hero" style={{
         background: 'linear-gradient(135deg, #e8f5f0 0%, #f0faf9 100%)',
         padding: '80px 64px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '48px',
@@ -74,7 +74,7 @@ const LandingPage = () => {
             </a>
           </div>
           {/* Stats */}
-          <div style={{ display: 'flex', gap: '32px', marginTop: '48px' }}>
+          <div className="lp-hero__stats" style={{ display: 'flex', gap: '32px', marginTop: '48px' }}>
             {[
               { value: '500+', label: 'Mascotas atendidas' },
               { value: '4', label: 'Veterinarios especializados' },
@@ -87,7 +87,7 @@ const LandingPage = () => {
             ))}
           </div>
         </div>
-        <div style={{
+        <div className="lp-hero__img" style={{
           width: '420px', height: '320px', borderRadius: '16px',
           background: '#fff', display: 'flex', alignItems: 'center',
           justifyContent: 'center', boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
@@ -107,7 +107,7 @@ const LandingPage = () => {
             Todo lo que necesitas para el bienestar de tu mascota
           </p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+        <div className="lp-servicios-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
           {[
             { icon: '📅', title: 'Agenda Online', desc: 'Reserva citas veterinarias en segundos, sin llamadas ni esperas.' },
             { icon: '📋', title: 'Historial Clínico', desc: 'Accede al historial médico digital de tu mascota en cualquier momento.' },
@@ -142,7 +142,7 @@ const LandingPage = () => {
           </h2>
           <p style={{ color: '#6b7280', fontSize: '16px', margin: 0 }}>Tres pasos para empezar</p>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '48px' }}>
+        <div className="lp-pasos" style={{ display: 'flex', justifyContent: 'center', gap: '48px' }}>
           {[
             { num: '1', title: 'Crea tu cuenta', desc: 'Regístrate gratis y agrega el perfil de tus mascotas en minutos.' },
             { num: '2', title: 'Agenda tu cita', desc: 'Reserva una cita con el veterinario disponible en el horario que prefieras.' },
@@ -165,7 +165,7 @@ const LandingPage = () => {
       </section>
 
       {/* Nosotros */}
-      <section id="nosotros" style={{ padding: '80px 64px', background: '#fff', display: 'flex', gap: '64px', alignItems: 'center' }}>
+      <section id="nosotros" className="lp-nosotros" style={{ padding: '80px 64px', background: '#fff', display: 'flex', gap: '64px', alignItems: 'center' }}>
         <div style={{
           width: '420px', height: '300px', borderRadius: '16px',
           background: '#e8f5f0', display: 'flex', alignItems: 'center',
@@ -231,7 +231,7 @@ const LandingPage = () => {
       <section id="contacto" style={{ padding: '80px 64px', background: '#fff', textAlign: 'center' }}>
         <h2 style={{ fontSize: '32px', fontWeight: 800, margin: '0 0 8px' }}>Contacto</h2>
         <p style={{ color: '#6b7280', margin: '0 0 48px' }}>¿Tienes dudas? Escríbenos</p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '64px' }}>
+        <div className="lp-contacto" style={{ display: 'flex', justifyContent: 'center', gap: '64px' }}>
           {[
             { icon: '📍', label: 'Dirección', value: 'Av. Veterinaria 123, Santiago, Chile' },
             { icon: '📞', label: 'Teléfono', value: '+56 9 1234 5678' },
@@ -247,7 +247,7 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer style={{
+      <footer className="lp-footer" style={{
         padding: '24px 64px', background: '#1f2937',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
