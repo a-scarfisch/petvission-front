@@ -53,7 +53,6 @@ const VetCitas = () => {
   }
 
   const handleCancelar = async (idReserva) => {
-    if (!confirm('¿Estás seguro de cancelar esta cita?')) return
     setLoadingId(idReserva)
     try {
       await apiClient.patch(`/reservas/${idReserva}/cancelar`)
