@@ -23,7 +23,7 @@ const VetCitas = () => {
   const [nuevaHora, setNuevaHora] = useState('')
 
   const citasFiltradas = filtro === 'Todas'
-    ? citas.filter((c) => c.estado !== 'CANCELADA')
+    ? citas
     : citas.filter((c) => c.estado === filtro)
 
   const formatHora = (hora) => hora?.slice(0, 5) ?? '—'
@@ -55,8 +55,8 @@ const VetCitas = () => {
   const handleCancelar = async (idReserva) => {
     setLoadingId(idReserva)
     try {
-      await apiClient.patch(`/reservas/${idReserva}/cancelar`)
-      removeCita(idReserva)
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/cancelar`)
+      updateCita(data.data)
     } catch (err) {
       alert(handleError(err))
     } finally {
