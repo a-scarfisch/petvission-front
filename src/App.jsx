@@ -17,6 +17,9 @@ import AdminDashboard from '@/modules/admin/components/AdminDashboard'
 import { AdminProvider } from '@/modules/admin/states/AdminContext'
 import AdminUsuarios from '@/modules/admin/components/AdminUsuarios'
 import AdminCitas from '@/modules/admin/components/AdminCitas'
+import AdminHorarios from '@/modules/admin/components/AdminHorarios'
+import AdminMascotas from '@/modules/admin/components/AdminMascotas'
+import AdminVeterinarios from '@/modules/admin/components/AdminVeterinarios'
 import LandingPage from '@/modules/landing/components/LandingPage'
 import MiPerfil from '@/modules/client/components/MiPerfil'
 import MisReservas from '@/modules/client/components/MisReservas'
@@ -82,7 +85,9 @@ function App() {
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="usuarios" element={<AdminUsuarios />} />
                   <Route path="citas" element={<AdminCitas />} />
-
+                  <Route path="horarios" element={<AdminHorarios />} />
+                  <Route path="mascotas" element={<AdminMascotas />} />
+                  <Route path="veterinarios" element={<AdminVeterinarios />} />
                 </Routes>
               </AdminProvider>
             </PrivateRoute>

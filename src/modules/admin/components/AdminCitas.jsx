@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAdminContext } from '@/modules/admin/states/AdminContext'
 import AdminLayout from './AdminLayout'
 
@@ -12,7 +12,9 @@ const estadoEstilo = {
 }
 
 const AdminCitas = () => {
-  const { citas, loading } = useAdminContext()
+  const { citas, loading, recargar } = useAdminContext()
+
+  useEffect(() => { recargar() }, [recargar])
   const [filtro, setFiltro] = useState('Todas')
   const [busqueda, setBusqueda] = useState('')
 
@@ -90,7 +92,7 @@ const AdminCitas = () => {
             </thead>
             <tbody>
               {citasFiltradas.map((c) => (
-                <tr key={c.idCita} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                <tr key={c.idReserva} style={{ borderBottom: '1px solid #f3f4f6' }}>
                   <td style={{ padding: '14px 16px' }}>
                     <div style={{
                       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',

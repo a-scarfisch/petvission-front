@@ -1,0 +1,154 @@
+/* ===== LAYOUT ===== */
+.adm-layout { display: flex; min-height: 100vh; }
+
+/* ===== SIDEBAR ===== */
+.adm-sidebar {
+  width: 220px; background: #1e1b4b;
+  display: flex; flex-direction: column;
+  padding: 24px 0; flex-shrink: 0;
+}
+.adm-sidebar__logo { padding: 0 24px 8px; }
+.adm-sidebar__logo-title { margin: 0; font-weight: 700; font-size: 16px; color: #fff; }
+.adm-sidebar__logo-sub { margin: 2px 0 0; font-size: 11px; color: #818cf8; }
+.adm-sidebar__divider { height: 1px; background: #312e81; margin: 16px 0; }
+.adm-sidebar__nav { flex: 1; }
+.adm-sidebar__nav-label {
+  padding: 0 24px; font-size: 11px; color: #818cf8;
+  font-weight: 600; margin: 0 0 8px;
+}
+.adm-sidebar__nav-label--section {
+  padding: 16px 24px 8px; font-size: 11px; color: #818cf8;
+  font-weight: 600; margin: 0;
+}
+.adm-sidebar__link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 24px; text-decoration: none;
+  font-size: 14px; color: #a5b4fc; background: transparent; font-weight: 400;
+}
+.adm-sidebar__link--active { color: #fff; background: #312e81; font-weight: 600; }
+.adm-sidebar__link:hover:not(.adm-sidebar__link--active) {
+  color: #c7d2fe; background: rgba(255,255,255,0.05);
+}
+.adm-sidebar__footer { padding: 16px 24px; border-top: 1px solid #312e81; }
+.adm-sidebar__user { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.adm-sidebar__avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #6366f1; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; flex-shrink: 0;
+}
+.adm-sidebar__user-name { margin: 0; font-size: 13px; font-weight: 600; color: #fff; }
+.adm-sidebar__user-email { margin: 0; font-size: 11px; color: #818cf8; }
+.adm-sidebar__logout {
+  width: 100%; padding: 8px; border: none;
+  background: none; color: #ef4444; cursor: pointer;
+  text-align: left; font-size: 13px;
+}
+
+/* ===== MAIN ===== */
+.adm-main { flex: 1; background: #f9fafb; padding: 32px; min-width: 0; }
+
+/* ===== BOTTOM NAV (hidden on desktop) ===== */
+.adm-bottom-nav { display: none; }
+.adm-bottom-nav__item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px; text-decoration: none; color: rgba(255,255,255,0.45);
+}
+.adm-bottom-nav__item--active { color: #818cf8; }
+.adm-bottom-nav__icon { font-size: 20px; line-height: 1; }
+.adm-bottom-nav__label { font-size: 10px; font-weight: 500; }
+.adm-bottom-nav__logout {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px; border: none; background: none;
+  color: rgba(255,255,255,0.45); font-family: inherit; cursor: pointer; padding: 0;
+}
+
+/* ===== TABLA ===== */
+.adm-table-wrapper {
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06); overflow: hidden;
+}
+.adm-table { width: 100%; border-collapse: collapse; }
+.adm-table thead tr { background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+.adm-table th {
+  padding: 12px 16px; text-align: left;
+  font-size: 12px; color: #6b7280; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.adm-table tbody tr { border-bottom: 1px solid #f3f4f6; }
+.adm-table tbody tr:last-child { border-bottom: none; }
+.adm-table td { padding: 14px 16px; font-size: 14px; color: #374151; }
+
+/* ===== TOOLBAR ===== */
+.adm-toolbar {
+  display: flex; gap: 12px; margin-bottom: 24px;
+  align-items: center; flex-wrap: wrap;
+}
+.adm-search {
+  flex: 1; padding: 9px 14px; border-radius: 8px;
+  border: 1px solid #e5e7eb; font-size: 14px;
+  min-width: 200px; outline: none;
+}
+.adm-search:focus { border-color: #6366f1; }
+.adm-filtro-btn {
+  padding: 8px 14px; border-radius: 99px; font-size: 13px;
+  cursor: pointer; border: 1px solid #e5e7eb; background: #fff; color: #374151;
+}
+.adm-filtro-btn--active {
+  background: #6366f1; color: #fff; border-color: #6366f1; font-weight: 600;
+}
+
+/* ===== EMPTY ===== */
+.adm-empty { padding: 48px; text-align: center; color: #9ca3af; }
+.adm-empty__icon { font-size: 32px; margin: 0 0 8px; }
+
+/* ===== AVATAR ===== */
+.adm-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #e0e7ff; color: #4338ca;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; flex-shrink: 0;
+}
+
+/* ===== BADGES ===== */
+.adm-badge {
+  padding: 4px 10px; border-radius: 99px;
+  font-size: 12px; font-weight: 600; display: inline-block;
+}
+.adm-badge--activo    { background: #d1fae5; color: #065f46; }
+.adm-badge--inactivo  { background: #fee2e2; color: #991b1b; }
+.adm-badge--CLIENTE       { background: #dbeafe; color: #1e40af; }
+.adm-badge--VETERINARIO   { background: #d1fae5; color: #065f46; }
+.adm-badge--ADMINISTRADOR { background: #ede9fe; color: #5b21b6; }
+.adm-badge--CONFIRMADA    { background: #d1fae5; color: #065f46; }
+.adm-badge--PENDIENTE     { background: #fef3c7; color: #92400e; }
+.adm-badge--CANCELADA     { background: #fee2e2; color: #991b1b; }
+.adm-badge--REPROGRAMADA  { background: #e0e7ff; color: #3730a3; }
+.adm-badge--COMPLETADA    { background: #f3f4f6; color: #374151; }
+
+/* ===== BOTONES ===== */
+.adm-btn-primary {
+  padding: 7px 14px; border-radius: 8px; border: none;
+  background: #6366f1; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.adm-btn-primary:disabled { opacity: 0.6; cursor: default; }
+.adm-btn-danger {
+  padding: 7px 14px; border-radius: 8px;
+  border: 1px solid #ef4444; background: none;
+  color: #ef4444; font-size: 13px; cursor: pointer;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .adm-sidebar { display: none; }
+  .adm-main { padding: 16px; padding-bottom: 70px; }
+
+  .adm-bottom-nav {
+    display: flex;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 60px; background: #1e1b4b;
+    border-top: 1px solid #312e81; z-index: 100; align-items: stretch;
+  }
+}

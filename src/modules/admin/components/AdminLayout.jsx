@@ -1,103 +1,97 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
+import '@/styles/modules/admin.css'
+
+const NAV_PRINCIPAL = [
+  { label: 'Dashboard', path: '/admin/dashboard', icon: '⊞' },
+]
+
+const NAV_GESTION = [
+  { label: 'Usuarios',      path: '/admin/usuarios',      icon: '👥' },
+  { label: 'Veterinarios',  path: '/admin/veterinarios',  icon: '👨‍⚕️' },
+  { label: 'Mascotas',      path: '/admin/mascotas',      icon: '🐾' },
+  { label: 'Citas',         path: '/admin/citas',         icon: '📅' },
+  { label: 'Horarios',      path: '/admin/horarios',      icon: '🕐' },
+]
+
+const BOTTOM_NAV = [
+  { label: 'Dashboard', path: '/admin/dashboard', icon: '🏠' },
+  { label: 'Usuarios',  path: '/admin/usuarios',  icon: '👥' },
+  { label: 'Citas',     path: '/admin/citas',     icon: '📅' },
+  { label: 'Horarios',  path: '/admin/horarios',  icon: '🕐' },
+]
 
 const AdminLayout = ({ children }) => {
   const { user, clearUser } = useAuthContext()
   const location = useLocation()
 
-  const navItems = [
-    { label: 'Dashboard', path: '/admin/dashboard', icon: '⊞' },
-    { label: 'Usuarios', path: '/admin/usuarios', icon: '👥' },
-    { label: 'Veterinarios', path: '/admin/veterinarios', icon: '👨‍⚕️' },
-    { label: 'Mascotas', path: '/admin/mascotas', icon: '🐾' },
-    { label: 'Citas', path: '/admin/citas', icon: '📅' },
-  ]
-
   const initials = user
     ? `${user.nombres?.[0] ?? ''}${user.apellidos?.[0] ?? ''}`
     : 'A'
 
+  const linkClass = (path) =>
+    `adm-sidebar__link${location.pathname === path ? ' adm-sidebar__link--active' : ''}`
+
+  const bottomClass = (path) =>
+    `adm-bottom-nav__item${location.pathname === path ? ' adm-bottom-nav__item--active' : ''}`
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <aside style={{
-        width: '220px',
-        background: '#1e1b4b',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '24px 0',
-      }}>
-        {/* Logo */}
-        <div style={{ padding: '0 24px 8px' }}>
-          <p style={{ margin: 0, fontWeight: 700, fontSize: '16px', color: '#fff' }}>🐾 PetVission</p>
-          <p style={{ margin: '2px 0 0', fontSize: '11px', color: '#818cf8' }}>Panel Administrador</p>
+    <div className="adm-layout">
+      <aside className="adm-sidebar">
+        <div className="adm-sidebar__logo">
+          <p className="adm-sidebar__logo-title">🐾 PetVission</p>
+          <p className="adm-sidebar__logo-sub">Panel Administrador</p>
         </div>
 
-        <div style={{ height: '1px', background: '#312e81', margin: '16px 0' }} />
+        <div className="adm-sidebar__divider" />
 
-        {/* Nav sections */}
-        <nav style={{ flex: 1 }}>
-          <p style={{ padding: '0 24px', fontSize: '11px', color: '#818cf8', fontWeight: 600, marginBottom: '8px' }}>
-            PRINCIPAL
-          </p>
-          {navItems.slice(0, 1).map((item) => (
-            <Link key={item.path} to={item.path} style={{
-              display: 'flex', alignItems: 'center', gap: '10px',
-              padding: '10px 24px', textDecoration: 'none', fontSize: '14px',
-              color: location.pathname === item.path ? '#fff' : '#a5b4fc',
-              background: location.pathname === item.path ? '#312e81' : 'transparent',
-              fontWeight: location.pathname === item.path ? 600 : 400,
-            }}>
+        <nav className="adm-sidebar__nav">
+          <p className="adm-sidebar__nav-label">PRINCIPAL</p>
+          {NAV_PRINCIPAL.map((item) => (
+            <Link key={item.path} to={item.path} className={linkClass(item.path)}>
               <span>{item.icon}</span>{item.label}
             </Link>
           ))}
 
-          <p style={{ padding: '16px 24px 8px', fontSize: '11px', color: '#818cf8', fontWeight: 600 }}>
-            GESTIÓN
-          </p>
-          {navItems.slice(1).map((item) => (
-            <Link key={item.path} to={item.path} style={{
-              display: 'flex', alignItems: 'center', gap: '10px',
-              padding: '10px 24px', textDecoration: 'none', fontSize: '14px',
-              color: location.pathname === item.path ? '#fff' : '#a5b4fc',
-              background: location.pathname === item.path ? '#312e81' : 'transparent',
-              fontWeight: location.pathname === item.path ? 600 : 400,
-            }}>
+          <p className="adm-sidebar__nav-label--section">GESTIÓN</p>
+          {NAV_GESTION.map((item) => (
+            <Link key={item.path} to={item.path} className={linkClass(item.path)}>
               <span>{item.icon}</span>{item.label}
             </Link>
           ))}
         </nav>
 
-        {/* User + logout */}
-        <div style={{ padding: '16px 24px', borderTop: '1px solid #312e81' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-            <div style={{
-              width: '36px', height: '36px', borderRadius: '50%',
-              background: '#6366f1', color: '#fff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 700, fontSize: '14px',
-            }}>
-              {initials}
-            </div>
+        <div className="adm-sidebar__footer">
+          <div className="adm-sidebar__user">
+            <div className="adm-sidebar__avatar">{initials}</div>
             <div>
-              <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#fff' }}>{user?.nombres}</p>
-              <p style={{ margin: 0, fontSize: '11px', color: '#818cf8' }}>{user?.correo}</p>
+              <p className="adm-sidebar__user-name">{user?.nombres}</p>
+              <p className="adm-sidebar__user-email">{user?.correo}</p>
             </div>
           </div>
-          <button onClick={clearUser} style={{
-            width: '100%', padding: '8px', border: 'none',
-            background: 'none', color: '#ef4444', cursor: 'pointer',
-            textAlign: 'left', fontSize: '13px',
-          }}>
+          <button className="adm-sidebar__logout" onClick={clearUser}>
             🚪 Cerrar sesión
           </button>
         </div>
       </aside>
 
-      {/* Main */}
-      <main style={{ flex: 1, background: '#f9fafb', padding: '32px' }}>
+      <main className="adm-main">
         {children}
       </main>
+
+      {/* Bottom nav — móvil */}
+      <nav className="adm-bottom-nav">
+        {BOTTOM_NAV.map((item) => (
+          <Link key={item.path} to={item.path} className={bottomClass(item.path)}>
+            <span className="adm-bottom-nav__icon">{item.icon}</span>
+            <span className="adm-bottom-nav__label">{item.label}</span>
+          </Link>
+        ))}
+        <button className="adm-bottom-nav__logout" onClick={clearUser}>
+          <span className="adm-bottom-nav__icon">🚪</span>
+          <span className="adm-bottom-nav__label">Salir</span>
+        </button>
+      </nav>
     </div>
   )
 }
