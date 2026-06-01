@@ -7,16 +7,16 @@ const NAV_PRINCIPAL = [
 ]
 
 const NAV_GESTION = [
-  { label: 'Usuarios',      path: '/admin/usuarios',      icon: '👥' },
-  { label: 'Veterinarios',  path: '/admin/veterinarios',  icon: '👨‍⚕️' },
-  { label: 'Mascotas',      path: '/admin/mascotas',      icon: '🐾' },
-  { label: 'Citas',         path: '/admin/citas',         icon: '📅' },
-  { label: 'Horarios',      path: '/admin/horarios',      icon: '🕐' },
+  { label: 'Usuarios',  path: '/admin/usuarios',  icon: '👥' },
+  { label: 'Mascotas',  path: '/admin/mascotas',  icon: '🐾' },
+  { label: 'Citas',     path: '/admin/citas',     icon: '📅' },
+  { label: 'Horarios',  path: '/admin/horarios',  icon: '🕐' },
 ]
 
 const BOTTOM_NAV = [
   { label: 'Dashboard', path: '/admin/dashboard', icon: '🏠' },
   { label: 'Usuarios',  path: '/admin/usuarios',  icon: '👥' },
+  { label: 'Mascotas',  path: '/admin/mascotas',  icon: '🐾' },
   { label: 'Citas',     path: '/admin/citas',     icon: '📅' },
   { label: 'Horarios',  path: '/admin/horarios',  icon: '🕐' },
 ]

@@ -56,8 +56,8 @@
   gap: 2px; text-decoration: none; color: rgba(255,255,255,0.45);
 }
 .adm-bottom-nav__item--active { color: #818cf8; }
-.adm-bottom-nav__icon { font-size: 20px; line-height: 1; }
-.adm-bottom-nav__label { font-size: 10px; font-weight: 500; }
+.adm-bottom-nav__icon { font-size: 18px; line-height: 1; }
+.adm-bottom-nav__label { font-size: 9px; font-weight: 500; }
 .adm-bottom-nav__logout {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
