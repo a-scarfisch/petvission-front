@@ -97,7 +97,7 @@ const ClientDashboard = () => {
         <div style={{ background: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <h3 style={{ margin: 0, fontSize: '16px' }}>📅 Próximas Citas</h3>
-            <Link to="/client/citas" style={{ color: '#2a9d8f', fontSize: '13px', textDecoration: 'none' }}>
+            <Link to="/client/reservas" style={{ color: '#2a9d8f', fontSize: '13px', textDecoration: 'none' }}>
               Ver todas
             </Link>
           </div>
