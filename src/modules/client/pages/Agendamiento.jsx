@@ -2,33 +2,34 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
 import { useClientContext } from '@/modules/client/states/ClientContext'
+import { handleError } from '@/modules/core/lib/errorHandler'
 import {
   getServicios,
   getVeterinarios,
   getAgendaVeterinario,
   agendarReserva,
 } from '../services/agendamientoService'
-import AgendaStepper  from '../components/agendamiento/AgendaStepper'
-import PasoPaciente   from '../components/agendamiento/PasoPaciente'
-import PasoServicio   from '../components/agendamiento/PasoServicio'
-import PasoProfesional from '../components/agendamiento/PasoProfesional'
-import PasoDiaHora    from '../components/agendamiento/PasoDiaHora'
-import PasoConfirmar  from '../components/agendamiento/PasoConfirmar'
+import AgendaStepper    from '../components/agendamiento/AgendaStepper'
+import PasoPaciente     from '../components/agendamiento/PasoPaciente'
+import PasoCategoria    from '../components/agendamiento/PasoCategoria'
+import PasoServicio     from '../components/agendamiento/PasoServicio'
+import PasoProfesional  from '../components/agendamiento/PasoProfesional'
+import PasoDiaHora      from '../components/agendamiento/PasoDiaHora'
+import PasoConfirmar    from '../components/agendamiento/PasoConfirmar'
 import '@/styles/global.css'
 import '@/styles/modules/agendamiento.css'
 
-const PASOS = ['Paciente', 'Servicio', 'Profesional', 'Día y Hora', 'Confirmar']
-const CHIPS = [
-  '🍽️ ¿No come bien?',
-  '💉 ¿Necesita vacunas?',
-  '🩺 Control de rutina',
-  '🐛 Desparasitación',
-  '🔬 Problemas de piel',
-]
+const PASOS = ['Paciente', 'Categoría', 'Servicio', 'Profesional', 'Día y Hora', 'Confirmar']
 
 const INIT = {
-  mascota: null, servicio: null, veterinario: null,
-  turnoDetalle: null, fecha: null, hora: null,
+  mascota: null,
+  categoriaReserva: null,
+  servicio: null,
+  motivo: '',
+  veterinario: null,
+  turnoDetalle: null,
+  fecha: null,
+  hora: null,
 }
 
 const Agendamiento = () => {
@@ -36,37 +37,55 @@ const Agendamiento = () => {
   const { user } = useAuthContext()
   const { mascotas, addCita } = useClientContext()
 
-  const [paso, setPaso]               = useState(0)
-  const [seleccion, setSeleccion]     = useState(INIT)
-  const [servicios, setServicios]     = useState([])
+  const [paso, setPaso]             = useState(0)
+  const [seleccion, setSeleccion]   = useState(INIT)
+  const [servicios, setServicios]   = useState([])
   const [veterinarios, setVeterinarios] = useState([])
-  const [agenda, setAgenda]           = useState([])
-  const [loading, setLoading]         = useState(false)
-  const [error, setError]             = useState(null)
+  const [agenda, setAgenda]         = useState([])
+  const [loading, setLoading]       = useState(false)
+  const [error, setError]           = useState(null)
 
-  // Carga inicial: servicios y veterinarios
+  // Carga veterinarios al montar
   useEffect(() => {
-    Promise.all([getServicios(), getVeterinarios()])
-      .then(([srv, vets]) => { setServicios(srv); setVeterinarios(vets) })
-      .catch(() => setError('Error al cargar datos. Recarga la página.'))
+    getVeterinarios()
+      .then(setVeterinarios)
+      .catch((err) => setError(handleError(err)))
   }, [])
+
+  // Carga servicios filtrados cuando se elige una categoría que los necesita
+  useEffect(() => {
+    const cat = seleccion.categoriaReserva
+    if (!cat || cat === 'CONSULTA') { setServicios([]); return }
+    getServicios(cat)
+      .then(setServicios)
+      .catch((err) => setError(handleError(err)))
+  }, [seleccion.categoriaReserva])
 
   // Carga agenda cuando se elige veterinario
   useEffect(() => {
     if (!seleccion.veterinario) return
+    let cancelled = false
     setAgenda([])
     setSeleccion((prev) => ({ ...prev, turnoDetalle: null, fecha: null, hora: null }))
     getAgendaVeterinario(seleccion.veterinario.idUsuario)
-      .then(setAgenda)
-      .catch(() => setError('Error al cargar la agenda del veterinario.'))
+      .then((data) => { if (!cancelled) setAgenda(data) })
+      .catch((err) => { if (!cancelled) setError(handleError(err)) })
+    return () => { cancelled = true }
   }, [seleccion.veterinario?.idUsuario])
 
   const setField = (field) => (value) =>
     setSeleccion((prev) => ({ ...prev, [field]: value }))
 
+  // Al cambiar categoría, limpiar servicio y motivo
+  const handleSelectCategoria = (cat) =>
+    setSeleccion((prev) => ({ ...prev, categoriaReserva: cat, servicio: null, motivo: '' }))
+
   const puedeContinuar = [
     () => !!seleccion.mascota,
-    () => !!seleccion.servicio,
+    () => !!seleccion.categoriaReserva,
+    () => seleccion.categoriaReserva === 'CONSULTA'
+      ? seleccion.motivo?.trim().length > 0
+      : !!seleccion.servicio,
     () => !!seleccion.veterinario,
     () => !!seleccion.turnoDetalle,
   ][paso]?.() ?? true
@@ -86,20 +105,22 @@ const Agendamiento = () => {
     setLoading(true)
     setError(null)
     try {
+      const esConsulta = seleccion.categoriaReserva === 'CONSULTA'
       const res = await agendarReserva({
-        idUsuario:      user.idUsuario,
-        idVeterinario:  seleccion.veterinario.idUsuario,
-        idMascota:      seleccion.mascota.idMascota,
-        idServicio:     seleccion.servicio.idServicio,
-        idTurnoDetalle: seleccion.turnoDetalle.id,
-        fecha:          seleccion.fecha,
-        hora:           seleccion.hora,
-        motivo:         seleccion.servicio.nombre,
+        idUsuario:        user.idUsuario,
+        idVeterinario:    seleccion.veterinario.idUsuario,
+        idMascota:        seleccion.mascota.idMascota,
+        idServicio:       esConsulta ? null : seleccion.servicio.idServicio,
+        idTurnoDetalle:   seleccion.turnoDetalle.id,
+        categoriaReserva: seleccion.categoriaReserva,
+        fecha:            seleccion.fecha,
+        hora:             seleccion.hora,
+        motivo:           esConsulta ? seleccion.motivo : seleccion.servicio.nombre,
       })
-      addCita(res.data ?? res)
-      navigate('/client/citas')
-    } catch {
-      setError('No se pudo agendar la reserva. Intenta de nuevo.')
+      addCita(res)
+      navigate('/client/reservas')
+    } catch (err) {
+      setError(handleError(err))
     } finally {
       setLoading(false)
     }
@@ -108,10 +129,11 @@ const Agendamiento = () => {
   const handleSelectDiaHora = ({ turnoDetalle, fecha, hora }) =>
     setSeleccion((prev) => ({ ...prev, turnoDetalle, fecha, hora }))
 
+  const ULTIMO_PASO = PASOS.length - 1
+
   return (
     <div className="ag-page">
 
-      {/* Top bar */}
       <header className="ag-topbar">
         <button className="ag-topbar__back" onClick={() => navigate('/client/dashboard')}>
           ← Volver al Dashboard
@@ -119,15 +141,6 @@ const Agendamiento = () => {
         <span className="ag-topbar__brand">🐾 PetVission</span>
       </header>
 
-      {/* Banner de síntomas */}
-      <div className="ag-banner">
-        <span className="ag-banner__title">¿Qué le pasa a tu mascota?</span>
-        <div className="ag-banner__chips">
-          {CHIPS.map((c) => <span key={c} className="ag-chip">{c}</span>)}
-        </div>
-      </div>
-
-      {/* Contenido */}
       <main className="ag-body">
         <div className="ag-container">
 
@@ -142,20 +155,30 @@ const Agendamiento = () => {
               />
             )}
             {paso === 1 && (
-              <PasoServicio
-                servicios={servicios}
-                seleccion={seleccion.servicio}
-                onSelect={setField('servicio')}
+              <PasoCategoria
+                seleccion={seleccion.categoriaReserva}
+                onSelect={handleSelectCategoria}
               />
             )}
             {paso === 2 && (
+              <PasoServicio
+                categoriaReserva={seleccion.categoriaReserva}
+                mascota={seleccion.mascota}
+                servicios={servicios}
+                seleccion={seleccion.servicio}
+                motivo={seleccion.motivo}
+                onSelect={setField('servicio')}
+                onMotivo={setField('motivo')}
+              />
+            )}
+            {paso === 3 && (
               <PasoProfesional
                 veterinarios={veterinarios}
                 seleccion={seleccion.veterinario}
                 onSelect={setField('veterinario')}
               />
             )}
-            {paso === 3 && (
+            {paso === 4 && (
               <PasoDiaHora
                 veterinario={seleccion.veterinario}
                 agenda={agenda}
@@ -163,7 +186,7 @@ const Agendamiento = () => {
                 onSelect={handleSelectDiaHora}
               />
             )}
-            {paso === 4 && (
+            {paso === 5 && (
               <PasoConfirmar
                 seleccion={seleccion}
                 error={error}
@@ -172,16 +195,15 @@ const Agendamiento = () => {
               />
             )}
 
-            {error && paso < 4 && <p className="ag-error">{error}</p>}
+            {error && paso < ULTIMO_PASO && <p className="ag-error">{error}</p>}
           </div>
 
-          {/* Navegación de pasos */}
           <div className="ag-footer">
             <button className="ag-btn-secondary" onClick={handleVolver}>
               {paso === 0 ? '← Cancelar' : '← Volver'}
             </button>
 
-            {paso < 4 && (
+            {paso < ULTIMO_PASO && (
               <button
                 className="ag-btn-primary"
                 onClick={handleContinuar}

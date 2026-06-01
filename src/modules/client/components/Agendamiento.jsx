@@ -66,7 +66,7 @@ const Agendamiento = () => {
                 motivo: seleccion.motivo || 'Consulta general',
             })
             addCita(nueva)
-            navigate('/client/citas')
+            navigate('/client/reservas')
         } catch {
             setError('Error al agendar la cita')
         } finally {

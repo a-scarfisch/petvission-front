@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { login, register } from '../services/authService'
+import { login, register, loginConGoogle } from '../services/authService'
+import { handleError } from '@/modules/core/lib/errorHandler'
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false)
@@ -14,7 +15,7 @@ export const useAuth = () => {
       localStorage.setItem('user', JSON.stringify(data))
       return data
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al iniciar sesión')
+      setError(handleError(err))
       return null
     } finally {
       setLoading(false)
@@ -28,7 +29,23 @@ export const useAuth = () => {
       const data = await register(userData)
       return data
     } catch (err) {
-      setError(err.response?.data?.message || 'Error al registrarse')
+      setError(handleError(err))
+      return null
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogleLogin = async (accessToken) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const data = await loginConGoogle(accessToken)
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data))
+      return data
+    } catch (err) {
+      setError(handleError(err))
       return null
     } finally {
       setLoading(false)
@@ -41,5 +58,5 @@ export const useAuth = () => {
     window.location.href = '/login'
   }
 
-  return { handleLogin, handleRegister, handleLogout, loading, error }
+  return { handleLogin, handleRegister, handleGoogleLogin, handleLogout, loading, error }
 }

@@ -6,16 +6,20 @@ import PrivateRoute from '@/modules/core/components/PrivateRoute'
 import ClientDashboard from '@/modules/client/components/ClientDashboard'
 import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
-import MisCitas from '@/modules/client/components/MisCitas'
 import Agendamiento from '@/modules/client/pages/Agendamiento'
 import VetDashboard from '@/modules/vet/components/VetDashboard'
 import { VetProvider } from '@/modules/vet/states/VetContext'
 import VetCitas from '@/modules/vet/components/VetCitas'
 import VetHorarios from '@/modules/vet/components/VetHorarios'
+import MisPacientes from '@/modules/vet/components/MisPacientes'
+import HistorialClinico from '@/modules/vet/components/HistorialClinico'
 import AdminDashboard from '@/modules/admin/components/AdminDashboard'
 import { AdminProvider } from '@/modules/admin/states/AdminContext'
 import AdminUsuarios from '@/modules/admin/components/AdminUsuarios'
 import AdminCitas from '@/modules/admin/components/AdminCitas'
+import AdminHorarios from '@/modules/admin/components/AdminHorarios'
+import AdminMascotas from '@/modules/admin/components/AdminMascotas'
+import AdminVeterinarios from '@/modules/admin/components/AdminVeterinarios'
 import LandingPage from '@/modules/landing/components/LandingPage'
 import MiPerfil from '@/modules/client/components/MiPerfil'
 import MisReservas from '@/modules/client/components/MisReservas'
@@ -45,7 +49,6 @@ function App() {
                   <Route path="mascotas" element={<MascotaList />} />
                   <Route path="mascotas/nueva" element={<NuevaMascota />} />
                   <Route path="dashboard" element={<ClientDashboard />} />
-                  <Route path="citas" element={<MisCitas />} />
                   <Route path="citas/nueva" element={<Agendamiento />} />
                   <Route path="reservas" element={<MisReservas />} />
                   <Route path="configuracion" element={<MiConfiguracion />} />
@@ -65,6 +68,8 @@ function App() {
                   <Route path="dashboard" element={<VetDashboard />} />
                   <Route path="citas" element={<VetCitas />} />
                   <Route path="horarios" element={<VetHorarios />} />
+                  <Route path="pacientes" element={<MisPacientes />} />
+                  <Route path="historial" element={<HistorialClinico />} />
                 </Routes>
               </VetProvider>
             </PrivateRoute>
@@ -80,7 +85,9 @@ function App() {
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="usuarios" element={<AdminUsuarios />} />
                   <Route path="citas" element={<AdminCitas />} />
-
+                  <Route path="horarios" element={<AdminHorarios />} />
+                  <Route path="mascotas" element={<AdminMascotas />} />
+                  <Route path="veterinarios" element={<AdminVeterinarios />} />
                 </Routes>
               </AdminProvider>
             </PrivateRoute>

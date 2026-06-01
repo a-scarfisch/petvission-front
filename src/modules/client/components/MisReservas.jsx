@@ -54,10 +54,10 @@ const MisReservas = () => {
 
   const handleCancelar = async () => {
     const { cita } = modal
-    setLoadingId(cita.idCita)
+    setLoadingId(cita.idReserva)
     closeModal()
     try {
-      const updated = await cancelarCita(cita.idCita)
+      const updated = await cancelarCita(cita.idReserva)
       updateCita(updated)
       showToast('Reserva cancelada correctamente')
     } catch {
@@ -69,10 +69,10 @@ const MisReservas = () => {
 
   const handleReprogramar = async () => {
     const { cita } = modal
-    setLoadingId(cita.idCita)
+    setLoadingId(cita.idReserva)
     closeModal()
     try {
-      const updated = await reprogramarCita(cita.idCita, toDateStr(selectedDate), `${selectedTime}:00`)
+      const updated = await reprogramarCita(cita.idReserva, toDateStr(selectedDate), `${selectedTime}:00`)
       updateCita(updated)
       showToast('Reserva reprogramada correctamente')
     } catch {
@@ -185,11 +185,11 @@ const MisReservas = () => {
             const badge = estadoBadge[c.estado] ?? { bg: '#f3f4f6', color: '#374151' }
             const activa = c.estado !== 'CANCELADA'
             return (
-              <div key={c.idCita} style={{
+              <div key={c.idReserva} className="reserva-card" style={{
                 background: '#fff', borderRadius: '12px', padding: '20px 24px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 display: 'flex', alignItems: 'center', gap: '20px',
-                opacity: loadingId === c.idCita ? 0.5 : 1,
+                opacity: loadingId === c.idReserva ? 0.5 : 1,
               }}>
                 {/* Fecha blob */}
                 <div style={{
@@ -228,10 +228,10 @@ const MisReservas = () => {
 
                 {/* Acciones */}
                 {activa && (
-                  <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                     <button
                       onClick={() => openReprog(c)}
-                      disabled={loadingId === c.idCita}
+                      disabled={loadingId === c.idReserva}
                       style={{
                         padding: '7px 14px', borderRadius: '8px', cursor: 'pointer',
                         border: '1px solid #2a9d8f', background: '#fff',
@@ -242,7 +242,7 @@ const MisReservas = () => {
                     </button>
                     <button
                       onClick={() => openCancel(c)}
-                      disabled={loadingId === c.idCita}
+                      disabled={loadingId === c.idReserva}
                       style={{
                         padding: '7px 14px', borderRadius: '8px', cursor: 'pointer',
                         border: '1px solid #ef4444', background: '#fff',

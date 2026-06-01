@@ -192,7 +192,7 @@ const MiPerfil = () => {
 
           {/* Tab: Información */}
           {activeTab === 'Información' && (
-            <div style={{
+            <div className="perfil-grid" style={{
               display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px',
             }}>
               <FieldGroup label="Nombres" disabled={!isEditing}
@@ -208,7 +208,6 @@ const MiPerfil = () => {
                 value={form.telefono}
                 onChange={(v) => setForm((f) => ({ ...f, telefono: v }))}
               />
-              <FieldGroup label="Rol" disabled value={user?.rol ?? ''} onChange={() => {}} />
             </div>
           )}
 

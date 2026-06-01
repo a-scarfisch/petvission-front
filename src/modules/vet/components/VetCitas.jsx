@@ -2,18 +2,20 @@ import { useState } from 'react'
 import { useVetContext } from '@/modules/vet/states/VetContext'
 import VetLayout from './VetLayout'
 import apiClient from '@/modules/core/lib/apiClient'
+import { handleError } from '@/modules/core/lib/errorHandler'
 
-const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA', 'REPROGRAMADA']
+const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA', 'REPROGRAMADA', 'COMPLETADA']
 
 const estadoEstilo = {
-  CONFIRMADA: { background: '#d1fae5', color: '#065f46' },
-  PENDIENTE: { background: '#fef3c7', color: '#92400e' },
-  CANCELADA: { background: '#fee2e2', color: '#991b1b' },
-  REPROGRAMADA: { background: '#e0e7ff', color: '#3730a3' },
+  CONFIRMADA:  { background: '#d1fae5', color: '#065f46' },
+  PENDIENTE:   { background: '#fef3c7', color: '#92400e' },
+  CANCELADA:   { background: '#fee2e2', color: '#991b1b' },
+  REPROGRAMADA:{ background: '#e0e7ff', color: '#3730a3' },
+  COMPLETADA:  { background: '#f3f4f6', color: '#374151' },
 }
 
 const VetCitas = () => {
-  const { citas, updateCita } = useVetContext()
+  const { citas, loading, updateCita, removeCita } = useVetContext()
   const [filtro, setFiltro] = useState('Todas')
   const [loadingId, setLoadingId] = useState(null)
   const [reprogramando, setReprogramando] = useState(null)
@@ -26,24 +28,47 @@ const VetCitas = () => {
 
   const formatHora = (hora) => hora?.slice(0, 5) ?? '—'
 
-  const handleCancelar = async (idCita) => {
-    if (!confirm('¿Estás seguro de cancelar esta cita?')) return
-    setLoadingId(idCita)
+  const handleConfirmar = async (idReserva) => {
+    setLoadingId(idReserva)
     try {
-      const { data } = await apiClient.patch(`/citas/${idCita}/cancelar`)
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/confirmar`)
       updateCita(data.data)
     } catch {
-      alert('Error al cancelar la cita')
+      alert('Error al confirmar la cita')
     } finally {
       setLoadingId(null)
     }
   }
 
-  const handleReprogramar = async (idCita) => {
-    if (!nuevaFecha || !nuevaHora) return
-    setLoadingId(idCita)
+  const handleCompletar = async (idReserva) => {
+    setLoadingId(idReserva)
     try {
-      const { data } = await apiClient.patch(`/citas/${idCita}/reprogramar`, {
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/completar`)
+      updateCita(data.data)
+    } catch {
+      alert('Error al completar la cita')
+    } finally {
+      setLoadingId(null)
+    }
+  }
+
+  const handleCancelar = async (idReserva) => {
+    setLoadingId(idReserva)
+    try {
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/cancelar`)
+      updateCita(data.data)
+    } catch (err) {
+      alert(handleError(err))
+    } finally {
+      setLoadingId(null)
+    }
+  }
+
+  const handleReprogramar = async (idReserva) => {
+    if (!nuevaFecha || !nuevaHora) return
+    setLoadingId(idReserva)
+    try {
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/reprogramar`, {
         nuevaFecha,
         nuevaHora: `${nuevaHora}:00`,
       })
@@ -57,6 +82,8 @@ const VetCitas = () => {
       setLoadingId(null)
     }
   }
+
+  if (loading) return <VetLayout><p>Cargando...</p></VetLayout>
 
   return (
     <VetLayout>
@@ -96,12 +123,12 @@ const VetCitas = () => {
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
           }}>
             <p style={{ fontSize: '32px', margin: '0 0 8px' }}>📅</p>
-            <p>No hay citas {filtro !== 'Todas' ? filtro.toLowerCase() + 's' : ''}.</p>
+            <p>No hay citas {filtro !== 'Todas' ? `con estado ${filtro.toLowerCase()}` : ''}.</p>
           </div>
         ) : (
           citasFiltradas.map((c) => (
-            <div key={c.idCita}>
-              <div style={{
+            <div key={c.idReserva}>
+              <div className="reserva-card" style={{
                 background: '#fff', borderRadius: '12px', padding: '20px 24px',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 display: 'flex', alignItems: 'center', gap: '20px',
@@ -137,37 +164,78 @@ const VetCitas = () => {
                   {c.estado}
                 </span>
 
-                {/* Acciones */}
-                {c.estado !== 'CANCELADA' && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                {/* Acciones por estado */}
+                {c.estado === 'PENDIENTE' && (
+                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
                     <button
-                      onClick={() => setReprogramando(reprogramando === c.idCita ? null : c.idCita)}
+                      onClick={() => handleConfirmar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
                       style={{
-                        background: 'none', border: '1px solid #2a9d8f',
-                        color: '#2a9d8f', padding: '7px 14px',
-                        borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
+                        background: '#2a9d8f', border: 'none', color: '#fff',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
+                      }}
+                    >
+                      {loadingId === c.idReserva ? 'Confirmando...' : '✓ Confirmar'}
+                    </button>
+                    <button
+                      onClick={() => handleCancelar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
+                      style={{
+                        background: 'none', border: '1px solid #ef4444', color: '#ef4444',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px',
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
+                      }}
+                    >
+                      ✕ Cancelar
+                    </button>
+                  </div>
+                )}
+
+                {c.estado === 'CONFIRMADA' && (
+                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => setReprogramando(reprogramando === c.idReserva ? null : c.idReserva)}
+                      style={{
+                        background: 'none', border: '1px solid #2a9d8f', color: '#2a9d8f',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px',
                       }}
                     >
                       📅 Reprogramar
                     </button>
                     <button
-                      onClick={() => handleCancelar(c.idCita)}
-                      disabled={loadingId === c.idCita}
+                      onClick={() => handleCompletar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
                       style={{
-                        background: 'none', border: '1px solid #ef4444',
-                        color: '#ef4444', padding: '7px 14px',
-                        borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-                        opacity: loadingId === c.idCita ? 0.6 : 1,
+                        background: '#2a9d8f', border: 'none', color: '#fff',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px', fontWeight: 600,
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
                       }}
                     >
-                      {loadingId === c.idCita ? 'Cancelando...' : '✕ Cancelar'}
+                      {loadingId === c.idReserva ? 'Completando...' : '✓ Completar'}
+                    </button>
+                    <button
+                      onClick={() => handleCancelar(c.idReserva)}
+                      disabled={loadingId === c.idReserva}
+                      style={{
+                        background: 'none', border: '1px solid #ef4444', color: '#ef4444',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px',
+                        opacity: loadingId === c.idReserva ? 0.6 : 1,
+                      }}
+                    >
+                      ✕ Cancelar
                     </button>
                   </div>
                 )}
               </div>
 
               {/* Form reprogramar */}
-              {reprogramando === c.idCita && (
+              {reprogramando === c.idReserva && (
                 <div style={{
                   background: '#f9fafb', borderRadius: '0 0 12px 12px',
                   padding: '16px 24px', border: '1px solid #e5e7eb',
@@ -196,8 +264,8 @@ const VetCitas = () => {
                     />
                   </div>
                   <button
-                    onClick={() => handleReprogramar(c.idCita)}
-                    disabled={loadingId === c.idCita || !nuevaFecha || !nuevaHora}
+                    onClick={() => handleReprogramar(c.idReserva)}
+                    disabled={loadingId === c.idReserva || !nuevaFecha || !nuevaHora}
                     style={{
                       background: '#2a9d8f', color: '#fff', border: 'none',
                       padding: '9px 20px', borderRadius: '8px',
@@ -205,7 +273,7 @@ const VetCitas = () => {
                       opacity: !nuevaFecha || !nuevaHora ? 0.5 : 1,
                     }}
                   >
-                    {loadingId === c.idCita ? 'Guardando...' : 'Confirmar'}
+                    {loadingId === c.idReserva ? 'Guardando...' : 'Confirmar'}
                   </button>
                   <button
                     onClick={() => setReprogramando(null)}

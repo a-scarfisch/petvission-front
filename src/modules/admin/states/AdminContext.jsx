@@ -1,40 +1,45 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import apiClient from '@/modules/core/lib/apiClient'
+import { handleError } from '@/modules/core/lib/errorHandler'
 
 const AdminContext = createContext(null)
 
 export const AdminProvider = ({ children }) => {
-    const [usuarios, setUsuarios] = useState([])
-    const [citas, setCitas] = useState([])
-    const [loading, setLoading] = useState(true)
+  const [usuarios, setUsuarios] = useState([])
+  const [citas, setCitas] = useState([])
+  const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        const fetchAll = async () => {
-            try {
-                const [usuariosRes, citasRes] = await Promise.all([
-                    apiClient.get('/usuarios'),
-                    apiClient.get('/citas'),
-                ])
-                setUsuarios(usuariosRes.data.data ?? [])
-                setCitas(citasRes.data.data ?? [])
-            } catch (err) {
-                console.error('Error cargando datos del admin:', err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        fetchAll()
-    }, [])
+  const recargar = useCallback(async () => {
+    setLoading(true)
+    try {
+      const [usuariosRes, citasRes] = await Promise.all([
+        apiClient.get('/usuarios'),
+        apiClient.get('/reservas'),
+      ])
+      setUsuarios(usuariosRes.data.data ?? [])
+      setCitas(citasRes.data.data ?? [])
+    } catch (err) {
+      console.error('Error cargando datos del admin:', handleError(err))
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
-    const updateUsuario = (updated) => setUsuarios((prev) =>
-        prev.map((u) => u.idUsuario === updated.idUsuario ? updated : u)
-    )
+  useEffect(() => {
+    recargar()
+  }, [recargar])
 
-    return (
-        <AdminContext.Provider value={{ usuarios, citas, loading, updateUsuario }}>
-            {children}
-        </AdminContext.Provider>
-    )
+  const updateUsuario = (updated) => setUsuarios((prev) =>
+    prev.map((u) => u.idUsuario === updated.idUsuario ? updated : u)
+  )
+
+  const addUsuario = (nuevo) => setUsuarios((prev) => [...prev, nuevo])
+
+  return (
+    <AdminContext.Provider value={{ usuarios, citas, loading, updateUsuario, addUsuario, recargar }}>
+      {children}
+    </AdminContext.Provider>
+  )
 }
 
 export const useAdminContext = () => useContext(AdminContext)

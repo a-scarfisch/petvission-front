@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import ClientLayout from './ClientLayout'
 import apiClient from '@/modules/core/lib/apiClient'
+import { handleError } from '@/modules/core/lib/errorHandler'
 
 const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA']
 
@@ -20,14 +21,14 @@ const MisCitas = () => {
     ? citas
     : citas.filter((c) => c.estado === filtro)
 
-  const handleCancelar = async (idCita) => {
+  const handleCancelar = async (idReserva) => {
     if (!confirm('¿Estás seguro de cancelar esta cita?')) return
-    setLoadingId(idCita)
+    setLoadingId(idReserva)
     try {
-      const { data } = await apiClient.patch(`/citas/${idCita}/cancelar`)
+      const { data } = await apiClient.patch(`/reservas/${idReserva}/cancelar`)
       updateCita(data.data)
     } catch (err) {
-      alert('Error al cancelar la cita')
+      alert(handleError(err))
     } finally {
       setLoadingId(null)
     }
@@ -89,7 +90,7 @@ const MisCitas = () => {
           </div>
         ) : (
           citasFiltradas.map((c) => (
-            <div key={c.idCita} style={{
+            <div key={c.idReserva} style={{
               background: '#fff', borderRadius: '12px', padding: '20px 24px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
               display: 'flex', alignItems: 'center', gap: '20px',
@@ -128,16 +129,16 @@ const MisCitas = () => {
               {/* Acciones */}
               {c.estado !== 'CANCELADA' && (
                 <button
-                  onClick={() => handleCancelar(c.idCita)}
-                  disabled={loadingId === c.idCita}
+                  onClick={() => handleCancelar(c.idReserva)}
+                  disabled={loadingId === c.idReserva}
                   style={{
                     background: 'none', border: '1px solid #ef4444',
                     color: '#ef4444', padding: '7px 14px',
                     borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-                    opacity: loadingId === c.idCita ? 0.6 : 1,
+                    opacity: loadingId === c.idReserva ? 0.6 : 1,
                   }}
                 >
-                  {loadingId === c.idCita ? 'Cancelando...' : '✕ Cancelar'}
+                  {loadingId === c.idReserva ? 'Cancelando...' : '✕ Cancelar'}
                 </button>
               )}
             </div>

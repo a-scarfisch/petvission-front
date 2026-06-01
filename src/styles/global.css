@@ -23,6 +23,34 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* ===== CARDS DE RESERVAS (cliente y veterinario) ===== */
+.reserva-card {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .reserva-card {
+    flex-wrap: wrap;
+  }
+
+  .reserva-card__acciones {
+    flex-direction: column;
+    width: 100%;
+    flex-shrink: 1 !important;
+  }
+
+  .reserva-card__acciones button {
+    width: 100%;
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
@@ -37,4 +65,48 @@ a {
 
 button {
   font-family: inherit;
+}
+
+/* ===== LANDING PAGE RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .lp-nav { padding: 12px 20px !important; }
+  .lp-nav__links a:not(.lp-nav__btn) { display: none; }
+
+  .lp-hero {
+    flex-direction: column !important;
+    padding: 40px 20px !important;
+    text-align: center;
+  }
+  .lp-hero__img { display: none !important; }
+  .lp-hero__stats {
+    flex-wrap: wrap;
+    gap: 16px !important;
+    justify-content: center;
+  }
+
+  .lp-servicios-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  .lp-pasos {
+    flex-direction: column !important;
+    align-items: center;
+    gap: 32px !important;
+  }
+
+  .lp-nosotros {
+    flex-direction: column !important;
+    padding: 40px 20px !important;
+  }
+
+  .lp-contacto {
+    flex-direction: column !important;
+    gap: 32px !important;
+    align-items: center;
+  }
+
+  .lp-footer {
+    flex-direction: column !important;
+    gap: 8px;
+    text-align: center;
+    padding: 24px 20px !important;
+  }
 }

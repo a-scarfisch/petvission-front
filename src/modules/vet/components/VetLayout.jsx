@@ -1,57 +1,46 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
+import '@/styles/modules/vet.css'
+
+const BOTTOM_NAV = [
+  { label: 'Dashboard', path: '/vet/dashboard', icon: '📅' },
+  { label: 'Citas',     path: '/vet/citas',     icon: '🗓️' },
+  { label: 'Pacientes', path: '/vet/pacientes', icon: '👥' },
+  { label: 'Horarios',  path: '/vet/horarios',  icon: '🕐' },
+]
+
+const NAV_ITEMS = [
+  { label: 'Dashboard',       path: '/vet/dashboard', icon: '📅' },
+  { label: 'Mis Citas',       path: '/vet/citas',     icon: '🗓️' },
+  { label: 'Mis Pacientes',   path: '/vet/pacientes', icon: '👥' },
+  { label: 'Historial',       path: '/vet/historial', icon: '📋' },
+  { label: 'Horarios',        path: '/vet/horarios',  icon: '🕐' },
+]
 
 const VetLayout = ({ children }) => {
   const { user, clearUser } = useAuthContext()
   const location = useLocation()
-
-  const navItems = [
-    { label: 'Dashboard', path: '/vet/dashboard', icon: '⊞' },
-    { label: 'Mis Citas', path: '/vet/citas', icon: '📅' },
-    { label: 'Pacientes', path: '/vet/pacientes', icon: '🐾' },
-    { label: 'Historial', path: '/vet/historial', icon: '📋' },
-    { label: 'Horarios', path: '/vet/horarios', icon: '🕐' },
-  ]
 
   const initials = user
     ? `${user.nombres?.[0] ?? ''}${user.apellidos?.[0] ?? ''}`
     : 'V'
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
-      <aside style={{
-        width: '220px',
-        background: '#1a1f36',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '24px 0',
-      }}>
-        {/* Logo */}
-        <div style={{ padding: '0 24px 8px' }}>
-          <p style={{ margin: 0, fontWeight: 700, fontSize: '16px', color: '#fff' }}>🐾 PetVission</p>
-          <p style={{ margin: '2px 0 0', fontSize: '11px', color: '#6b7db3' }}>Gestión Veterinaria</p>
+    <div className="vet-layout">
+      <aside className="vet-sidebar">
+        <div className="vet-sidebar__logo">
+          <p className="vet-sidebar__logo-title">🐾 PetVission</p>
+          <p className="vet-sidebar__logo-sub">Gestión Veterinaria</p>
         </div>
 
-        <div style={{ height: '1px', background: '#2d3561', margin: '16px 0' }} />
+        <div className="vet-sidebar__divider" />
 
-        {/* Nav */}
-        <nav style={{ flex: 1 }}>
-          {navItems.map((item) => (
+        <nav className="vet-sidebar__nav">
+          {NAV_ITEMS.map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                padding: '10px 24px',
-                color: location.pathname === item.path ? '#fff' : '#8892b0',
-                background: location.pathname === item.path ? '#2d3561' : 'transparent',
-                textDecoration: 'none',
-                fontWeight: location.pathname === item.path ? 600 : 400,
-                fontSize: '14px',
-              }}
+              className={`vet-sidebar__link${location.pathname === item.path ? ' vet-sidebar__link--active' : ''}`}
             >
               <span>{item.icon}</span>
               {item.label}
@@ -59,39 +48,41 @@ const VetLayout = ({ children }) => {
           ))}
         </nav>
 
-        {/* User + logout */}
-        <div style={{ padding: '16px 24px', borderTop: '1px solid #2d3561' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-            <div style={{
-              width: '36px', height: '36px', borderRadius: '50%',
-              background: '#2a9d8f', color: '#fff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 700, fontSize: '14px',
-            }}>
-              {initials}
-            </div>
+        <div className="vet-sidebar__footer">
+          <div className="vet-sidebar__user">
+            <div className="vet-sidebar__avatar">{initials}</div>
             <div>
-              <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#fff' }}>{user?.nombres}</p>
-              <p style={{ margin: 0, fontSize: '11px', color: '#6b7db3' }}>{user?.correo}</p>
+              <p className="vet-sidebar__user-name">{user?.nombres} {user?.apellidos}</p>
+              <p className="vet-sidebar__user-email">{user?.correo}</p>
             </div>
           </div>
-          <button
-            onClick={clearUser}
-            style={{
-              width: '100%', padding: '8px', border: 'none',
-              background: 'none', color: '#ef4444', cursor: 'pointer',
-              textAlign: 'left', fontSize: '13px',
-            }}
-          >
+          <button className="vet-sidebar__logout" onClick={clearUser}>
             🚪 Cerrar sesión
           </button>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main style={{ flex: 1, background: '#f9fafb', padding: '32px' }}>
+      <main className="vet-main">
         {children}
       </main>
+
+      {/* Bottom nav — móvil */}
+      <nav className="vet-bottom-nav">
+        {BOTTOM_NAV.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`vet-bottom-nav__item${location.pathname === item.path ? ' vet-bottom-nav__item--active' : ''}`}
+          >
+            <span className="vet-bottom-nav__icon">{item.icon}</span>
+            <span className="vet-bottom-nav__label">{item.label}</span>
+          </Link>
+        ))}
+        <button className="vet-bottom-nav__logout" onClick={clearUser}>
+          <span className="vet-bottom-nav__icon">🚪</span>
+          <span className="vet-bottom-nav__label">Salir</span>
+        </button>
+      </nav>
     </div>
   )
 }

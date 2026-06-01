@@ -34,6 +34,7 @@ const NuevaMascota = () => {
     color: '',
     notas: '',
     estadoSalud: 'SALUDABLE',
+    animalGuia: false,
   })
   const [avatarPreview, setAvatarPreview] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -65,6 +66,7 @@ const NuevaMascota = () => {
         color: form.color || null,
         estadoSalud: form.estadoSalud,
         notas: form.notas || null,
+        animalGuia: ['PERRO', 'GATO'].includes(form.especie) ? form.animalGuia : false,
       })
       addMascota(nueva)
       navigate('/client/mascotas')
@@ -144,7 +146,10 @@ const NuevaMascota = () => {
                 <button
                   key={e.valor}
                   type="button"
-                  onClick={() => set('especie', e.valor)}
+                  onClick={() => {
+                    set('especie', e.valor)
+                    if (!['PERRO', 'GATO'].includes(e.valor)) set('animalGuia', false)
+                  }}
                   style={{
                     padding: '10px 20px', borderRadius: '10px', cursor: 'pointer',
                     fontSize: '15px', fontWeight: form.especie === e.valor ? 700 : 400,
@@ -158,6 +163,22 @@ const NuevaMascota = () => {
               ))}
             </div>
           </div>
+
+          {/* Animal guía — solo PERRO o GATO */}
+          {['PERRO', 'GATO'].includes(form.especie) && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <input
+                type="checkbox"
+                id="animalGuia"
+                checked={form.animalGuia}
+                onChange={(e) => set('animalGuia', e.target.checked)}
+                style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: '#2a9d8f' }}
+              />
+              <label htmlFor="animalGuia" style={{ fontSize: '14px', color: '#374151', cursor: 'pointer' }}>
+                ¿Es animal guía o de apoyo emocional?
+              </label>
+            </div>
+          )}
 
           {/* Información básica */}
           <div>
