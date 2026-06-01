@@ -215,8 +215,16 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
+  html, body { overflow-x: hidden; max-width: 100vw; }
+
   .adm-sidebar { display: none; }
-  .adm-main { padding: 16px; padding-bottom: 70px; }
+  .adm-main { padding: 16px; padding-bottom: 70px; box-sizing: border-box; max-width: 100%; }
+
+  .adm-table-wrapper { overflow-x: auto; max-width: 100%; }
+  .adm-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .adm-toolbar { flex-wrap: wrap; gap: 8px; }
+  .adm-modal { max-width: calc(100vw - 32px); }
+  .adm-form-row { grid-template-columns: 1fr; }
 
   .adm-bottom-nav {
     display: flex;
