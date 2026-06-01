@@ -33,8 +33,10 @@ export const AdminProvider = ({ children }) => {
     prev.map((u) => u.idUsuario === updated.idUsuario ? updated : u)
   )
 
+  const addUsuario = (nuevo) => setUsuarios((prev) => [...prev, nuevo])
+
   return (
-    <AdminContext.Provider value={{ usuarios, citas, loading, updateUsuario, recargar }}>
+    <AdminContext.Provider value={{ usuarios, citas, loading, updateUsuario, addUsuario, recargar }}>
       {children}
     </AdminContext.Provider>
   )

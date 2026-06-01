@@ -140,6 +140,79 @@
   color: #ef4444; font-size: 13px; cursor: pointer;
 }
 
+/* ===== MODAL ===== */
+.adm-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.adm-modal {
+  background: #fff; border-radius: 16px;
+  width: 100%; max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  display: flex; flex-direction: column; max-height: 90vh;
+}
+.adm-modal--wide { max-width: 560px; }
+.adm-modal__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 16px; border-bottom: 1px solid #f3f4f6;
+}
+.adm-modal__title { margin: 0; font-size: 17px; font-weight: 700; color: #111827; }
+.adm-modal__close {
+  background: none; border: none; cursor: pointer;
+  font-size: 20px; color: #9ca3af; line-height: 1; padding: 4px;
+}
+.adm-modal__body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+.adm-modal__footer {
+  padding: 16px 24px; border-top: 1px solid #f3f4f6;
+  display: flex; gap: 10px; justify-content: flex-end;
+}
+
+/* ===== FORMULARIO ===== */
+.adm-form-group { margin-bottom: 16px; }
+.adm-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.adm-form-label {
+  display: block; font-size: 13px; font-weight: 600;
+  color: #374151; margin-bottom: 6px;
+}
+.adm-form-input {
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  border: 1px solid #e5e7eb; font-size: 14px;
+  outline: none; box-sizing: border-box;
+}
+.adm-form-input:focus { border-color: #6366f1; }
+
+/* ===== MENSAJES ===== */
+.adm-msg-success {
+  padding: 10px 14px; border-radius: 8px;
+  background: #d1fae5; color: #065f46;
+  font-size: 13px; margin-bottom: 16px;
+}
+.adm-msg-error {
+  padding: 10px 14px; border-radius: 8px;
+  background: #fee2e2; color: #991b1b;
+  font-size: 13px; margin-bottom: 16px;
+}
+
+/* ===== LISTA DE SELECCIÓN (buscador de clientes) ===== */
+.adm-select-list {
+  border: 1px solid #e5e7eb; border-radius: 8px;
+  max-height: 200px; overflow-y: auto; margin-top: 8px;
+}
+.adm-select-item {
+  padding: 10px 14px; cursor: pointer; font-size: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.adm-select-item:last-child { border-bottom: none; }
+.adm-select-item:hover { background: #f5f3ff; }
+.adm-select-item--active { background: #ede9fe; color: #4f46e5; font-weight: 600; }
+.adm-btn-secondary {
+  padding: 7px 14px; border-radius: 8px;
+  border: 1px solid #e5e7eb; background: #fff;
+  color: #374151; font-size: 13px; cursor: pointer;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .adm-sidebar { display: none; }

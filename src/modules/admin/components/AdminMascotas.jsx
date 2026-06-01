@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import apiClient from '@/modules/core/lib/apiClient'
 import { handleError } from '@/modules/core/lib/errorHandler'
 import AdminLayout from './AdminLayout'
@@ -11,10 +11,20 @@ const especieEmoji = (especie) => {
 }
 
 const AdminMascotas = () => {
-  const [mascotas, setMascotas] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [filtro, setFiltro] = useState('Todas')
-  const [busqueda, setBusqueda] = useState('')
+  const [mascotas, setMascotas]               = useState([])
+  const [loading, setLoading]                 = useState(true)
+  const [filtro, setFiltro]                   = useState('Todas')
+  const [busqueda, setBusqueda]               = useState('')
+
+  // Modal reasignar
+  const [mascotaSel, setMascotaSel]           = useState(null)
+  const [clientes, setClientes]               = useState([])
+  const [loadingClientes, setLoadingClientes] = useState(false)
+  const [busquedaCli, setBusquedaCli]         = useState('')
+  const [clienteSel, setClienteSel]           = useState(null)
+  const [saving, setSaving]                   = useState(false)
+  const [errorModal, setErrorModal]           = useState('')
+  const clientesCargados                      = useRef(false)
 
   useEffect(() => {
     const cargar = async () => {
@@ -30,10 +40,57 @@ const AdminMascotas = () => {
     cargar()
   }, [])
 
+  const abrirReasignar = async (mascota) => {
+    setMascotaSel(mascota)
+    setBusquedaCli('')
+    setClienteSel(null)
+    setErrorModal('')
+
+    if (!clientesCargados.current) {
+      setLoadingClientes(true)
+      try {
+        const { data } = await apiClient.get('/usuarios/clientes')
+        setClientes(data.data ?? [])
+        clientesCargados.current = true
+      } catch (err) {
+        setErrorModal(handleError(err))
+      } finally {
+        setLoadingClientes(false)
+      }
+    }
+  }
+
+  const cerrarModal = () => setMascotaSel(null)
+
+  const handleReasignar = async () => {
+    if (!clienteSel) return
+    setSaving(true)
+    setErrorModal('')
+    try {
+      const { data } = await apiClient.patch(
+        `/mascotas/${mascotaSel.idMascota}/reasignar`,
+        { idNuevoUsuario: clienteSel.idUsuario }
+      )
+      setMascotas((prev) =>
+        prev.map((m) => m.idMascota === mascotaSel.idMascota ? data.data : m)
+      )
+      cerrarModal()
+    } catch (err) {
+      setErrorModal(handleError(err))
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const clientesFiltrados = clientes.filter((c) =>
+    `${c.nombres} ${c.apellidos} ${c.correo}`
+      .toLowerCase().includes(busquedaCli.toLowerCase())
+  )
+
   const filtradas = mascotas
     .filter((m) => {
-      if (filtro === 'PERRO')    return m.especie?.toUpperCase() === 'PERRO'
-      if (filtro === 'GATO')     return m.especie?.toUpperCase() === 'GATO'
+      if (filtro === 'PERRO')     return m.especie?.toUpperCase() === 'PERRO'
+      if (filtro === 'GATO')      return m.especie?.toUpperCase() === 'GATO'
       if (filtro === 'Inactivas') return !m.estado
       return true
     })
@@ -81,7 +138,7 @@ const AdminMascotas = () => {
           <table className="adm-table">
             <thead>
               <tr>
-                {['Mascota', 'Especie', 'Raza', 'Dueño', 'Estado'].map((h) => (
+                {['Mascota', 'Especie', 'Raza', 'Dueño', 'Estado', ''].map((h) => (
                   <th key={h}>{h}</th>
                 ))}
               </tr>
@@ -112,12 +169,91 @@ const AdminMascotas = () => {
                       {m.estado ? 'Activo' : 'Inactivo'}
                     </span>
                   </td>
+                  <td>
+                    <button className="adm-btn-secondary" onClick={() => abrirReasignar(m)}>
+                      ✏️ Reasignar
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         )}
       </div>
+
+      {mascotaSel && (
+        <div className="adm-modal-overlay" onClick={cerrarModal}>
+          <div className="adm-modal adm-modal--wide" onClick={(e) => e.stopPropagation()}>
+            <div className="adm-modal__header">
+              <h3 className="adm-modal__title">✏️ Reasignar dueño</h3>
+              <button className="adm-modal__close" onClick={cerrarModal}>✕</button>
+            </div>
+            <div className="adm-modal__body">
+              {errorModal && <p className="adm-msg-error">{errorModal}</p>}
+
+              <div className="adm-form-row" style={{ marginBottom: '16px' }}>
+                <div>
+                  <p className="adm-form-label">Mascota</p>
+                  <p style={{ margin: 0, fontWeight: 600 }}>{mascotaSel.nombre}</p>
+                </div>
+                <div>
+                  <p className="adm-form-label">Dueño actual</p>
+                  <p style={{ margin: 0, color: '#6b7280' }}>{mascotaSel.nombreUsuario}</p>
+                </div>
+              </div>
+
+              <div className="adm-form-group">
+                <label className="adm-form-label">Buscar nuevo dueño (clientes)</label>
+                <input
+                  className="adm-form-input"
+                  type="text"
+                  placeholder="Nombre o correo..."
+                  value={busquedaCli}
+                  onChange={(e) => { setBusquedaCli(e.target.value); setClienteSel(null) }}
+                />
+              </div>
+
+              {loadingClientes ? (
+                <p style={{ color: '#9ca3af', fontSize: '13px' }}>Cargando clientes...</p>
+              ) : busquedaCli.length > 0 && (
+                <div className="adm-select-list">
+                  {clientesFiltrados.length === 0 ? (
+                    <div className="adm-select-item" style={{ color: '#9ca3af', cursor: 'default' }}>
+                      Sin resultados
+                    </div>
+                  ) : clientesFiltrados.map((c) => (
+                    <div
+                      key={c.idUsuario}
+                      className={`adm-select-item${clienteSel?.idUsuario === c.idUsuario ? ' adm-select-item--active' : ''}`}
+                      onClick={() => setClienteSel(c)}
+                    >
+                      <span style={{ fontWeight: 600 }}>{c.nombres} {c.apellidos}</span>
+                      <span style={{ color: '#6b7280', marginLeft: '8px', fontSize: '12px' }}>{c.correo}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {clienteSel && (
+                <p className="adm-msg-success" style={{ marginTop: '12px' }}>
+                  Nuevo dueño seleccionado: <strong>{clienteSel.nombres} {clienteSel.apellidos}</strong>
+                </p>
+              )}
+            </div>
+
+            <div className="adm-modal__footer">
+              <button className="adm-btn-secondary" onClick={cerrarModal}>Cancelar</button>
+              <button
+                className="adm-btn-primary"
+                onClick={handleReasignar}
+                disabled={!clienteSel || saving}
+              >
+                {saving ? 'Guardando...' : 'Confirmar reasignación'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   )
 }
