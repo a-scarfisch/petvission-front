@@ -17,7 +17,7 @@ const LandingPage = () => {
           <a href="#servicios" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Servicios</a>
           <a href="#nosotros" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Nosotros</a>
           <a href="#contacto" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Contacto</a>
-          <Link to="/login" style={{
+          <Link to="/login" className="lp-nav__btn" style={{
             padding: '8px 16px', borderRadius: '8px',
             border: '1px solid #2a9d8f', color: '#2a9d8f',
             textDecoration: 'none', fontSize: '14px', fontWeight: 600,
