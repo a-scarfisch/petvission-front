@@ -28,6 +28,7 @@ const FORM_INICIAL = {
   tratamiento: '',
   indicaciones: '',
   duracion: '',
+  observaciones: '',
   receta: '',
   peso: '',
   incluirVacuna: false,
@@ -102,6 +103,7 @@ const HistorialClinico = () => {
         tratamiento: form.tratamiento || null,
         indicaciones: form.indicaciones || null,
         duracion: form.duracion || null,
+        observaciones: form.observaciones || null,
         receta: form.receta || null,
         peso: form.peso ? parseFloat(form.peso) : null,
         vacuna: form.incluirVacuna && form.idVacuna
@@ -238,6 +240,13 @@ const HistorialClinico = () => {
                 </div>
               )}
 
+              {h.observaciones && (
+                <div className="vet-timeline-item__section">
+                  <p className="vet-timeline-item__section-label">Observaciones</p>
+                  <p className="vet-timeline-item__body">{h.observaciones}</p>
+                </div>
+              )}
+
               {h.peso && (
                 <div className="vet-timeline-item__section">
                   <p className="vet-timeline-item__section-label">Peso registrado</p>
@@ -337,6 +346,16 @@ const HistorialClinico = () => {
                     placeholder="Ej: 12.5"
                   />
                 </div>
+              </div>
+
+              <div className="vet-modal__field">
+                <label>Observaciones (opcional)</label>
+                <textarea
+                  rows={2}
+                  value={form.observaciones}
+                  onChange={(e) => setF('observaciones', e.target.value)}
+                  placeholder="Notas internas de la consulta..."
+                />
               </div>
 
               <div className="vet-modal__divider" />

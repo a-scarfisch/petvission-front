@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import { eliminarMascota, actualizarMascota } from '../services/mascotasService'
 import { handleError } from '@/modules/core/lib/errorHandler'
@@ -132,6 +132,12 @@ const MascotaList = () => {
                     <td>{m.peso ? `${m.peso} kg` : '—'}</td>
                     <td>
                       <div className="mascotas-acciones">
+                        <Link
+                          to={`/client/historial?mascotaId=${m.idMascota}`}
+                          className="btn-historial"
+                        >
+                          📋 Historial
+                        </Link>
                         <button className="btn-editar" onClick={() => handleEditar(m)}>Editar</button>
                         <button className="btn-eliminar" onClick={() => handleEliminar(m.idMascota, m.nombre)}>
                           Eliminar
@@ -160,6 +166,12 @@ const MascotaList = () => {
                   {m.peso && <span className="mascotas-chip">{m.peso} kg</span>}
                 </div>
                 <div className="mascotas-card__actions">
+                  <Link
+                    to={`/client/historial?mascotaId=${m.idMascota}`}
+                    className="btn-historial"
+                  >
+                    📋 Historial
+                  </Link>
                   <button className="btn-editar" onClick={() => handleEditar(m)}>Editar</button>
                   <button className="btn-eliminar" onClick={() => handleEliminar(m.idMascota, m.nombre)}>
                     Eliminar

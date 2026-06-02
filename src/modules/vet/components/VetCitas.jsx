@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useVetContext } from '@/modules/vet/states/VetContext'
 import VetLayout from './VetLayout'
 import apiClient from '@/modules/core/lib/apiClient'
@@ -15,6 +16,7 @@ const estadoEstilo = {
 }
 
 const VetCitas = () => {
+  const navigate = useNavigate()
   const { citas, loading, updateCita, removeCita } = useVetContext()
   const [filtro, setFiltro] = useState('Todas')
   const [loadingId, setLoadingId] = useState(null)
@@ -196,6 +198,18 @@ const VetCitas = () => {
 
                 {c.estado === 'CONFIRMADA' && (
                   <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                    {c.idMascota && (
+                      <button
+                        onClick={() => navigate(`/vet/historial?mascotaId=${c.idMascota}`)}
+                        style={{
+                          background: 'none', border: '1px solid #6366f1', color: '#6366f1',
+                          padding: '7px 14px', borderRadius: '8px',
+                          cursor: 'pointer', fontSize: '13px',
+                        }}
+                      >
+                        📋 Historial
+                      </button>
+                    )}
                     <button
                       onClick={() => setReprogramando(reprogramando === c.idReserva ? null : c.idReserva)}
                       style={{
@@ -229,6 +243,21 @@ const VetCitas = () => {
                       }}
                     >
                       ✕ Cancelar
+                    </button>
+                  </div>
+                )}
+
+                {c.estado === 'COMPLETADA' && c.idMascota && (
+                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => navigate(`/vet/historial?mascotaId=${c.idMascota}`)}
+                      style={{
+                        background: 'none', border: '1px solid #6366f1', color: '#6366f1',
+                        padding: '7px 14px', borderRadius: '8px',
+                        cursor: 'pointer', fontSize: '13px',
+                      }}
+                    >
+                      📋 Historial
                     </button>
                   </div>
                 )}

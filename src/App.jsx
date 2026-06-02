@@ -25,6 +25,7 @@ import MiPerfil from '@/modules/client/components/MiPerfil'
 import MisReservas from '@/modules/client/components/MisReservas'
 import NuevaMascota from '@/modules/mascotas/components/NuevaMascota'
 import MiConfiguracion from '@/modules/client/components/MiConfiguracion'
+import HistorialMascota from '@/modules/client/components/HistorialMascota'
 
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
                   <Route path="reservas" element={<MisReservas />} />
                   <Route path="configuracion" element={<MiConfiguracion />} />
                   <Route path="perfil" element={<MiPerfil />} />
+                  <Route path="historial" element={<HistorialMascota />} />
                 </Routes>
               </ClientProvider>
             </PrivateRoute>
