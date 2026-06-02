@@ -2,13 +2,12 @@ import { useState } from 'react'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import { useNavigate } from 'react-router-dom'
 import ClientLayout from './ClientLayout'
-import { cancelarCita, reprogramarCita } from '../services/citasService'
+import { cancelarCita, reprogramarCita, getDisponibilidadParaReprogramar } from '../services/citasService'
 
 const FILTROS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA']
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 const MESES_CORTOS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
 const DIAS_CORTOS = ['D','L','M','X','J','V','S']
-const TIME_SLOTS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00']
 
 const estadoBadge = {
   CONFIRMADA: { bg: '#d1fae5', color: '#065f46' },
@@ -36,6 +35,8 @@ const MisReservas = () => {
   const [calMonth, setCalMonth] = useState(() => new Date())
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState(null)
+  const [slotsDisponibles, setSlotsDisponibles] = useState([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
 
   const showToast = (msg, isError = false) => {
     setToast({ msg, isError })
@@ -46,7 +47,25 @@ const MisReservas = () => {
     setCalMonth(new Date())
     setSelectedDate(null)
     setSelectedTime(null)
+    setSlotsDisponibles([])
     setModal({ type: 'reprog', cita })
+  }
+
+  const handleSeleccionarFecha = async (fecha, idVeterinario) => {
+    setSelectedDate(fecha)
+    setSelectedTime(null)
+    setSlotsDisponibles([])
+    if (!idVeterinario) return
+    const fechaStr = toDateStr(fecha)
+    setLoadingSlots(true)
+    try {
+      const slots = await getDisponibilidadParaReprogramar(idVeterinario, fechaStr)
+      setSlotsDisponibles(slots)
+    } catch {
+      setSlotsDisponibles([])
+    } finally {
+      setLoadingSlots(false)
+    }
   }
 
   const openCancel = (cita) => setModal({ type: 'cancel', cita })
@@ -291,7 +310,10 @@ const MisReservas = () => {
                   <button
                     key={i}
                     disabled={!d || isPast(d)}
-                    onClick={() => d && !isPast(d) && setSelectedDate(new Date(calYear, calMon, d))}
+                    onClick={() => d && !isPast(d) && handleSeleccionarFecha(
+                      new Date(calYear, calMon, d),
+                      modal?.cita?.idVeterinario
+                    )}
                     style={{
                       height: '32px', borderRadius: '6px', border: 'none',
                       fontSize: '13px', cursor: d && !isPast(d) ? 'pointer' : 'default',
@@ -312,23 +334,32 @@ const MisReservas = () => {
                 <p style={{ margin: '0 0 8px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>
                   Selecciona un horario
                 </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {TIME_SLOTS.map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setSelectedTime(t)}
-                      style={{
-                        padding: '7px 14px', borderRadius: '8px', fontSize: '13px',
-                        cursor: 'pointer', fontWeight: selectedTime === t ? 600 : 400,
-                        border: selectedTime === t ? 'none' : '1px solid #2a9d8f',
-                        background: selectedTime === t ? '#2a9d8f' : '#fff',
-                        color: selectedTime === t ? '#fff' : '#2a9d8f',
-                      }}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
+                {loadingSlots ? (
+                  <p style={{ fontSize: '13px', color: '#6b7280' }}>Cargando horarios...</p>
+                ) : slotsDisponibles.length === 0 ? (
+                  <p style={{ fontSize: '13px', color: '#9ca3af' }}>No hay horarios disponibles para este día.</p>
+                ) : (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {slotsDisponibles.map((slot) => {
+                      const horaLabel = slot.horaInicio?.slice(0, 5)
+                      return (
+                        <button
+                          key={slot.id}
+                          onClick={() => setSelectedTime(horaLabel)}
+                          style={{
+                            padding: '7px 14px', borderRadius: '8px', fontSize: '13px',
+                            cursor: 'pointer', fontWeight: selectedTime === horaLabel ? 600 : 400,
+                            border: selectedTime === horaLabel ? 'none' : '1px solid #2a9d8f',
+                            background: selectedTime === horaLabel ? '#2a9d8f' : '#fff',
+                            color: selectedTime === horaLabel ? '#fff' : '#2a9d8f',
+                          }}
+                        >
+                          {horaLabel}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             )}
 

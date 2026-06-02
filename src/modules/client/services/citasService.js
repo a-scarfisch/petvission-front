@@ -29,3 +29,10 @@ export const reprogramarCita = async (idCita, fecha, hora) => {
   const { data } = await apiClient.patch(`/reservas/${idCita}/reprogramar`, { fecha, hora })
   return data.data
 }
+
+export const getDisponibilidadParaReprogramar = async (idVeterinario, fecha) => {
+  const { data } = await apiClient.get(`/turnos/veterinario/${idVeterinario}/disponibilidad`, {
+    params: { fecha },
+  })
+  return data.data ?? []
+}
