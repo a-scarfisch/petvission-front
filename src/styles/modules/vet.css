@@ -314,3 +314,229 @@
     border-top: 1px solid #2d3561; z-index: 100; align-items: stretch;
   }
 }
+
+/* ===== FICHA DE ATENCIÓN ===== */
+
+.vet-ficha-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vet-btn-cerrar-ficha {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  background: #059669;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.vet-btn-cerrar-ficha:hover { background: #047857; }
+
+.vet-ficha-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 420px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Col 1: mascota ── */
+.vet-ficha-col-left {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.vet-ficha-avatar-lg { font-size: 56px; line-height: 1; }
+.vet-ficha-nombre { margin: 8px 0 0; font-size: 18px; font-weight: 700; color: #111827; }
+.vet-ficha-especie { margin: 2px 0 8px; font-size: 13px; color: #6b7280; }
+
+.vet-ficha-datos {
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vet-ficha-dato {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.vet-ficha-dato span { color: #9ca3af; }
+.vet-ficha-dato strong { color: #111827; }
+
+.vet-ficha-notas {
+  width: 100%;
+  margin-top: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+}
+
+.vet-ficha-notas-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.vet-ficha-notas-body {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* ── Col 2: historial ── */
+.vet-ficha-col-center {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.vet-ficha-acciones {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.vet-ficha-historial-title {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.vet-ficha-historial-vacio {
+  font-size: 13px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.vet-ficha-historial-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vet-ficha-historial-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.vet-ficha-historial-item__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+}
+
+.vet-ficha-historial-item__header:hover { background: #f9fafb; }
+
+.vet-ficha-historial-item__fecha {
+  font-weight: 600;
+  color: #2a9d8f;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.vet-ficha-historial-item__dx {
+  flex: 1;
+  color: #374151;
+}
+
+.vet-ficha-historial-item__body {
+  padding: 12px 16px;
+  border-top: 1px solid #f3f4f6;
+  background: #f9fafb;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.vet-ficha-historial-item__body p { margin: 0 0 4px; }
+
+/* ── Col 3: panel formulario ── */
+.vet-ficha-col-right {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.vet-ficha-panel-vacio {
+  padding: 48px 24px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.vet-ficha-panel {
+  padding: 24px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+
+.vet-ficha-panel-title {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.vet-ficha-panel-ok {
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .vet-ficha-layout {
+    grid-template-columns: 240px 1fr;
+  }
+  .vet-ficha-col-right {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .vet-ficha-layout {
+    grid-template-columns: 1fr;
+  }
+}

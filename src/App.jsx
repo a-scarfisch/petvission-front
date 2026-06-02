@@ -8,6 +8,7 @@ import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
 import Agendamiento from '@/modules/client/pages/Agendamiento'
 import VetDashboard from '@/modules/vet/components/VetDashboard'
+import VetFichaMascota from '@/modules/vet/components/VetFichaMascota'
 import { VetProvider } from '@/modules/vet/states/VetContext'
 import VetCitas from '@/modules/vet/components/VetCitas'
 import VetHorarios from '@/modules/vet/components/VetHorarios'
@@ -72,6 +73,7 @@ function App() {
                   <Route path="horarios" element={<VetHorarios />} />
                   <Route path="pacientes" element={<MisPacientes />} />
                   <Route path="historial" element={<HistorialClinico />} />
+                  <Route path="ficha-mascota" element={<VetFichaMascota />} />
                 </Routes>
               </VetProvider>
             </PrivateRoute>
