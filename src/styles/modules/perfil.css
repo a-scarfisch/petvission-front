@@ -1,0 +1,214 @@
+/* ── Toast ── */
+.perfil-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: #d1fae5;
+  color: #065f46;
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  font-size: 14px;
+  font-weight: 500;
+}
+.perfil-toast--error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ── Banner de cabecera ── */
+.perfil-banner {
+  height: 100px;
+  background: linear-gradient(135deg, #2a9d8f 0%, #21867a 100%);
+}
+
+/* ── Cabecera del perfil ── */
+.perfil-head {
+  padding: 0 32px 0;
+  position: relative;
+}
+
+.perfil-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #2a9d8f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 28px;
+  border: 4px solid #fff;
+  position: absolute;
+  top: -40px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.perfil-head__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 48px;
+}
+
+.perfil-head__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.perfil-head__name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 20px;
+  color: #1a2535;
+}
+
+.perfil-head__email {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ── Tabs ── */
+.perfil-tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.perfil-tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.perfil-tab--active {
+  color: #2a9d8f;
+  font-weight: 600;
+  border-bottom-color: #2a9d8f;
+}
+
+/* ── Cuerpo ── */
+.perfil-body {
+  padding: 24px 32px 32px;
+}
+
+/* ── Grid de campos ── */
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.perfil-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.perfil-field__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.perfil-field__input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #1a2535;
+  outline: none;
+  font-family: inherit;
+}
+
+.perfil-field__input--disabled {
+  background: #f9fafb;
+  color: #6b7280;
+}
+
+.perfil-field__input:focus:not(:disabled) {
+  border-color: #2a9d8f;
+  box-shadow: 0 0 0 3px rgba(42,157,143,0.12);
+}
+
+/* ── Grid mascotas en perfil ── */
+.perfil-mascotas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.perfil-mascota-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.perfil-mascota-card__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e8f5f0;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.perfil-mascota-card__nombre {
+  margin: 0 0 4px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.perfil-mascota-card__meta {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ── Seguridad ── */
+.perfil-seguridad {
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.perfil-seguridad__titulo {
+  margin: 0 0 4px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+}
+
+.perfil-pw-error {
+  margin: 0;
+  font-size: 13px;
+  color: #ef4444;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .perfil-head { padding: 0 20px 0; }
+  .perfil-body { padding: 20px 20px 24px; }
+  .perfil-grid { grid-template-columns: 1fr; }
+  .perfil-head__info { flex-direction: column; gap: 12px; }
+  .perfil-head__actions { width: 100%; }
+}

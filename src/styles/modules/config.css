@@ -1,0 +1,187 @@
+/* ── Contenedor vertical ── */
+.cfg-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+}
+
+/* ── Sección ── */
+.cfg-section {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.cfg-section--danger {
+  border: 1px solid #fecaca;
+}
+
+.cfg-section__header {
+  padding: 14px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  background: #fafafa;
+}
+
+.cfg-section__header--danger {
+  background: #fff5f5;
+}
+
+.cfg-section__title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 13px;
+  color: #374151;
+}
+
+.cfg-section__title--danger {
+  color: #991b1b;
+}
+
+.cfg-section__body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Toggle row ── */
+.cfg-toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.cfg-toggle-row__label {
+  margin: 0;
+  font-weight: 500;
+  font-size: 14px;
+  color: #1a2535;
+}
+
+.cfg-toggle-row__desc {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ── Toggle switch ── */
+.cfg-toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 99px;
+  border: none;
+  background: #d1d5db;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.cfg-toggle--on {
+  background: #2a9d8f;
+}
+
+.cfg-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ── Divider ── */
+.cfg-divider {
+  border-top: 1px solid #f3f4f6;
+  margin: 0 -20px;
+}
+
+/* ── Campo con label ── */
+.cfg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cfg-field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.cfg-select {
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #1a2535;
+  background: #fff;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+}
+
+.cfg-select--inline {
+  width: auto;
+}
+
+/* ── Indent para sub-opciones ── */
+.cfg-indent {
+  padding-left: 16px;
+  border-left: 3px solid #e8f5f0;
+}
+
+/* ── Fila zona de peligro ── */
+.cfg-danger-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cfg-danger-row__title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+.cfg-danger-row__desc {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.cfg-btn-danger {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: inherit;
+}
+
+.cfg-btn-danger:hover {
+  background: #fecaca;
+}
+
+/* ── Footer de guardar ── */
+.cfg-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}

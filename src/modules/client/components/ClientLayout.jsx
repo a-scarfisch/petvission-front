@@ -29,7 +29,10 @@ const ClientLayout = ({ children }) => {
     <div className="cl-layout">
       {/* Sidebar — desktop */}
       <aside className="cl-sidebar">
-        <div className="cl-sidebar__logo">🐾 PetVission</div>
+        <div className="cl-sidebar__logo">
+          <p className="cl-sidebar__logo-title">🐾 PetVission</p>
+          <p className="cl-sidebar__logo-sub">Portal Cliente</p>
+        </div>
 
         <nav style={{ flex: 1 }}>
           <p className="cl-sidebar__nav-label">PRINCIPAL</p>

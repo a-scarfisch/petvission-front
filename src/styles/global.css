@@ -28,6 +28,196 @@ body {
   overflow-x: hidden;
 }
 
+/* ═══════════════════════════════════════════════════════
+   SISTEMA GLOBAL DE COMPONENTES — pv-*
+   Usado por módulos cliente, vet y admin
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Card base ── */
+.pv-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  padding: 24px;
+}
+
+/* ── Page header ── */
+.pv-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.pv-page-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+.pv-page-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ── Botón primario global ── */
+.pv-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background: var(--teal);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.pv-btn-primary:hover { background: var(--teal-dark); }
+
+.pv-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: 1.5px solid var(--teal);
+  background: transparent;
+  color: var(--teal);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.pv-btn-outline:hover { background: var(--teal-light); }
+
+/* ── Stat grid ── */
+.pv-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.pv-stat-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.pv-stat-card__label {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+.pv-stat-card__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.pv-stat-card__icon { font-size: 22px; }
+.pv-stat-card__value {
+  font-size: 30px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+/* ── Section inside card ── */
+.pv-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.pv-section-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+.pv-section-link {
+  font-size: 13px;
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 500;
+}
+.pv-section-link:hover { text-decoration: underline; }
+
+/* ── Badges de estado ── */
+.pv-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.pv-badge--PENDIENTE    { background: #fef3c7; color: #92400e; }
+.pv-badge--CONFIRMADA   { background: #d1fae5; color: #065f46; }
+.pv-badge--EN_ATENCION  { background: #dbeafe; color: #1e40af; }
+.pv-badge--COMPLETADA   { background: #f3f4f6; color: #374151; }
+.pv-badge--CANCELADA    { background: #fee2e2; color: #991b1b; }
+.pv-badge--REPROGRAMADA { background: #e0e7ff; color: #3730a3; }
+
+/* ── Empty state ── */
+.pv-empty {
+  text-align: center;
+  padding: 40px 24px;
+  color: #9ca3af;
+}
+.pv-empty__icon { font-size: 36px; margin: 0 0 10px; }
+.pv-empty__text { margin: 0; font-size: 14px; }
+
+/* ── Dashboard banner ── */
+.pv-banner {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 28px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+.pv-banner__title { margin: 0; font-size: 22px; font-weight: 700; }
+.pv-banner__sub   { margin: 5px 0 0; opacity: 0.88; font-size: 14px; }
+.pv-banner__btn {
+  background: #fff;
+  color: var(--teal);
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Grid 2 columnas ── */
+.pv-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* ── Row separado por línea ── */
+.pv-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.pv-list-row:last-child { border-bottom: none; }
+
+/* ═══════════════════════════════════════════════════════ */
+
 /* ===== CARDS DE RESERVAS (cliente y veterinario) ===== */
 .reserva-card {
   max-width: 100%;
@@ -65,5 +255,12 @@ a {
 
 button {
   font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .pv-stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .pv-grid-2    { grid-template-columns: 1fr; }
+  .pv-banner    { flex-direction: column; align-items: flex-start; padding: 20px; }
+  .pv-banner__btn { width: 100%; text-align: center; }
 }
 
