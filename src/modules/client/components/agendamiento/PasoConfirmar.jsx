@@ -9,24 +9,37 @@ const formatFecha = (fechaStr) => {
 const formatPrecio = (precio) =>
   precio != null ? `$${Number(precio).toLocaleString('es-CL')}` : 'Consultar precio'
 
+const labelCategoria = (cat) => ({
+  CONSULTA:     'Consulta General',
+  LABORATORIO:  'Laboratorio',
+  PROCEDIMIENTO: 'Procedimiento',
+  PELUQUERIA:   'Peluquería',
+}[cat] ?? cat)
+
 const PasoConfirmar = ({ seleccion, error, loading, onConfirmar }) => {
-  const esConsulta   = seleccion.categoriaReserva === 'CONSULTA'
-  const esVacunacion = seleccion.categoriaReserva === 'VACUNACION'
+  const { categoriaReserva, motivoKey, observacion, servicio, veterinario, fecha, hora, mascota } = seleccion
+
+  const motivoTexto = (() => {
+    if (categoriaReserva === 'CONSULTA') {
+      const partes = [motivoKey, observacion?.trim()].filter(Boolean)
+      return partes.length ? partes.join(' — ') : 'Sin especificar'
+    }
+    if (categoriaReserva === 'LABORATORIO') return 'El veterinario determinará los estudios necesarios'
+    return servicio?.nombre ?? '—'
+  })()
 
   const filas = [
-    ['🐾 Mascota',      seleccion.mascota?.nombre],
-    ['📋 Categoría',    seleccion.categoriaReserva],
-    esConsulta
-      ? ['🩺 Motivo',   seleccion.motivo]
-      : esVacunacion
-        ? ['💉 Vacuna',  'El veterinario elegirá la vacuna durante la consulta']
-        : ['🏥 Servicio', seleccion.servicio?.nombre],
-    !esConsulta && !esVacunacion && seleccion.servicio?.precio !== undefined
-      ? ['💰 Precio',   formatPrecio(seleccion.servicio?.precio)]
+    ['🐾 Mascota',         mascota?.nombre],
+    ['📋 Tipo de atención', labelCategoria(categoriaReserva)],
+    categoriaReserva === 'CONSULTA' || categoriaReserva === 'LABORATORIO'
+      ? ['🩺 Detalle', motivoTexto]
+      : ['🏥 Servicio', motivoTexto],
+    categoriaReserva !== 'CONSULTA' && categoriaReserva !== 'LABORATORIO' && servicio?.precio !== undefined
+      ? ['💰 Precio', formatPrecio(servicio?.precio)]
       : null,
-    ['👨‍⚕️ Veterinario', `${seleccion.veterinario?.nombres ?? ''} ${seleccion.veterinario?.apellidos ?? ''}`],
-    ['📅 Fecha',        formatFecha(seleccion.fecha)],
-    ['🕐 Hora',         seleccion.hora?.slice(0, 5)],
+    ['👨‍⚕️ Veterinario', veterinario ? `${veterinario.nombres ?? ''} ${veterinario.apellidos ?? ''}` : '—'],
+    ['📅 Fecha',           formatFecha(fecha)],
+    ['🕐 Hora',            hora?.slice(0, 5)],
   ].filter(Boolean)
 
   return (
@@ -50,7 +63,7 @@ const PasoConfirmar = ({ seleccion, error, loading, onConfirmar }) => {
           onClick={onConfirmar}
           disabled={loading}
         >
-          {loading ? 'Agendando…' : '✓ Confirmar Cita'}
+          {loading ? 'Agendando…' : '✓ Confirmar Reserva'}
         </button>
       </div>
     </div>

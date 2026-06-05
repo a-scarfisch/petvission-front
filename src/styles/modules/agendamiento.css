@@ -587,6 +587,161 @@
   margin-bottom: 10px;
 }
 
+/* ── Paso Servicio — select + obs (CONSULTA) ─────────── */
+.ag-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #e2f0ee;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-dark);
+  background: #fff;
+  outline: none;
+  margin-bottom: 20px;
+  transition: border-color .15s;
+  cursor: pointer;
+}
+
+.ag-select:focus {
+  border-color: var(--teal);
+}
+
+.ag-obs-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+  margin-bottom: 8px;
+}
+
+.ag-obs-opcional {
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+.ag-obs-textarea {
+  min-height: 90px;
+  margin-bottom: 4px;
+}
+
+.ag-obs-counter {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: var(--text-light);
+  text-align: right;
+}
+
+/* ── Slots con vet (PasoDiaHoraVet) ──────────────────── */
+.ag-slots-vet-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ag-slot-vet-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1.5px solid #e2f0ee;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s, background .15s;
+  font-family: inherit;
+  width: 100%;
+}
+
+.ag-slot-vet-btn:hover:not(.ag-slot-vet-btn--active) {
+  border-color: var(--teal);
+  background: #f0faf8;
+}
+
+.ag-slot-vet-btn--active {
+  border: 2px solid var(--teal);
+  background: #f0faf8;
+}
+
+.ag-slot-vet-btn__hora {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--teal);
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+.ag-slot-vet-btn--active .ag-slot-vet-btn__hora {
+  color: var(--teal);
+}
+
+.ag-slot-vet-btn__vet {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* ── Pantalla Éxito ──────────────────────────────────── */
+.ag-exito {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid #e2f0ee;
+  padding: 48px 40px;
+  text-align: center;
+}
+
+.ag-exito__icono {
+  font-size: 56px;
+  margin-bottom: 16px;
+}
+
+.ag-exito__titulo {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+}
+
+.ag-exito__sub {
+  font-size: 15px;
+  color: #374151;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.ag-exito__recordatorio {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 0 auto 28px;
+  max-width: 420px;
+  text-align: left;
+}
+
+.ag-exito__recordatorio span {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.ag-exito__recordatorio p {
+  margin: 0;
+  font-size: 13px;
+  color: #166534;
+  line-height: 1.5;
+}
+
+.ag-exito__acciones {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 600px) {
   .ag-body {

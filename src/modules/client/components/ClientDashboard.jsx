@@ -29,6 +29,31 @@ const ClientDashboard = () => {
     { label: 'Confirmadas',   value: citas.filter((c) => c.estado === 'CONFIRMADA').length, icon: '✅' },
   ]
 
+  if (mascotas.length === 0) {
+    return (
+      <ClientLayout>
+        <div className="pv-banner">
+          <div>
+            <p className="pv-banner__title">¡Hola, {user?.nombres}! 👋</p>
+            <p className="pv-banner__sub">Bienvenido a PetVission</p>
+          </div>
+        </div>
+        <div className="pv-card" style={{ textAlign: 'center', padding: '48px 32px' }}>
+          <p style={{ fontSize: '48px', margin: '0 0 16px' }}>🐾</p>
+          <p style={{ fontWeight: 700, fontSize: '18px', margin: '0 0 8px' }}>
+            Agrega tu primera mascota para comenzar
+          </p>
+          <p style={{ color: '#6b7280', fontSize: '14px', margin: '0 0 24px' }}>
+            Una vez registrada podrás agendar citas y ver su historial clínico.
+          </p>
+          <Link to="/client/mascotas" className="pv-btn-primary">
+            + Registrar mascota
+          </Link>
+        </div>
+      </ClientLayout>
+    )
+  }
+
   return (
     <ClientLayout>
       {/* Banner */}
@@ -97,7 +122,10 @@ const ClientDashboard = () => {
           {proximasCitas.length === 0 ? (
             <div className="pv-empty">
               <p className="pv-empty__icon">📅</p>
-              <p className="pv-empty__text">No tienes citas próximas.</p>
+              <p className="pv-empty__text">No tienes citas activas.</p>
+              <p style={{ color: '#6b7280', fontSize: '13px', margin: '4px 0 0' }}>
+                ¿Todo bien? Agenda un control rutinario para mantener a tu mascota saludable.
+              </p>
             </div>
           ) : (
             proximasCitas.map((c) => (

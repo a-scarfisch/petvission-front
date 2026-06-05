@@ -16,6 +16,11 @@ export const getAgendaVeterinario = async (idVeterinario) => {
   return data.data ?? []
 }
 
+export const getDisponibilidadTodos = async (fecha) => {
+  const { data } = await apiClient.get('/turnos/disponibilidad', { params: { fecha } })
+  return data.data ?? []
+}
+
 export const agendarReserva = async (payload) => {
   const { data } = await apiClient.post('/reservas', payload)
   return data.data
