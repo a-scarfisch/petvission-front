@@ -22,6 +22,7 @@ import AdminHorarios from '@/modules/admin/components/AdminHorarios'
 import AdminMascotas from '@/modules/admin/components/AdminMascotas'
 import AdminVeterinarios from '@/modules/admin/components/AdminVeterinarios'
 import LandingPage from '@/modules/landing/components/LandingPage'
+import ConfirmarCita from '@/modules/public/ConfirmarCita'
 import MiPerfil from '@/modules/client/components/MiPerfil'
 import MisReservas from '@/modules/client/components/MisReservas'
 import NuevaMascota from '@/modules/mascotas/components/NuevaMascota'
@@ -39,6 +40,9 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
 
         <Route path="/" element={<LandingPage />} />
+
+        {/* Confirmación de cita desde enlace de email — pública, sin JWT */}
+        <Route path="/confirmar-cita/:id" element={<ConfirmarCita />} />
 
         {/* Rutas cliente envueltas en ClientProvider */}
         <Route
