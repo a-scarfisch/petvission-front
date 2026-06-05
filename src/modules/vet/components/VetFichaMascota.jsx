@@ -210,7 +210,7 @@ const VetFichaMascota = () => {
       {/* Header con botón cerrar ficha */}
       <div className="vet-ficha-header">
         <div>
-          <button className="vet-btn-secondary" style={{ fontSize: '13px', marginBottom: '6px' }}
+          <button className="vet-btn-secondary vet-btn-volver"
             onClick={() => navigate('/vet/citas')}>
             ← Volver a citas
           </button>
@@ -237,7 +237,7 @@ const VetFichaMascota = () => {
             {mascota?.especie}{mascota?.raza ? ` · ${mascota.raza}` : ''}
           </p>
           {mascota?.animalGuia && (
-            <span className="vet-guia-badge" style={{ marginBottom: '8px' }}>🦮 Animal guía</span>
+            <span className="vet-guia-badge">🦮 Animal guía</span>
           )}
 
           <div className="vet-ficha-datos">
@@ -322,7 +322,7 @@ const VetFichaMascota = () => {
         <div className="vet-ficha-col-right">
           {panelActivo === null && (
             <div className="vet-ficha-panel-vacio">
-              <p style={{ fontSize: '32px', margin: '0 0 8px' }}>📋</p>
+              <p className="vet-ficha-panel-vacio__icon">📋</p>
               <p>Selecciona "Agregar consulta" o "Agregar servicio" para comenzar.</p>
             </div>
           )}
@@ -330,7 +330,7 @@ const VetFichaMascota = () => {
           {panelActivo === 'servicio' && (
             <div className="vet-ficha-panel">
               <h4 className="vet-ficha-panel-title">🔧 Agregar servicio</h4>
-              <p style={{ fontSize: '13px', color: '#6b7280', margin: '0 0 16px' }}>
+              <p className="vet-ficha-panel-msg">
                 El registro detallado de servicios estará disponible próximamente.
               </p>
             </div>
@@ -397,10 +397,7 @@ const VetFichaMascota = () => {
               <div className="vet-modal__divider" />
 
               {/* Signos vitales */}
-              <p style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase',
-                color: '#6b7280', margin: '0 0 10px', letterSpacing: '0.05em' }}>
-                Signos vitales
-              </p>
+              <p className="vet-section-label">Signos vitales</p>
               <div className="vet-modal__grid">
                 <div className="vet-modal__field">
                   <label>Peso (kg)</label>
@@ -470,8 +467,7 @@ const VetFichaMascota = () => {
               {errorForm && <p className="vet-modal__error">{errorForm}</p>}
 
               <button
-                className="vet-btn-primary"
-                style={{ width: '100%', marginTop: '16px', padding: '12px' }}
+                className="vet-btn-primary vet-btn-primary--full"
                 onClick={handleGuardar}
                 disabled={guardando}
               >
@@ -484,34 +480,18 @@ const VetFichaMascota = () => {
 
       {/* Modal confirmación cerrar ficha */}
       {confirmCerrar && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 1000,
-          background: 'rgba(0,0,0,0.45)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }} onClick={() => setConfirmCerrar(false)}>
-          <div style={{
-            background: '#fff', borderRadius: '16px', padding: '32px',
-            maxWidth: '380px', width: '100%',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-          }} onClick={(e) => e.stopPropagation()}>
-            <p style={{ fontSize: '32px', textAlign: 'center', margin: '0 0 8px' }}>✓</p>
-            <p style={{ textAlign: 'center', fontWeight: 700, fontSize: '17px', margin: '0 0 8px' }}>
-              ¿Cerrar ficha y completar la reserva?
-            </p>
-            <p style={{ textAlign: 'center', fontSize: '13px', color: '#6b7280', margin: '0 0 24px' }}>
+        <div className="vet-confirm-overlay" onClick={() => setConfirmCerrar(false)}>
+          <div className="vet-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <p className="vet-confirm-modal__icon">✓</p>
+            <p className="vet-confirm-modal__title">¿Cerrar ficha y completar la reserva?</p>
+            <p className="vet-confirm-modal__desc">
               La reserva pasará a estado COMPLETADA. Esta acción no se puede deshacer.
             </p>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-              <button onClick={() => setConfirmCerrar(false)}
-                style={{ padding: '9px 20px', borderRadius: '8px', border: '1px solid #e5e7eb',
-                  background: '#fff', cursor: 'pointer', fontSize: '14px' }}>
+            <div className="vet-confirm-modal__footer">
+              <button className="vet-btn-secondary" onClick={() => setConfirmCerrar(false)}>
                 Cancelar
               </button>
-              <button onClick={handleCerrarFicha} disabled={cerrando}
-                style={{ padding: '9px 20px', borderRadius: '8px', border: 'none',
-                  background: '#2a9d8f', color: '#fff', fontWeight: 600,
-                  cursor: 'pointer', fontSize: '14px',
-                  opacity: cerrando ? 0.6 : 1 }}>
+              <button className="vet-btn-primary" onClick={handleCerrarFicha} disabled={cerrando}>
                 {cerrando ? 'Cerrando...' : 'Confirmar y cerrar'}
               </button>
             </div>

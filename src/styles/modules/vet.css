@@ -540,3 +540,138 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   CITAS — VetCitas
+   ═══════════════════════════════════════════════════════ */
+.vet-lista { display: flex; flex-direction: column; gap: 12px; }
+
+.vet-cita-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.vet-fecha {
+  min-width: 56px;
+  text-align: center;
+  background: #e8f5f0;
+  border-radius: 10px;
+  padding: 10px 8px;
+  flex-shrink: 0;
+}
+.vet-fecha__dia { margin: 0; font-size: 22px; font-weight: 700; color: #2a9d8f; }
+.vet-fecha__mes { margin: 0; font-size: 11px; color: #2a9d8f; text-transform: uppercase; }
+
+.vet-cita-info { flex: 1; min-width: 0; }
+.vet-cita-info__titulo { margin: 0 0 4px; font-weight: 600; font-size: 15px; }
+.vet-cita-info__sub    { margin: 0; font-size: 13px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.vet-cita-acciones { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+
+/* ── Botones pequeños de acción ── */
+.vet-btn-sm {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.vet-btn-sm:disabled          { opacity: 0.6; cursor: default; }
+.vet-btn-sm--primary          { background: #2a9d8f; color: #fff; border: none; font-weight: 600; }
+.vet-btn-sm--outline          { background: #fff; border: 1px solid #2a9d8f; color: #2a9d8f; }
+.vet-btn-sm--danger           { background: #fff; border: 1px solid #ef4444; color: #ef4444; }
+.vet-btn-sm--indigo           { background: #fff; border: 1px solid #6366f1; color: #6366f1; }
+
+/* ── Formulario reprogramar inline ── */
+.vet-reprog-form {
+  background: #f9fafb;
+  border-radius: 0 0 12px 12px;
+  padding: 16px 24px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.vet-reprog-form__field { display: flex; flex-direction: column; gap: 4px; }
+.vet-reprog-form__label { font-size: 12px; color: #6b7280; }
+.vet-reprog-form__input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FICHA — VetFichaMascota / HistorialClinico
+   ═══════════════════════════════════════════════════════ */
+
+.vet-btn-volver             { font-size: 13px; margin-bottom: 6px; }
+.vet-ficha-header-row       { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.vet-ficha-col-left .vet-guia-badge { margin-bottom: 8px; }
+
+.vet-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 0 0 10px;
+  letter-spacing: 0.05em;
+}
+.vet-btn-primary--full        { width: 100%; margin-top: 16px; padding: 12px !important; }
+.vet-ficha-panel-vacio__icon  { font-size: 32px; margin: 0 0 8px; }
+.vet-ficha-panel-msg          { font-size: 13px; color: #6b7280; margin: 0 0 16px; }
+
+/* ── Modal confirmación ── */
+.vet-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vet-confirm-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.vet-confirm-modal__icon   { font-size: 32px; text-align: center; margin: 0 0 8px; }
+.vet-confirm-modal__title  { text-align: center; font-weight: 700; font-size: 17px; margin: 0 0 8px; }
+.vet-confirm-modal__desc   { text-align: center; font-size: 13px; color: #6b7280; margin: 0 0 24px; }
+.vet-confirm-modal__footer { display: flex; gap: 10px; justify-content: flex-end; }
+.vet-confirm-modal .vet-btn-secondary { padding: 9px 20px; font-size: 14px; }
+.vet-confirm-modal .vet-btn-primary   { padding: 9px 20px; font-size: 14px; }
+.vet-confirm-modal .vet-btn-primary:disabled { opacity: 0.6; }
+
+/* ── Timeline muted ── */
+.vet-timeline-item__body--muted { color: #6b7280; margin-top: 4px; }
+
+/* ── Vacunas tags row ── */
+.vet-vacunas-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+/* ═══════════════════════════════════════════════════════
+   MISC
+   ═══════════════════════════════════════════════════════ */
+.vet-row-clickable              { cursor: pointer; }
+.vet-td-bold                    { font-weight: 600; }
+.vet-page-subtitle--capitalize  { text-transform: capitalize; }
+
+@media (max-width: 768px) {
+  .vet-cita-card    { flex-wrap: wrap; }
+  .vet-cita-acciones { width: 100%; }
+  .vet-cita-acciones button { flex: 1; }
+  .vet-reprog-form  { flex-direction: column; }
+  .vet-reprog-form__input { width: 100%; }
+}

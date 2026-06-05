@@ -79,7 +79,7 @@ const MisPacientes = () => {
                 <tr
                   key={p.idMascota}
                   onClick={() => navigate(`/vet/historial?mascotaId=${p.idMascota}`)}
-                  style={{ cursor: 'pointer' }}
+                  className="vet-row-clickable"
                 >
                   <td>
                     <div className="vet-mascota-cell">

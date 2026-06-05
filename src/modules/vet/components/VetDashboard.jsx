@@ -40,7 +40,7 @@ const VetDashboard = () => {
       <div className="vet-page-header">
         <div>
           <h2 className="vet-page-title">Bienvenido, {user?.nombres}</h2>
-          <p className="vet-page-subtitle" style={{ textTransform: 'capitalize' }}>{fechaHoy}</p>
+          <p className="vet-page-subtitle vet-page-subtitle--capitalize">{fechaHoy}</p>
         </div>
       </div>
 

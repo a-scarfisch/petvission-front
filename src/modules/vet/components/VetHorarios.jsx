@@ -79,7 +79,7 @@ const VetHorarios = () => {
             <tbody>
               {plantillas.map((p) => (
                 <tr key={p.id}>
-                  <td style={{ fontWeight: 600 }}>
+                  <td className="vet-td-bold">
                     {DIA_LABEL[p.diaSemana] ?? p.diaSemana}
                   </td>
                   <td className="vet-hora">

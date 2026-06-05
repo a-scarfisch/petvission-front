@@ -4,29 +4,12 @@ import { useVetContext } from '@/modules/vet/states/VetContext'
 import VetLayout from './VetLayout'
 import apiClient from '@/modules/core/lib/apiClient'
 import { handleError } from '@/modules/core/lib/errorHandler'
+import '@/styles/modules/vet.css'
 
 const ESTADOS = ['Todas', 'PENDIENTE', 'CONFIRMADA', 'EN_ATENCION', 'COMPLETADA', 'CANCELADA', 'REPROGRAMADA']
 
-const estadoEstilo = {
-  CONFIRMADA:  { background: '#d1fae5', color: '#065f46' },
-  PENDIENTE:   { background: '#fef3c7', color: '#92400e' },
-  EN_ATENCION: { background: '#dbeafe', color: '#1e40af' },
-  CANCELADA:   { background: '#fee2e2', color: '#991b1b' },
-  REPROGRAMADA:{ background: '#e0e7ff', color: '#3730a3' },
-  COMPLETADA:  { background: '#f3f4f6', color: '#374151' },
-}
-
-const btnPrimario = {
-  background: '#2a9d8f', border: 'none', color: '#fff',
-  padding: '7px 14px', borderRadius: '8px',
-  cursor: 'pointer', fontSize: '13px', fontWeight: 600,
-}
-
-const btnSecundario = (color = '#2a9d8f') => ({
-  background: 'none', border: `1px solid ${color}`, color,
-  padding: '7px 14px', borderRadius: '8px',
-  cursor: 'pointer', fontSize: '13px',
-})
+const estadoLabel = (e) =>
+  e === 'EN_ATENCION' ? 'En atención' : e.charAt(0) + e.slice(1).toLowerCase()
 
 const VetCitas = () => {
   const navigate = useNavigate()
@@ -40,8 +23,6 @@ const VetCitas = () => {
   const citasFiltradas = filtro === 'Todas'
     ? citas
     : citas.filter((c) => c.estado === filtro)
-
-  const formatHora = (hora) => hora?.slice(0, 5) ?? '—'
 
   const handleAbrirFicha = async (cita) => {
     setLoadingId(cita.idReserva)
@@ -87,218 +68,160 @@ const VetCitas = () => {
     }
   }
 
-  if (loading) return <VetLayout><p>Cargando...</p></VetLayout>
+  if (loading) return <VetLayout><p className="vet-loading">Cargando...</p></VetLayout>
 
   return (
     <VetLayout>
-      {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ margin: 0, fontSize: '22px' }}>📅 Mis Citas</h2>
-        <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '14px' }}>
-          Gestiona todas tus citas
-        </p>
+      <div className="vet-page-header">
+        <div>
+          <h2 className="vet-page-title">📅 Mis Citas</h2>
+          <p className="vet-page-subtitle">Gestiona todas tus citas</p>
+        </div>
       </div>
 
-      {/* Filtros */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
+      <div className="vet-toolbar">
         {ESTADOS.map((e) => (
           <button
             key={e}
             onClick={() => setFiltro(e)}
-            style={{
-              padding: '8px 16px', borderRadius: '99px', fontSize: '13px',
-              cursor: 'pointer', fontWeight: filtro === e ? 600 : 400,
-              background: filtro === e ? '#2a9d8f' : '#fff',
-              color: filtro === e ? '#fff' : '#374151',
-              border: filtro === e ? 'none' : '1px solid #e5e7eb',
-            }}
+            className={`vet-filtro-btn${filtro === e ? ' vet-filtro-btn--active' : ''}`}
           >
-            {e === 'EN_ATENCION' ? 'En atención' : e.charAt(0) + e.slice(1).toLowerCase()}
+            {e === 'Todas' ? 'Todas' : estadoLabel(e)}
           </button>
         ))}
       </div>
 
-      {/* Listado */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div className="vet-lista">
         {citasFiltradas.length === 0 ? (
-          <div style={{
-            background: '#fff', borderRadius: '12px', padding: '48px',
-            textAlign: 'center', color: '#9ca3af',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-          }}>
-            <p style={{ fontSize: '32px', margin: '0 0 8px' }}>📅</p>
-            <p>No hay citas {filtro !== 'Todas' ? `con estado ${filtro.toLowerCase()}` : ''}.</p>
+          <div className="vet-section">
+            <div className="vet-empty">
+              <p className="vet-empty__icon">📅</p>
+              <p>No hay citas {filtro !== 'Todas' ? `con estado ${filtro.toLowerCase()}` : ''}.</p>
+            </div>
           </div>
         ) : (
           citasFiltradas.map((c) => (
             <div key={c.idReserva}>
-              <div className="reserva-card" style={{
-                background: '#fff', borderRadius: '12px', padding: '20px 24px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-                display: 'flex', alignItems: 'center', gap: '20px',
-              }}>
-                {/* Fecha */}
-                <div style={{
-                  minWidth: '56px', textAlign: 'center',
-                  background: '#e8f5f0', borderRadius: '10px', padding: '10px 8px',
-                }}>
-                  <p style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#2a9d8f' }}>
-                    {c.fecha?.split('-')[2]}
-                  </p>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#2a9d8f', textTransform: 'uppercase' }}>
+              <div className="vet-cita-card">
+                <div className="vet-fecha">
+                  <p className="vet-fecha__dia">{c.fecha?.split('-')[2]}</p>
+                  <p className="vet-fecha__mes">
                     {new Date(c.fecha + 'T00:00:00').toLocaleDateString('es-CL', { month: 'short' })}
                   </p>
                 </div>
 
-                {/* Info */}
-                <div style={{ flex: 1 }}>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '15px' }}>
-                    {c.motivo ?? 'Consulta general'}
-                  </p>
-                  <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>
-                    🕐 {formatHora(c.hora)} · 👤 {c.nombreCliente}
+                <div className="vet-cita-info">
+                  <p className="vet-cita-info__titulo">{c.motivo ?? 'Consulta general'}</p>
+                  <p className="vet-cita-info__sub">
+                    🕐 {c.hora?.slice(0, 5) ?? '—'} · 👤 {c.nombreCliente}
                     {c.nombreMascota && ` · 🐾 ${c.nombreMascota}`}
                   </p>
                 </div>
 
-                {/* Estado */}
-                <span style={{
-                  padding: '4px 12px', borderRadius: '99px', fontSize: '12px', fontWeight: 600,
-                  ...(estadoEstilo[c.estado] ?? { background: '#f3f4f6', color: '#374151' }),
-                }}>
-                  {c.estado === 'EN_ATENCION' ? 'En atención' : c.estado}
+                <span className={`vet-estado vet-estado--${c.estado}`}>
+                  {estadoLabel(c.estado)}
                 </span>
 
-                {/* Acciones PENDIENTE */}
-                {c.estado === 'PENDIENTE' && (
-                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                <div className="vet-cita-acciones">
+                  {c.estado === 'PENDIENTE' && <>
                     {c.idMascota && (
                       <button
+                        className="vet-btn-sm vet-btn-sm--primary"
                         onClick={() => handleAbrirFicha(c)}
                         disabled={loadingId === c.idReserva}
-                        style={{ ...btnPrimario, opacity: loadingId === c.idReserva ? 0.6 : 1 }}
                       >
                         {loadingId === c.idReserva ? 'Abriendo...' : '🩺 Atender'}
                       </button>
                     )}
                     <button
+                      className="vet-btn-sm vet-btn-sm--danger"
                       onClick={() => handleCancelar(c.idReserva)}
                       disabled={loadingId === c.idReserva}
-                      style={{ ...btnSecundario('#ef4444'), opacity: loadingId === c.idReserva ? 0.6 : 1 }}
                     >
                       ✕ Cancelar
                     </button>
-                  </div>
-                )}
+                  </>}
 
-                {/* Acciones CONFIRMADA */}
-                {c.estado === 'CONFIRMADA' && (
-                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                  {c.estado === 'CONFIRMADA' && <>
                     {c.idMascota && (
                       <button
+                        className="vet-btn-sm vet-btn-sm--primary"
                         onClick={() => handleAbrirFicha(c)}
                         disabled={loadingId === c.idReserva}
-                        style={{ ...btnPrimario, opacity: loadingId === c.idReserva ? 0.6 : 1 }}
                       >
                         {loadingId === c.idReserva ? 'Abriendo...' : '🩺 Atender'}
                       </button>
                     )}
                     <button
+                      className="vet-btn-sm vet-btn-sm--outline"
                       onClick={() => setReprogramando(reprogramando === c.idReserva ? null : c.idReserva)}
-                      style={btnSecundario()}
                     >
                       📅 Reprogramar
                     </button>
                     <button
+                      className="vet-btn-sm vet-btn-sm--danger"
                       onClick={() => handleCancelar(c.idReserva)}
                       disabled={loadingId === c.idReserva}
-                      style={{ ...btnSecundario('#ef4444'), opacity: loadingId === c.idReserva ? 0.6 : 1 }}
                     >
                       ✕ Cancelar
                     </button>
-                  </div>
-                )}
+                  </>}
 
-                {/* Acciones EN_ATENCION */}
-                {c.estado === 'EN_ATENCION' && c.idMascota && (
-                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                  {c.estado === 'EN_ATENCION' && c.idMascota && <>
                     <button
+                      className="vet-btn-sm vet-btn-sm--primary"
                       onClick={() => navigate(`/vet/ficha-mascota?mascotaId=${c.idMascota}&reservaId=${c.idReserva}`)}
-                      style={btnPrimario}
                     >
                       📋 Continuar ficha
                     </button>
                     <button
+                      className="vet-btn-sm vet-btn-sm--danger"
                       onClick={() => handleCancelar(c.idReserva)}
                       disabled={loadingId === c.idReserva}
-                      style={{ ...btnSecundario('#ef4444'), opacity: loadingId === c.idReserva ? 0.6 : 1 }}
                     >
                       ✕ Cancelar
                     </button>
-                  </div>
-                )}
+                  </>}
 
-                {/* Acciones COMPLETADA */}
-                {c.estado === 'COMPLETADA' && c.idMascota && (
-                  <div className="reserva-card__acciones" style={{ display: 'flex', gap: '8px' }}>
+                  {c.estado === 'COMPLETADA' && c.idMascota && (
                     <button
+                      className="vet-btn-sm vet-btn-sm--indigo"
                       onClick={() => navigate(`/vet/historial?mascotaId=${c.idMascota}`)}
-                      style={btnSecundario('#6366f1')}
                     >
                       📋 Ver historial
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
-              {/* Form reprogramar */}
               {reprogramando === c.idReserva && (
-                <div style={{
-                  background: '#f9fafb', borderRadius: '0 0 12px 12px',
-                  padding: '16px 24px', border: '1px solid #e5e7eb',
-                  borderTop: 'none', display: 'flex', gap: '12px', alignItems: 'flex-end',
-                }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>
-                      Nueva fecha
-                    </label>
+                <div className="vet-reprog-form">
+                  <div className="vet-reprog-form__field">
+                    <label className="vet-reprog-form__label">Nueva fecha</label>
                     <input
                       type="date"
                       value={nuevaFecha}
                       onChange={(e) => setNuevaFecha(e.target.value)}
-                      style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '14px' }}
+                      className="vet-reprog-form__input"
                     />
                   </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>
-                      Nueva hora
-                    </label>
+                  <div className="vet-reprog-form__field">
+                    <label className="vet-reprog-form__label">Nueva hora</label>
                     <input
                       type="time"
                       value={nuevaHora}
                       onChange={(e) => setNuevaHora(e.target.value)}
-                      style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '14px' }}
+                      className="vet-reprog-form__input"
                     />
                   </div>
                   <button
+                    className="vet-btn-primary"
                     onClick={() => handleReprogramar(c.idReserva)}
                     disabled={loadingId === c.idReserva || !nuevaFecha || !nuevaHora}
-                    style={{
-                      ...btnPrimario,
-                      padding: '9px 20px',
-                      opacity: !nuevaFecha || !nuevaHora ? 0.5 : 1,
-                    }}
                   >
                     {loadingId === c.idReserva ? 'Guardando...' : 'Confirmar'}
                   </button>
-                  <button
-                    onClick={() => setReprogramando(null)}
-                    style={{
-                      background: 'none', border: '1px solid #d1d5db',
-                      padding: '9px 16px', borderRadius: '8px',
-                      cursor: 'pointer', fontSize: '14px',
-                    }}
-                  >
+                  <button className="vet-btn-secondary" onClick={() => setReprogramando(null)}>
                     Cancelar
                   </button>
                 </div>

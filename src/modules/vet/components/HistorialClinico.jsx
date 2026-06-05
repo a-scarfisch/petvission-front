@@ -159,9 +159,8 @@ const HistorialClinico = () => {
       <div className="vet-page-header">
         <div>
           <button
-            className="vet-btn-secondary"
+            className="vet-btn-secondary vet-btn-volver"
             onClick={() => navigate('/vet/pacientes')}
-            style={{ marginBottom: '8px', fontSize: '13px' }}
           >
             ← Volver a Pacientes
           </button>
@@ -177,7 +176,7 @@ const HistorialClinico = () => {
         <div className="vet-ficha">
           <div className="vet-ficha__avatar">{especieEmoji(mascota.especie)}</div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <div className="vet-ficha-header-row">
               <h3 className="vet-ficha__nombre">{mascota.nombre}</h3>
               {mascota.animalGuia && <span className="vet-guia-badge">🦮 Animal guía</span>}
             </div>
@@ -221,12 +220,12 @@ const HistorialClinico = () => {
                   <p className="vet-timeline-item__section-label">Tratamiento</p>
                   <p className="vet-timeline-item__body">{t.descripcion}</p>
                   {t.indicaciones && (
-                    <p className="vet-timeline-item__body" style={{ color: '#6b7280', marginTop: '4px' }}>
+                    <p className="vet-timeline-item__body vet-timeline-item__body--muted">
                       Indicaciones: {t.indicaciones}
                     </p>
                   )}
                   {t.duracion && (
-                    <p className="vet-timeline-item__body" style={{ color: '#6b7280' }}>
+                    <p className="vet-timeline-item__body vet-timeline-item__body--muted">
                       Duración: {t.duracion}
                     </p>
                   )}
@@ -257,7 +256,7 @@ const HistorialClinico = () => {
               {h.vacunas?.length > 0 && (
                 <div className="vet-timeline-item__section">
                   <p className="vet-timeline-item__section-label">Vacunas aplicadas</p>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '4px' }}>
+                  <div className="vet-vacunas-row">
                     {h.vacunas.map((v) => (
                       <span key={v.idVacunacion} className="vet-vacuna-tag">
                         💉 {v.nombreVacuna}
