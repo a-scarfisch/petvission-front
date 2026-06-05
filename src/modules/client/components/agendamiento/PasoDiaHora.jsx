@@ -16,9 +16,15 @@ const PasoDiaHora = ({ agenda, seleccion, onSelect }) => {
     () => seleccion?.fecha ?? toDateStr(proximos7[0])
   )
 
-  const slotsDelDia = agenda.filter(
-    (s) => s.fecha === diaActivo && s.disponible
-  )
+  const hoyStr = toDateStr(new Date())
+  const ahora = new Date()
+  const horaAhoraStr = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}:${String(ahora.getSeconds()).padStart(2, '0')}`
+
+  const slotsDelDia = agenda.filter((s) => {
+    if (s.fecha !== diaActivo || !s.disponible) return false
+    if (s.fecha === hoyStr && s.horaInicio <= horaAhoraStr) return false
+    return true
+  })
 
   return (
     <div>
