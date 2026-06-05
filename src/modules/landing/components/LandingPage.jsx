@@ -1,7 +1,20 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
 
 const LandingPage = () => {
   const anio = new Date().getFullYear()
+  const [menuAbierto, setMenuAbierto] = useState(false)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    const cerrar = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuAbierto(false)
+      }
+    }
+    document.addEventListener('mousedown', cerrar)
+    return () => document.removeEventListener('mousedown', cerrar)
+  }, [])
 
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', color: '#1f2937' }}>
@@ -17,20 +30,85 @@ const LandingPage = () => {
           <a href="#servicios" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Servicios</a>
           <a href="#nosotros" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Nosotros</a>
           <a href="#contacto" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Contacto</a>
-          <Link to="/login" className="lp-nav__btn" style={{
-            padding: '8px 16px', borderRadius: '8px',
-            border: '1px solid #2a9d8f', color: '#2a9d8f',
-            textDecoration: 'none', fontSize: '14px', fontWeight: 600,
-          }}>
-            Iniciar sesión
-          </Link>
-          <Link to="/register" className="lp-nav__btn" style={{
-            padding: '8px 16px', borderRadius: '8px',
-            background: '#2a9d8f', color: '#fff',
-            textDecoration: 'none', fontSize: '14px', fontWeight: 600,
-          }}>
-            Registrarse
-          </Link>
+
+          {/* Dropdown acceso */}
+          <div ref={menuRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setMenuAbierto(!menuAbierto)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '9px 20px', borderRadius: '99px',
+                background: menuAbierto ? '#218f82' : '#2a9d8f',
+                color: '#fff', border: 'none', cursor: 'pointer',
+                fontSize: '14px', fontWeight: 600,
+                boxShadow: '0 2px 8px rgba(42,157,143,0.3)',
+                transition: 'background 0.2s',
+              }}
+            >
+              🐾 Mi cuenta
+              <span style={{ fontSize: '10px', opacity: 0.8 }}>{menuAbierto ? '▲' : '▼'}</span>
+            </button>
+
+            {menuAbierto && (
+              <div style={{
+                position: 'absolute', right: 0, top: 'calc(100% + 10px)',
+                background: '#fff', borderRadius: '14px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                padding: '8px', minWidth: '200px', zIndex: 200,
+                border: '1px solid #f3f4f6',
+              }}>
+                <Link
+                  to="/login"
+                  onClick={() => setMenuAbierto(false)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '10px 14px', borderRadius: '8px',
+                    color: '#1f2937', textDecoration: 'none',
+                    fontSize: '14px', fontWeight: 500,
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span style={{
+                    width: '32px', height: '32px', borderRadius: '50%',
+                    background: '#e8f5f0', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', fontSize: '15px',
+                  }}>🔑</span>
+                  <div>
+                    <p style={{ margin: 0, fontWeight: 600, fontSize: '13px' }}>Iniciar sesión</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Ya tengo cuenta</p>
+                  </div>
+                </Link>
+
+                <div style={{ height: '1px', background: '#f3f4f6', margin: '4px 0' }} />
+
+                <Link
+                  to="/register"
+                  onClick={() => setMenuAbierto(false)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '10px 14px', borderRadius: '8px',
+                    color: '#1f2937', textDecoration: 'none',
+                    fontSize: '14px', fontWeight: 500,
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span style={{
+                    width: '32px', height: '32px', borderRadius: '50%',
+                    background: '#e8f5f0', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', fontSize: '15px',
+                  }}>🐶</span>
+                  <div>
+                    <p style={{ margin: 0, fontWeight: 600, fontSize: '13px' }}>Crear cuenta</p>
+                    <p style={{ margin: 0, fontSize: '11px', color: '#9ca3af' }}>Es gratis 🎉</p>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -91,9 +169,13 @@ const LandingPage = () => {
           width: '420px', height: '320px', borderRadius: '16px',
           background: '#fff', display: 'flex', alignItems: 'center',
           justifyContent: 'center', boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-          flexShrink: 0,
+          flexShrink: 0, overflow: 'hidden',
         }}>
-          <span style={{ fontSize: '48px', fontWeight: 700, color: '#2a9d8f' }}>PetVission</span>
+          <img
+            src="/LPV_transparente.png"
+            alt="PetVission"
+            style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '16px' }}
+          />
         </div>
       </section>
 
@@ -168,10 +250,13 @@ const LandingPage = () => {
       <section id="nosotros" className="lp-nosotros" style={{ padding: '80px 64px', background: '#fff', display: 'flex', gap: '64px', alignItems: 'center' }}>
         <div style={{
           width: '420px', height: '300px', borderRadius: '16px',
-          background: '#e8f5f0', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', flexShrink: 0,
+          overflow: 'hidden', flexShrink: 0,
         }}>
-          <span style={{ fontSize: '20px', fontWeight: 700, color: '#2a9d8f' }}>Equipo PetVission</span>
+          <img
+            src="/groupPV.png"
+            alt="Equipo PetVission"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
         </div>
         <div>
           <h2 style={{ fontSize: '32px', fontWeight: 800, margin: '0 0 16px' }}>
