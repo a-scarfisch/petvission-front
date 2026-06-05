@@ -104,10 +104,14 @@ const VetFichaMascota = () => {
     load()
   }, [mascotaId, reservaId])
 
+  const especieVacuna = mascota?.especie === 'GATO' ? 'FELINA'
+    : mascota?.especie === 'PERRO' ? 'CANINA'
+    : null
+
   const handleAbrirConsulta = async () => {
     setPanelActivo('consulta')
     if (vacunasCatalogo.length === 0) {
-      try { setVacunasCatalogo(await getVacunasCatalogo()) } catch { /* silencio */ }
+      try { setVacunasCatalogo(await getVacunasCatalogo(especieVacuna)) } catch { /* silencio */ }
     }
   }
 

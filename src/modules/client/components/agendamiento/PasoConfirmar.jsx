@@ -10,15 +10,18 @@ const formatPrecio = (precio) =>
   precio != null ? `$${Number(precio).toLocaleString('es-CL')}` : 'Consultar precio'
 
 const PasoConfirmar = ({ seleccion, error, loading, onConfirmar }) => {
-  const esConsulta = seleccion.categoriaReserva === 'CONSULTA'
+  const esConsulta   = seleccion.categoriaReserva === 'CONSULTA'
+  const esVacunacion = seleccion.categoriaReserva === 'VACUNACION'
 
   const filas = [
     ['🐾 Mascota',      seleccion.mascota?.nombre],
     ['📋 Categoría',    seleccion.categoriaReserva],
     esConsulta
       ? ['🩺 Motivo',   seleccion.motivo]
-      : ['🏥 Servicio', seleccion.servicio?.nombre],
-    !esConsulta && seleccion.servicio?.precio !== undefined
+      : esVacunacion
+        ? ['💉 Vacuna',  'El veterinario elegirá la vacuna durante la consulta']
+        : ['🏥 Servicio', seleccion.servicio?.nombre],
+    !esConsulta && !esVacunacion && seleccion.servicio?.precio !== undefined
       ? ['💰 Precio',   formatPrecio(seleccion.servicio?.precio)]
       : null,
     ['👨‍⚕️ Veterinario', `${seleccion.veterinario?.nombres ?? ''} ${seleccion.veterinario?.apellidos ?? ''}`],

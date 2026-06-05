@@ -85,7 +85,9 @@ const Agendamiento = () => {
     () => !!seleccion.categoriaReserva,
     () => seleccion.categoriaReserva === 'CONSULTA'
       ? seleccion.motivo?.trim().length > 0
-      : !!seleccion.servicio,
+      : seleccion.categoriaReserva === 'VACUNACION'
+        ? true
+        : !!seleccion.servicio,
     () => !!seleccion.veterinario,
     () => !!seleccion.turnoDetalle,
   ][paso]?.() ?? true
@@ -105,17 +107,18 @@ const Agendamiento = () => {
     setLoading(true)
     setError(null)
     try {
-      const esConsulta = seleccion.categoriaReserva === 'CONSULTA'
+      const esConsulta  = seleccion.categoriaReserva === 'CONSULTA'
+      const esVacunacion = seleccion.categoriaReserva === 'VACUNACION'
       const res = await agendarReserva({
         idUsuario:        user.idUsuario,
         idVeterinario:    seleccion.veterinario.idUsuario,
         idMascota:        seleccion.mascota.idMascota,
-        idServicio:       esConsulta ? null : seleccion.servicio.idServicio,
+        idServicio:       (esConsulta || esVacunacion) ? null : seleccion.servicio.idServicio,
         idTurnoDetalle:   seleccion.turnoDetalle.id,
         categoriaReserva: seleccion.categoriaReserva,
         fecha:            seleccion.fecha,
         hora:             seleccion.hora,
-        motivo:           esConsulta ? seleccion.motivo : seleccion.servicio.nombre,
+        motivo:           esConsulta ? seleccion.motivo : esVacunacion ? 'Vacunación' : seleccion.servicio.nombre,
       })
       addCita(res)
       navigate('/client/reservas')

@@ -1,17 +1,7 @@
 const formatCLP = (precio) =>
   precio != null ? `$${Number(precio).toLocaleString('es-CL')}` : 'Consultar precio'
 
-const FILTROS_VACUNA = {
-  PERRO: (nombre) => /Canina|Cachorro|KC|Óctuple|Séxtuple|Plan|Refuerzo/i.test(nombre),
-  GATO:  (nombre) => /Felina|Leucemia|Plan|Refuerzo/i.test(nombre),
-}
-
-const filtrarPorEspecie = (servicios, especie) => {
-  const fn = FILTROS_VACUNA[especie?.toUpperCase()]
-  return fn ? servicios.filter((s) => fn(s.nombre)) : servicios
-}
-
-const PasoServicio = ({ categoriaReserva, mascota, servicios, seleccion, motivo, onSelect, onMotivo }) => {
+const PasoServicio = ({ categoriaReserva, servicios, seleccion, motivo, onSelect, onMotivo }) => {
   if (categoriaReserva === 'CONSULTA') {
     return (
       <div>
@@ -27,22 +17,33 @@ const PasoServicio = ({ categoriaReserva, mascota, servicios, seleccion, motivo,
     )
   }
 
-  const serviciosVisibles = categoriaReserva === 'VACUNACION'
-    ? filtrarPorEspecie(servicios, mascota?.especie)
-    : servicios
+  if (categoriaReserva === 'VACUNACION') {
+    return (
+      <div>
+        <p className="ag-section-title">Vacunación</p>
+        <div className="ag-card" style={{ textAlign: 'center', padding: '32px 24px', background: '#f0fdf4', border: '1.5px solid #bbf7d0' }}>
+          <p style={{ fontSize: '40px', margin: '0 0 12px' }}>💉</p>
+          <p style={{ fontWeight: 600, margin: '0 0 8px', color: '#166534' }}>No es necesario elegir la vacuna ahora</p>
+          <p style={{ color: '#6b7280', fontSize: '14px', margin: 0, lineHeight: 1.5 }}>
+            El veterinario registrará la vacuna específica durante la consulta según el calendario y las necesidades de tu mascota.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
       <p className="ag-section-title">Selecciona el servicio</p>
 
-      {serviciosVisibles.length === 0 ? (
+      {servicios.length === 0 ? (
         <div className="ag-empty">
           <span className="ag-empty__icon">🏥</span>
           <p>No hay servicios disponibles.</p>
         </div>
       ) : (
         <div className="ag-servicio-grid">
-          {serviciosVisibles.map((s) => (
+          {servicios.map((s) => (
             <div
               key={s.idServicio}
               onClick={() => onSelect(s)}

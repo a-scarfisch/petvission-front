@@ -15,7 +15,9 @@ export const getReservasVeterinario = async (idVeterinario) => {
   return data.data ?? []
 }
 
-export const getVacunasCatalogo = async () => {
-  const { data } = await apiClient.get('/vacunacion/catalogo')
+// especie: "CANINA" | "FELINA" | null (sin filtro devuelve todas)
+export const getVacunasCatalogo = async (especie) => {
+  const params = especie ? { especie } : {}
+  const { data } = await apiClient.get('/vacunacion/catalogo', { params })
   return data.data ?? []
 }
