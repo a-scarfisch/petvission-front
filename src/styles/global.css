@@ -78,7 +78,8 @@ body {
   white-space: nowrap;
   text-decoration: none;
 }
-.pv-btn-primary:hover { background: var(--teal-dark); }
+.pv-btn-primary:hover    { background: var(--teal-dark); }
+.pv-btn-primary:disabled { opacity: 0.5; cursor: default; }
 
 .pv-btn-outline {
   display: inline-flex;
