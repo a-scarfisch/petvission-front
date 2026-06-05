@@ -11,6 +11,7 @@ const NAV_GESTION = [
   { label: 'Mascotas',  path: '/admin/mascotas',  icon: '🐾' },
   { label: 'Citas',     path: '/admin/citas',     icon: '📅' },
   { label: 'Horarios',  path: '/admin/horarios',  icon: '🕐' },
+  { label: 'Seguridad', path: '/admin/seguridad', icon: '🔐' },
 ]
 
 const BOTTOM_NAV = [

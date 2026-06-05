@@ -21,6 +21,7 @@ import AdminCitas from '@/modules/admin/components/AdminCitas'
 import AdminHorarios from '@/modules/admin/components/AdminHorarios'
 import AdminMascotas from '@/modules/admin/components/AdminMascotas'
 import AdminVeterinarios from '@/modules/admin/components/AdminVeterinarios'
+import AdminSeguridad from '@/modules/admin/components/AdminSeguridad'
 import LandingPage from '@/modules/landing/components/LandingPage'
 import ConfirmarCita from '@/modules/public/ConfirmarCita'
 import MiPerfil from '@/modules/client/components/MiPerfil'
@@ -96,6 +97,7 @@ function App() {
                   <Route path="horarios" element={<AdminHorarios />} />
                   <Route path="mascotas" element={<AdminMascotas />} />
                   <Route path="veterinarios" element={<AdminVeterinarios />} />
+                  <Route path="seguridad" element={<AdminSeguridad />} />
                 </Routes>
               </AdminProvider>
             </PrivateRoute>
