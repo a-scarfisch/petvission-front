@@ -1,262 +1,199 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import '@/styles/modules/landing.css'
 
 const LandingPage = () => {
   const anio = new Date().getFullYear()
+  const [menuAbierto, setMenuAbierto] = useState(false)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    const cerrar = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuAbierto(false)
+      }
+    }
+    document.addEventListener('mousedown', cerrar)
+    return () => document.removeEventListener('mousedown', cerrar)
+  }, [])
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif', color: '#1f2937' }}>
+    <div className="lp-root">
 
       {/* Navbar */}
-      <nav className="lp-nav" style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '16px 64px', background: '#fff',
-        borderBottom: '1px solid #f3f4f6', position: 'sticky', top: 0, zIndex: 100,
-      }}>
-        <span style={{ fontWeight: 700, fontSize: '18px', color: '#2a9d8f' }}>🐾 PetVission</span>
-        <div className="lp-nav__links" style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
-          <a href="#servicios" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Servicios</a>
-          <a href="#nosotros" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Nosotros</a>
-          <a href="#contacto" style={{ color: '#374151', textDecoration: 'none', fontSize: '14px' }}>Contacto</a>
-          <Link to="/login" className="lp-nav__btn" style={{
-            padding: '8px 16px', borderRadius: '8px',
-            border: '1px solid #2a9d8f', color: '#2a9d8f',
-            textDecoration: 'none', fontSize: '14px', fontWeight: 600,
-          }}>
-            Iniciar sesión
-          </Link>
-          <Link to="/register" className="lp-nav__btn" style={{
-            padding: '8px 16px', borderRadius: '8px',
-            background: '#2a9d8f', color: '#fff',
-            textDecoration: 'none', fontSize: '14px', fontWeight: 600,
-          }}>
-            Registrarse
-          </Link>
+      <nav className="lp-nav">
+        <span className="lp-nav__brand">🐾 PetVission</span>
+        <div className="lp-nav__links">
+          <a href="#servicios">Servicios</a>
+          <a href="#nosotros">Nosotros</a>
+          <a href="#contacto">Contacto</a>
+
+          <div ref={menuRef} className="lp-nav__dropdown">
+            <button
+              onClick={() => setMenuAbierto(!menuAbierto)}
+              className={`lp-nav__dropdown-btn${menuAbierto ? ' lp-nav__dropdown-btn--open' : ''}`}
+            >
+              🐾 Mi cuenta
+              <span className="lp-nav__dropdown-arrow">{menuAbierto ? '▲' : '▼'}</span>
+            </button>
+
+            {menuAbierto && (
+              <div className="lp-nav__dropdown-menu">
+                <Link to="/login" className="lp-nav__dropdown-item" onClick={() => setMenuAbierto(false)}>
+                  <span className="lp-nav__dropdown-icon">🔑</span>
+                  <div>
+                    <p>Iniciar sesión</p>
+                    <p>Ya tengo cuenta</p>
+                  </div>
+                </Link>
+
+                <div className="lp-nav__dropdown-divider" />
+
+                <Link to="/register" className="lp-nav__dropdown-item" onClick={() => setMenuAbierto(false)}>
+                  <span className="lp-nav__dropdown-icon">🐶</span>
+                  <div>
+                    <p>Crear cuenta</p>
+                    <p>Es gratis 🎉</p>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="lp-hero" style={{
-        background: 'linear-gradient(135deg, #e8f5f0 0%, #f0faf9 100%)',
-        padding: '80px 64px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '48px',
-      }}>
-        <div style={{ maxWidth: '560px' }}>
-          <span style={{
-            display: 'inline-block', padding: '4px 12px', borderRadius: '99px',
-            background: '#d1fae5', color: '#065f46', fontSize: '13px',
-            fontWeight: 600, marginBottom: '16px',
-          }}>
-            🐾 Clínica Veterinaria Online
-          </span>
-          <h1 style={{ fontSize: '48px', fontWeight: 800, lineHeight: 1.2, margin: '0 0 16px' }}>
+      <section className="lp-hero">
+        <div className="lp-hero__content">
+          <span className="lp-hero__badge">🐾 Clínica Veterinaria Online</span>
+          <h1 className="lp-hero__title">
             El cuidado que tu mascota{' '}
-            <span style={{ color: '#2a9d8f' }}>merece</span>,{' '}
+            <span>merece</span>,{' '}
             en un solo lugar
           </h1>
-          <p style={{ fontSize: '16px', color: '#6b7280', lineHeight: 1.6, margin: '0 0 32px' }}>
+          <p className="lp-hero__desc">
             Agenda citas veterinarias y accede al historial clínico de tu mascota
             desde una plataforma moderna y centralizada.
           </p>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <Link to="/register" style={{
-              padding: '12px 24px', borderRadius: '8px',
-              background: '#2a9d8f', color: '#fff',
-              textDecoration: 'none', fontWeight: 600, fontSize: '15px',
-            }}>
-              📅 Agendar cita
-            </Link>
-            <a href="#servicios" style={{
-              padding: '12px 24px', borderRadius: '8px',
-              border: '1px solid #2a9d8f', color: '#2a9d8f',
-              textDecoration: 'none', fontWeight: 600, fontSize: '15px',
-            }}>
-              🐾 Ver servicios
-            </a>
+          <div className="lp-hero__ctas">
+            <Link to="/register" className="lp-btn">📅 Agendar cita</Link>
+            <a href="#servicios" className="lp-btn lp-btn--outline">🐾 Ver servicios</a>
           </div>
-          {/* Stats */}
-          <div className="lp-hero__stats" style={{ display: 'flex', gap: '32px', marginTop: '48px' }}>
+          <div className="lp-hero__stats">
             {[
-              { value: '500+', label: 'Mascotas atendidas' },
-              { value: '4', label: 'Veterinarios especializados' },
+              { value: '500+',   label: 'Mascotas atendidas' },
+              { value: '4',      label: 'Veterinarios especializados' },
               { value: '1.200+', label: 'Citas realizadas' },
             ].map((s) => (
               <div key={s.label}>
-                <p style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: '#2a9d8f' }}>{s.value}</p>
-                <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>{s.label}</p>
+                <p className="lp-hero__stat-value">{s.value}</p>
+                <p className="lp-hero__stat-label">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className="lp-hero__img" style={{
-          width: '420px', height: '320px', borderRadius: '16px',
-          background: '#fff', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
-          flexShrink: 0,
-        }}>
-          <span style={{ fontSize: '48px', fontWeight: 700, color: '#2a9d8f' }}>PetVission</span>
+        <div className="lp-hero__img">
+          <img src="/LPV_transparente.png" alt="PetVission" />
         </div>
       </section>
 
       {/* Servicios */}
-      <section id="servicios" style={{ padding: '80px 64px', background: '#fff' }}>
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h2 style={{ fontSize: '32px', fontWeight: 800, margin: '0 0 8px' }}>
-            Nuestros <span style={{ color: '#2a9d8f' }}>Servicios</span>
-          </h2>
-          <p style={{ color: '#6b7280', fontSize: '16px', margin: 0 }}>
-            Todo lo que necesitas para el bienestar de tu mascota
-          </p>
+      <section id="servicios" className="lp-section lp-section--white">
+        <div className="lp-section__header">
+          <h2 className="lp-section__title">Nuestros <span>Servicios</span></h2>
+          <p className="lp-section__subtitle">Todo lo que necesitas para el bienestar de tu mascota</p>
         </div>
-        <div className="lp-servicios-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
+        <div className="lp-servicios-grid">
           {[
-            { icon: '📅', title: 'Agenda Online', desc: 'Reserva citas veterinarias en segundos, sin llamadas ni esperas.' },
+            { icon: '📅', title: 'Agenda Online',     desc: 'Reserva citas veterinarias en segundos, sin llamadas ni esperas.' },
             { icon: '📋', title: 'Historial Clínico', desc: 'Accede al historial médico digital de tu mascota en cualquier momento.' },
-            { icon: '💉', title: 'Control de Vacunas', desc: 'Registro y recordatorios automáticos del calendario de vacunación.' },
-            { icon: '🔔', title: 'Recordatorios', desc: 'Recibe avisos automáticos de tus citas para no olvidar ninguna.' },
+            { icon: '💉', title: 'Control de Vacunas',desc: 'Registro y recordatorios automáticos del calendario de vacunación.' },
+            { icon: '🔔', title: 'Recordatorios',     desc: 'Recibe avisos automáticos de tus citas para no olvidar ninguna.' },
           ].map((s) => (
-            <div key={s.title} style={{
-              padding: '32px 24px', borderRadius: '12px',
-              border: '1px solid #f3f4f6', textAlign: 'center',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
-            }}>
-              <div style={{
-                width: '56px', height: '56px', borderRadius: '50%',
-                background: '#e8f5f0', display: 'flex',
-                alignItems: 'center', justifyContent: 'center',
-                fontSize: '24px', margin: '0 auto 16px',
-              }}>
-                {s.icon}
-              </div>
-              <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 700 }}>{s.title}</h3>
-              <p style={{ margin: 0, fontSize: '14px', color: '#6b7280', lineHeight: 1.6 }}>{s.desc}</p>
+            <div key={s.title} className="lp-servicio-card">
+              <div className="lp-servicio-icon">{s.icon}</div>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Cómo funciona */}
-      <section style={{ padding: '80px 64px', background: '#f9fafb' }}>
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h2 style={{ fontSize: '32px', fontWeight: 800, margin: '0 0 8px' }}>
-            ¿Cómo <span style={{ color: '#2a9d8f' }}>funciona</span>?
-          </h2>
-          <p style={{ color: '#6b7280', fontSize: '16px', margin: 0 }}>Tres pasos para empezar</p>
+      <section className="lp-section lp-section--gray">
+        <div className="lp-section__header">
+          <h2 className="lp-section__title">¿Cómo <span>funciona</span>?</h2>
+          <p className="lp-section__subtitle">Tres pasos para empezar</p>
         </div>
-        <div className="lp-pasos" style={{ display: 'flex', justifyContent: 'center', gap: '48px' }}>
+        <div className="lp-pasos">
           {[
-            { num: '1', title: 'Crea tu cuenta', desc: 'Regístrate gratis y agrega el perfil de tus mascotas en minutos.' },
-            { num: '2', title: 'Agenda tu cita', desc: 'Reserva una cita con el veterinario disponible en el horario que prefieras.' },
-            { num: '3', title: 'Gestiona todo', desc: 'Accede al historial clínico y próximas citas desde tu panel personal.' },
+            { num: '1', title: 'Crea tu cuenta',  desc: 'Regístrate gratis y agrega el perfil de tus mascotas en minutos.' },
+            { num: '2', title: 'Agenda tu cita',  desc: 'Reserva una cita con el veterinario disponible en el horario que prefieras.' },
+            { num: '3', title: 'Gestiona todo',   desc: 'Accede al historial clínico y próximas citas desde tu panel personal.' },
           ].map((s) => (
-            <div key={s.num} style={{ textAlign: 'center', maxWidth: '240px' }}>
-              <div style={{
-                width: '56px', height: '56px', borderRadius: '50%',
-                background: '#2a9d8f', color: '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '22px', fontWeight: 800, margin: '0 auto 16px',
-              }}>
-                {s.num}
-              </div>
-              <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 700 }}>{s.title}</h3>
-              <p style={{ margin: 0, fontSize: '14px', color: '#6b7280', lineHeight: 1.6 }}>{s.desc}</p>
+            <div key={s.num} className="lp-paso">
+              <div className="lp-paso__num">{s.num}</div>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Nosotros */}
-      <section id="nosotros" className="lp-nosotros" style={{ padding: '80px 64px', background: '#fff', display: 'flex', gap: '64px', alignItems: 'center' }}>
-        <div style={{
-          width: '420px', height: '300px', borderRadius: '16px',
-          background: '#e8f5f0', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', flexShrink: 0,
-        }}>
-          <span style={{ fontSize: '20px', fontWeight: 700, color: '#2a9d8f' }}>Equipo PetVission</span>
+      <section id="nosotros" className="lp-section lp-section--white lp-nosotros">
+        <div className="lp-nosotros__img">
+          <img src="/groupPV.png" alt="Equipo PetVission" />
         </div>
         <div>
-          <h2 style={{ fontSize: '32px', fontWeight: 800, margin: '0 0 16px' }}>
-            ¿Por qué elegir <span style={{ color: '#2a9d8f' }}>PetVission</span>?
-          </h2>
+          <h2>¿Por qué elegir <span>PetVission</span>?</h2>
           {[
             { icon: '✅', title: 'Todo centralizado', desc: 'Mascotas, citas e historial clínico en una sola plataforma.' },
-            { icon: '🕐', title: 'Disponible 24/7', desc: 'Agenda citas en cualquier momento del día.' },
-            { icon: '🔒', title: 'Seguro y confiable', desc: 'Sistema protegido con autenticación JWT y control de roles.' },
+            { icon: '🕐', title: 'Disponible 24/7',   desc: 'Agenda citas en cualquier momento del día.' },
+            { icon: '🔒', title: 'Seguro y confiable',desc: 'Sistema protegido con autenticación JWT y control de roles.' },
           ].map((item) => (
-            <div key={item.title} style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
-              <div style={{
-                width: '40px', height: '40px', borderRadius: '50%',
-                background: '#e8f5f0', display: 'flex',
-                alignItems: 'center', justifyContent: 'center',
-                fontSize: '18px', flexShrink: 0,
-              }}>
-                {item.icon}
-              </div>
+            <div key={item.title} className="lp-nosotros__feature">
+              <div className="lp-nosotros__feature-icon">{item.icon}</div>
               <div>
-                <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 700 }}>{item.title}</h4>
-                <p style={{ margin: 0, fontSize: '14px', color: '#6b7280' }}>{item.desc}</p>
+                <h4>{item.title}</h4>
+                <p>{item.desc}</p>
               </div>
             </div>
           ))}
-          <Link to="/register" style={{
-            display: 'inline-block', marginTop: '8px',
-            padding: '12px 24px', borderRadius: '8px',
-            background: '#2a9d8f', color: '#fff',
-            textDecoration: 'none', fontWeight: 600, fontSize: '15px',
-          }}>
-            Comenzar gratis →
-          </Link>
+          <Link to="/register" className="lp-btn">Comenzar gratis →</Link>
         </div>
       </section>
 
       {/* CTA */}
-      <section style={{
-        padding: '64px', background: '#2a9d8f', textAlign: 'center',
-      }}>
-        <h2 style={{ fontSize: '32px', fontWeight: 800, color: '#fff', margin: '0 0 8px' }}>
-          ¿Listo para cuidar mejor a tu mascota?
-        </h2>
-        <p style={{ color: '#e8f5f0', fontSize: '16px', margin: '0 0 32px' }}>
-          Únete a cientos de dueños que ya confían en PetVission
-        </p>
-        <Link to="/register" style={{
-          padding: '14px 32px', borderRadius: '8px',
-          background: '#fff', color: '#2a9d8f',
-          textDecoration: 'none', fontWeight: 700, fontSize: '16px',
-        }}>
-          Crear cuenta gratis
-        </Link>
+      <section className="lp-cta">
+        <h2>¿Listo para cuidar mejor a tu mascota?</h2>
+        <p>Únete a cientos de dueños que ya confían en PetVission</p>
+        <Link to="/register" className="lp-btn--white">Crear cuenta gratis</Link>
       </section>
 
       {/* Contacto */}
-      <section id="contacto" style={{ padding: '80px 64px', background: '#fff', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '32px', fontWeight: 800, margin: '0 0 8px' }}>Contacto</h2>
-        <p style={{ color: '#6b7280', margin: '0 0 48px' }}>¿Tienes dudas? Escríbenos</p>
-        <div className="lp-contacto" style={{ display: 'flex', justifyContent: 'center', gap: '64px' }}>
+      <section id="contacto" className="lp-section--contacto">
+        <h2>Contacto</h2>
+        <p>¿Tienes dudas? Escríbenos</p>
+        <div className="lp-contacto">
           {[
             { icon: '📍', label: 'Dirección', value: 'Av. Veterinaria 123, Santiago, Chile' },
-            { icon: '📞', label: 'Teléfono', value: '+56 9 1234 5678' },
-            { icon: '✉️', label: 'Email', value: 'contacto@petvission.cl' },
+            { icon: '📞', label: 'Teléfono',  value: '+56 9 1234 5678' },
+            { icon: '✉️', label: 'Email',     value: 'contacto@petvission.cl' },
           ].map((c) => (
-            <div key={c.label}>
-              <p style={{ fontSize: '28px', margin: '0 0 8px' }}>{c.icon}</p>
-              <p style={{ margin: '0 0 4px', fontWeight: 700, fontSize: '15px' }}>{c.label}</p>
-              <p style={{ margin: 0, color: '#6b7280', fontSize: '14px' }}>{c.value}</p>
+            <div key={c.label} className="lp-contacto__item">
+              <p>{c.icon}</p>
+              <p>{c.label}</p>
+              <p>{c.value}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="lp-footer" style={{
-        padding: '24px 64px', background: '#1f2937',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      }}>
-        <span style={{ color: '#9ca3af', fontSize: '14px' }}>
-          PetVission © {anio} — Todos los derechos reservados
-        </span>
-        <span style={{ color: '#6b7280', fontSize: '13px' }}>
-          Desarrollado por Escuadrón Alpha Mango — Java Generation Chile
-        </span>
+      <footer className="lp-footer">
+        <span className="lp-footer__copy">PetVission © {anio} — Todos los derechos reservados</span>
+        <span className="lp-footer__credit">Desarrollado por Escuadrón Alpha Mango — Java Generation Chile</span>
       </footer>
     </div>
   )
