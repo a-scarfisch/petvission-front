@@ -6,7 +6,7 @@ import { cancelarCita, reprogramarCita, getDisponibilidadParaReprogramar } from 
 import '@/styles/global.css'
 import '@/styles/modules/reservas.css'
 
-const FILTROS      = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA']
+const FILTROS      = ['Todas', 'CONFIRMADA', 'PENDIENTE']
 const MESES        = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 const MESES_CORTOS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
 const DIAS_CORTOS  = ['D','L','M','X','J','V','S']
@@ -101,9 +101,11 @@ const MisReservas = () => {
     return { day: d, mon: MESES_CORTOS[parseInt(m) - 1] }
   }
 
+  const citasActivas = citas.filter((c) => c.estado === 'PENDIENTE' || c.estado === 'CONFIRMADA')
+
   const citasFiltradas = filtro === 'Todas'
-    ? citas
-    : citas.filter((c) => c.estado === filtro)
+    ? citasActivas
+    : citasActivas.filter((c) => c.estado === filtro)
 
   // ── Calendar helpers ──────────────────────────────────────
   const today = new Date(); today.setHours(0, 0, 0, 0)
@@ -178,7 +180,6 @@ const MisReservas = () => {
         ) : (
           citasFiltradas.map((c) => {
             const { day, mon } = formatFecha(c.fecha)
-            const activa = c.estado !== 'CANCELADA'
             return (
               <div
                 key={c.idReserva}
@@ -203,8 +204,7 @@ const MisReservas = () => {
                   {c.estado?.charAt(0) + c.estado?.slice(1).toLowerCase()}
                 </span>
 
-                {activa && (
-                  <div className="res-acciones">
+                <div className="res-acciones">
                     <button
                       className="res-btn-reprog"
                       onClick={() => openReprog(c)}
@@ -220,7 +220,6 @@ const MisReservas = () => {
                       ✕ Cancelar
                     </button>
                   </div>
-                )}
               </div>
             )
           })
