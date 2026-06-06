@@ -47,7 +47,6 @@ const VetFichaMascota = () => {
   const [mascota, setMascota] = useState(null)
   const [historialPrevio, setHistorialPrevio] = useState([])
   const [historialReserva, setHistorialReserva] = useState(null) // edición
-  const [expandido, setExpandido] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -60,6 +59,8 @@ const VetFichaMascota = () => {
 
   const [confirmCerrar, setConfirmCerrar] = useState(false)
   const [cerrando, setCerrando] = useState(false)
+
+  const [historialModal, setHistorialModal] = useState(null)
 
   const setF = (k, v) => setForm((f) => ({ ...f, [k]: v }))
   const modoEdicion = !!historialReserva
@@ -259,7 +260,7 @@ const VetFichaMascota = () => {
           </div>
         </div>
 
-        {/* ── Col 2: historial + botones ── */}
+        {/* ── Col 2: formulario activo ── */}
         <div className="vet-ficha-col-center">
           <div className="vet-ficha-acciones">
             <button
@@ -276,54 +277,10 @@ const VetFichaMascota = () => {
             </button>
           </div>
 
-          <h4 className="vet-ficha-historial-title">Historial previo</h4>
-
-          {historialPrevio.filter((h) =>
-            !historialReserva || h.idHistorial !== historialReserva.idHistorial
-          ).length === 0 ? (
-            <p className="vet-ficha-historial-vacio">Sin consultas anteriores registradas.</p>
-          ) : (
-            <div className="vet-ficha-historial-lista">
-              {historialPrevio
-                .filter((h) => !historialReserva || h.idHistorial !== historialReserva.idHistorial)
-                .map((h) => (
-                  <div key={h.idHistorial} className="vet-ficha-historial-item">
-                    <button
-                      className="vet-ficha-historial-item__header"
-                      onClick={() => setExpandido(expandido === h.idHistorial ? null : h.idHistorial)}
-                    >
-                      <span className="vet-ficha-historial-item__fecha">{formatFecha(h.fechaRegistro)}</span>
-                      <span className="vet-ficha-historial-item__dx">
-                        {h.diagnostico?.length > 60
-                          ? h.diagnostico.slice(0, 60) + '…'
-                          : h.diagnostico}
-                      </span>
-                      <span>{expandido === h.idHistorial ? '▲' : '▼'}</span>
-                    </button>
-                    {expandido === h.idHistorial && (
-                      <div className="vet-ficha-historial-item__body">
-                        <p><strong>Dr. {h.nombreVeterinario}</strong></p>
-                        {h.tratamiento && <p><em>Tratamiento:</em> {h.tratamiento}</p>}
-                        {h.receta && <p><em>Receta:</em> {h.receta}</p>}
-                        {h.observaciones && <p><em>Obs:</em> {h.observaciones}</p>}
-                        {h.peso && <p><em>Peso registrado:</em> {h.peso} kg</p>}
-                        {h.vacunas?.length > 0 && (
-                          <p><em>Vacunas:</em> {h.vacunas.map((v) => v.nombreVacuna).join(', ')}</p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-            </div>
-          )}
-        </div>
-
-        {/* ── Col 3: panel de formulario ── */}
-        <div className="vet-ficha-col-right">
           {panelActivo === null && (
             <div className="vet-ficha-panel-vacio">
               <p className="vet-ficha-panel-vacio__icon">📋</p>
-              <p>Selecciona "Agregar consulta" o "Agregar servicio" para comenzar.</p>
+              <p>Selecciona una acción para comenzar.</p>
             </div>
           )}
 
@@ -346,7 +303,6 @@ const VetFichaMascota = () => {
                 <p className="vet-ficha-panel-ok">✓ Guardado correctamente</p>
               )}
 
-              {/* Diagnóstico */}
               <div className="vet-modal__field">
                 <label>Diagnóstico *</label>
                 <textarea rows={3} value={form.diagnostico}
@@ -354,7 +310,6 @@ const VetFichaMascota = () => {
                   placeholder="Describe el diagnóstico..." />
               </div>
 
-              {/* Observaciones */}
               <div className="vet-modal__field">
                 <label>Observaciones</label>
                 <textarea rows={2} value={form.observaciones}
@@ -362,7 +317,6 @@ const VetFichaMascota = () => {
                   placeholder="Notas internas..." />
               </div>
 
-              {/* Tratamiento */}
               <div className="vet-modal__field">
                 <label>Tratamiento</label>
                 <textarea rows={2} value={form.tratamiento}
@@ -370,7 +324,6 @@ const VetFichaMascota = () => {
                   placeholder="Describe el tratamiento..." />
               </div>
 
-              {/* Indicaciones + Duración */}
               <div className="vet-modal__grid">
                 <div className="vet-modal__field">
                   <label>Indicaciones</label>
@@ -386,7 +339,6 @@ const VetFichaMascota = () => {
                 </div>
               </div>
 
-              {/* Receta */}
               <div className="vet-modal__field">
                 <label>Receta</label>
                 <textarea rows={2} value={form.receta}
@@ -396,7 +348,6 @@ const VetFichaMascota = () => {
 
               <div className="vet-modal__divider" />
 
-              {/* Signos vitales */}
               <p className="vet-section-label">Signos vitales</p>
               <div className="vet-modal__grid">
                 <div className="vet-modal__field">
@@ -428,7 +379,6 @@ const VetFichaMascota = () => {
 
               <div className="vet-modal__divider" />
 
-              {/* Toggle vacuna */}
               <div className="vet-modal__checkbox">
                 <input type="checkbox" id="incluirVacuna" checked={form.incluirVacuna}
                   onChange={(e) => setF('incluirVacuna', e.target.checked)} />
@@ -476,7 +426,104 @@ const VetFichaMascota = () => {
             </div>
           )}
         </div>
+
+        {/* ── Col 3: sidebar historial ── */}
+        <div className="vet-ficha-col-historial">
+          <h4 className="vet-ficha-historial-title">Historial previo</h4>
+          {historialPrevio.filter((h) =>
+            !historialReserva || h.idHistorial !== historialReserva.idHistorial
+          ).length === 0 ? (
+            <p className="vet-ficha-historial-vacio">Sin consultas anteriores.</p>
+          ) : (
+            <div className="vet-ficha-historial-nav">
+              {historialPrevio
+                .filter((h) => !historialReserva || h.idHistorial !== historialReserva.idHistorial)
+                .map((h) => (
+                  <button
+                    key={h.idHistorial}
+                    className="vet-ficha-historial-nav__item"
+                    onClick={() => setHistorialModal(h)}
+                  >
+                    <span className="vet-ficha-historial-item__fecha">{formatFecha(h.fechaRegistro)}</span>
+                    <span className="vet-ficha-historial-nav__dx">
+                      {h.diagnostico?.length > 45
+                        ? h.diagnostico.slice(0, 45) + '…'
+                        : h.diagnostico}
+                    </span>
+                  </button>
+                ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Modal detalle consulta histórica */}
+      {historialModal && (
+        <div className="vet-confirm-overlay" onClick={() => setHistorialModal(null)}>
+          <div className="vet-historial-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="vet-historial-modal__header">
+              <div>
+                <p className="vet-historial-modal__fecha">{formatFecha(historialModal.fechaRegistro)}</p>
+                <p className="vet-historial-modal__vet">Dr. {historialModal.nombreVeterinario}</p>
+              </div>
+              <button className="vet-modal__close" onClick={() => setHistorialModal(null)}>✕</button>
+            </div>
+            <div className="vet-historial-modal__body">
+              <div className="vet-historial-modal__field">
+                <span className="vet-historial-modal__label">Diagnóstico</span>
+                <p>{historialModal.diagnostico}</p>
+              </div>
+              {historialModal.tratamiento && (
+                <div className="vet-historial-modal__field">
+                  <span className="vet-historial-modal__label">Tratamiento</span>
+                  <p>{historialModal.tratamiento}</p>
+                </div>
+              )}
+              {historialModal.receta && (
+                <div className="vet-historial-modal__field">
+                  <span className="vet-historial-modal__label">Receta</span>
+                  <p>{historialModal.receta}</p>
+                </div>
+              )}
+              {historialModal.indicaciones && (
+                <div className="vet-historial-modal__field">
+                  <span className="vet-historial-modal__label">Indicaciones</span>
+                  <p>{historialModal.indicaciones}</p>
+                </div>
+              )}
+              {historialModal.observaciones && (
+                <div className="vet-historial-modal__field">
+                  <span className="vet-historial-modal__label">Observaciones</span>
+                  <p>{historialModal.observaciones}</p>
+                </div>
+              )}
+              {(historialModal.peso || historialModal.temperatura || historialModal.frecuenciaCardiaca) && (
+                <div className="vet-historial-modal__field">
+                  <span className="vet-historial-modal__label">Signos vitales</span>
+                  <div className="vet-historial-modal__vitales">
+                    {historialModal.peso && <span>Peso: <strong>{historialModal.peso} kg</strong></span>}
+                    {historialModal.temperatura && <span>Temp: <strong>{historialModal.temperatura} °C</strong></span>}
+                    {historialModal.frecuenciaCardiaca && <span>FC: <strong>{historialModal.frecuenciaCardiaca} lpm</strong></span>}
+                    {historialModal.frecuenciaRespiratoria && <span>FR: <strong>{historialModal.frecuenciaRespiratoria} rpm</strong></span>}
+                    {historialModal.saturacionOxigeno && <span>SpO₂: <strong>{historialModal.saturacionOxigeno}%</strong></span>}
+                  </div>
+                </div>
+              )}
+              {historialModal.vacunas?.length > 0 && (
+                <div className="vet-historial-modal__field">
+                  <span className="vet-historial-modal__label">Vacunas aplicadas</span>
+                  <p>{historialModal.vacunas.map((v) => v.nombreVacuna).join(', ')}</p>
+                </div>
+              )}
+            </div>
+            <div className="vet-historial-modal__footer">
+              <button className="vet-btn-secondary" onClick={() => setHistorialModal(null)}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal confirmación cerrar ficha */}
       {confirmCerrar && (
