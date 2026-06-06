@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import { handleError } from '@/modules/core/lib/errorHandler'
-import { getServicios, agendarReserva } from '../services/agendamientoService'
+import { agendarReserva } from '../services/agendamientoService'
 import AgendaStepper   from '../components/agendamiento/AgendaStepper'
 import PasoPaciente    from '../components/agendamiento/PasoPaciente'
 import PasoCategoria   from '../components/agendamiento/PasoCategoria'
@@ -36,23 +36,11 @@ const Agendamiento = () => {
 
   const [paso, setPaso]           = useState(0)
   const [seleccion, setSeleccion] = useState(INIT)
-  const [servicios, setServicios] = useState([])
   const [loading, setLoading]     = useState(false)
   const [error, setError]         = useState(null)
   const [exito, setExito]         = useState(false)
 
   const cat = seleccion.categoriaReserva
-
-  // Carga servicios cuando se elige PROCEDIMIENTO o PELUQUERIA
-  useEffect(() => {
-    if (cat !== 'PROCEDIMIENTO' && cat !== 'PELUQUERIA') {
-      setServicios([])
-      return
-    }
-    getServicios(cat)
-      .then(setServicios)
-      .catch((err) => setError(handleError(err)))
-  }, [cat])
 
   const setField = (field) => (value) =>
     setSeleccion((prev) => ({ ...prev, [field]: value }))
@@ -93,12 +81,7 @@ const Agendamiento = () => {
   const puedeContinuar = [
     () => !!seleccion.mascota,
     () => !!seleccion.tipoAtencion,
-    () => {
-      if (seleccion.tipoAtencion === 'CONSULTA') return true
-      if (!cat) return false
-      if (cat === 'LABORATORIO') return true
-      return !!seleccion.servicio
-    },
+    () => seleccion.tipoAtencion === 'CONSULTA' ? true : !!cat,
     () => !!seleccion.turnoDetalle,
   ][paso]?.() ?? true
 
@@ -117,23 +100,25 @@ const Agendamiento = () => {
     setLoading(true)
     setError(null)
     try {
-      const esConsulta    = cat === 'CONSULTA'
-      const esLaboratorio = cat === 'LABORATORIO'
+      const LABEL_SUBTIPO = {
+        CONSULTA:      null,
+        LABORATORIO:   'Laboratorio',
+        PROCEDIMIENTO: 'Procedimiento',
+        PELUQUERIA:    'Peluquería',
+      }
 
-      const motivoPartes = esConsulta
+      const motivoPartes = cat === 'CONSULTA'
         ? [seleccion.motivoKey, seleccion.observacion?.trim()].filter(Boolean)
         : []
-      const motivo = esConsulta
+      const motivo = cat === 'CONSULTA'
         ? (motivoPartes.length ? motivoPartes.join(' — ') : 'Consulta general')
-        : esLaboratorio
-          ? 'Laboratorio'
-          : seleccion.servicio?.nombre
+        : LABEL_SUBTIPO[cat] ?? cat
 
       const res = await agendarReserva({
         idUsuario:        user.idUsuario,
         idVeterinario:    seleccion.veterinario.idUsuario,
         idMascota:        seleccion.mascota.idMascota,
-        idServicio:       (esConsulta || esLaboratorio) ? null : seleccion.servicio.idServicio,
+        idServicio:       null,
         idTurnoDetalle:   seleccion.turnoDetalle.id,
         categoriaReserva: cat,
         fecha:            seleccion.fecha,
@@ -197,12 +182,9 @@ const Agendamiento = () => {
               <PasoServicio
                 tipoAtencion={seleccion.tipoAtencion}
                 categoriaReserva={seleccion.categoriaReserva}
-                servicios={servicios}
-                seleccion={seleccion.servicio}
                 motivoKey={seleccion.motivoKey}
                 observacion={seleccion.observacion}
                 onSubtipo={handleSelectSubtipo}
-                onSelect={setField('servicio')}
                 onMotivoKey={setField('motivoKey')}
                 onObservacion={setField('observacion')}
               />

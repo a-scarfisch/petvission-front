@@ -6,6 +6,9 @@ const DIAS_CORTOS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 const toDateStr = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
+const fmtHora = (h) =>
+  typeof h === 'string' ? h.slice(0, 5) : String(h).slice(0, 5)
+
 const PasoDiaHoraVet = ({ seleccion, onSelect }) => {
   const proximos7 = Array.from({ length: 7 }, (_, i) => {
     const d = new Date()
@@ -30,6 +33,16 @@ const PasoDiaHoraVet = ({ seleccion, onSelect }) => {
     return () => { cancelled = true }
   }, [diaActivo])
 
+  // Agrupa slots por veterinario
+  const porVet = slots.reduce((acc, slot) => {
+    const id = slot.veterinario.idUsuario
+    if (!acc[id]) acc[id] = { vet: slot.veterinario, slots: [] }
+    acc[id].slots.push(slot)
+    return acc
+  }, {})
+
+  const slotSeleccionado = seleccion?.turnoDetalle?.id
+
   return (
     <div>
       <p className="ag-section-title">Elige día y veterinario disponible</p>
@@ -53,39 +66,41 @@ const PasoDiaHoraVet = ({ seleccion, onSelect }) => {
 
       <p className="ag-slots-title">Horarios disponibles</p>
 
-      {loading ? (
-        <p className="ag-no-slots">Cargando horarios…</p>
-      ) : slots.length === 0 ? (
-        <p className="ag-no-slots">No hay horarios disponibles para este día.</p>
-      ) : (
-        <div className="ag-slots-vet-grid">
-          {slots.map((slot) => {
-            const activo = seleccion?.turnoDetalle?.id === slot.idTurnoDetalle
-            return (
-              <button
-                key={slot.idTurnoDetalle}
-                type="button"
-                onClick={() => onSelect({
-                  turnoDetalle: { id: slot.idTurnoDetalle },
-                  fecha: diaActivo,
-                  hora: slot.horaInicio,
-                  veterinario: slot.veterinario,
+      <div className="ag-slots-panel">
+        {loading ? (
+          <p className="ag-slots-estado">Cargando horarios…</p>
+        ) : slots.length === 0 ? (
+          <p className="ag-slots-estado">No hay horarios disponibles para este día.</p>
+        ) : (
+          Object.values(porVet).map(({ vet, slots: vetSlots }) => (
+            <div key={vet.idUsuario} className="ag-slots-vet-group">
+              <p className="ag-slots-vet-name">
+                {vet.nombres} {vet.apellidos}
+              </p>
+              <div className="ag-slots-hours">
+                {vetSlots.map((slot) => {
+                  const activo = slotSeleccionado === slot.idTurnoDetalle
+                  return (
+                    <button
+                      key={slot.idTurnoDetalle}
+                      type="button"
+                      onClick={() => onSelect({
+                        turnoDetalle: { id: slot.idTurnoDetalle },
+                        fecha: diaActivo,
+                        hora: slot.horaInicio,
+                        veterinario: slot.veterinario,
+                      })}
+                      className={`ag-hour-btn${activo ? ' ag-hour-btn--active' : ''}`}
+                    >
+                      {fmtHora(slot.horaInicio)}
+                    </button>
+                  )
                 })}
-                className={`ag-slot-vet-btn${activo ? ' ag-slot-vet-btn--active' : ''}`}
-              >
-                <span className="ag-slot-vet-btn__hora">
-                  {typeof slot.horaInicio === 'string'
-                    ? slot.horaInicio.slice(0, 5)
-                    : String(slot.horaInicio).slice(0, 5)}
-                </span>
-                <span className="ag-slot-vet-btn__vet">
-                  {slot.veterinario.nombres} {slot.veterinario.apellidos}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-      )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   )
 }

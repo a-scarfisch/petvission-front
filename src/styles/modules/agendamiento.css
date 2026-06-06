@@ -633,53 +633,65 @@
 }
 
 /* ── Slots con vet (PasoDiaHoraVet) ──────────────────── */
-.ag-slots-vet-grid {
+.ag-slots-panel {
+  border: 1px solid #e2f0ee;
+  border-radius: 14px;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.ag-slots-estado {
+  color: var(--text-light);
+  font-size: 14px;
+  padding: 32px 20px;
+  margin: 0;
+  text-align: center;
+}
+
+.ag-slots-vet-group {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.ag-slots-vet-group:last-child {
+  border-bottom: none;
+}
+
+.ag-slots-vet-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 10px;
+}
+
+.ag-slots-hours {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
-.ag-slot-vet-btn {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 18px;
-  border-radius: 12px;
+.ag-hour-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
   border: 1.5px solid #e2f0ee;
   background: #fff;
+  color: var(--teal);
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  text-align: left;
-  transition: border-color .15s, background .15s;
+  transition: background .15s, color .15s, border-color .15s;
   font-family: inherit;
-  width: 100%;
 }
 
-.ag-slot-vet-btn:hover:not(.ag-slot-vet-btn--active) {
+.ag-hour-btn:hover:not(.ag-hour-btn--active) {
   border-color: var(--teal);
   background: #f0faf8;
 }
 
-.ag-slot-vet-btn--active {
-  border: 2px solid var(--teal);
-  background: #f0faf8;
-}
-
-.ag-slot-vet-btn__hora {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--teal);
-  min-width: 52px;
-  flex-shrink: 0;
-}
-
-.ag-slot-vet-btn--active .ag-slot-vet-btn__hora {
-  color: var(--teal);
-}
-
-.ag-slot-vet-btn__vet {
-  font-size: 14px;
-  color: #374151;
-  font-weight: 500;
+.ag-hour-btn--active {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
 }
 
 /* ── Pantalla Éxito ──────────────────────────────────── */
