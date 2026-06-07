@@ -118,10 +118,12 @@ const MascotaList = () => {
                       <div className="mascotas-mascota-cell">
                         <div className="mascotas-avatar">{especieEmoji(m.especie)}</div>
                         <div className="mascotas-nombre-col">
-                          <span className="mascotas-mascota-nombre">{m.nombre}</span>
-                          {m.animalGuia && (
-                            <div className="mascotas-guia-badge">🦮 Animal guía</div>
-                          )}
+                          <span className="mascotas-mascota-nombre">
+                            {m.nombre}
+                            {m.animalGuia && (
+                              <span className="mascotas-guia-icon" title="Animal guía o de apoyo emocional">🦮</span>
+                            )}
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -156,14 +158,12 @@ const MascotaList = () => {
               <div key={m.idMascota} className="mascotas-card">
                 <div className="mascotas-card__avatar">{especieEmoji(m.especie)}</div>
                 <div className="mascotas-card__nombre">{m.nombre}</div>
-                {m.animalGuia && (
-                  <div className="mascotas-guia-badge">🦮 Animal guía</div>
-                )}
                 <div className="mascotas-card__meta">{m.especie}{m.raza ? ` · ${m.raza}` : ''}</div>
                 <div className="mascotas-card__chips">
                   {m.sexo && <span className="mascotas-chip">{m.sexo}</span>}
                   <span className="mascotas-chip">{calcularEdad(m.fechaNacimiento)} años</span>
                   {m.peso && <span className="mascotas-chip">{m.peso} kg</span>}
+                  {m.animalGuia && <span className="mascotas-chip mascotas-chip--guia" title="Animal guía o de apoyo emocional">🦮 Animal guía</span>}
                 </div>
                 <div className="mascotas-card__actions">
                   <Link
