@@ -10,6 +10,7 @@ import {
   registrarVacunacion,
 } from '../services/historialService'
 import { getVacunasCatalogo } from '../services/vetService'
+import { useVetContext } from '../states/VetContext'
 import VetLayout from './VetLayout'
 
 const especieEmoji = (e) => ({ GATO: '🐱', AVE: '🐦', OTRO: '🐹' }[e?.toUpperCase()] ?? '🐶')
@@ -40,9 +41,13 @@ const FORM_VACIO = {
 const VetFichaMascota = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { updateCita } = useVetContext()
 
   const mascotaId = searchParams.get('mascotaId')
   const reservaId = searchParams.get('reservaId')
+  const estadoInicial = searchParams.get('estado')
+
+  const [reservaCompletada, setReservaCompletada] = useState(estadoInicial === 'COMPLETADA')
 
   const [mascota, setMascota] = useState(null)
   const [historialPrevio, setHistorialPrevio] = useState([])
@@ -174,7 +179,9 @@ const VetFichaMascota = () => {
   const handleCerrarFicha = async () => {
     setCerrando(true)
     try {
-      await apiClient.patch(`/reservas/${reservaId}/completar`)
+      const { data } = await apiClient.patch(`/reservas/${reservaId}/completar`)
+      updateCita(data.data)
+      setReservaCompletada(true)
       navigate('/vet/citas')
     } catch (err) {
       alert(handleError(err))
@@ -218,12 +225,18 @@ const VetFichaMascota = () => {
           <h2 className="vet-page-title">🩺 Ficha de atención</h2>
         </div>
         {reservaId && (
-          <button
-            className="vet-btn-cerrar-ficha"
-            onClick={() => setConfirmCerrar(true)}
-          >
-            ✓ Cerrar ficha
-          </button>
+          reservaCompletada ? (
+            <span className="vet-ficha-estado-badge vet-ficha-estado-badge--completada">
+              ✓ Atención finalizada
+            </span>
+          ) : (
+            <button
+              className="vet-btn-cerrar-ficha"
+              onClick={() => setConfirmCerrar(true)}
+            >
+              ✓ Finalizar atención
+            </button>
+          )
         )}
       </div>
 
@@ -266,12 +279,14 @@ const VetFichaMascota = () => {
             <button
               className={panelActivo === 'consulta' ? 'vet-btn-primary' : 'vet-btn-secondary'}
               onClick={handleAbrirConsulta}
+              disabled={reservaCompletada}
             >
-              📋 {modoEdicion ? 'Editar consulta' : 'Agregar consulta'}
+              📋 {modoEdicion ? 'Ver consulta' : 'Agregar consulta'}
             </button>
             <button
               className={panelActivo === 'servicio' ? 'vet-btn-primary' : 'vet-btn-secondary'}
               onClick={() => setPanelActivo('servicio')}
+              disabled={reservaCompletada}
             >
               🔧 Agregar servicio
             </button>
@@ -296,7 +311,7 @@ const VetFichaMascota = () => {
           {panelActivo === 'consulta' && (
             <div className="vet-ficha-panel">
               <h4 className="vet-ficha-panel-title">
-                {modoEdicion ? '✏️ Editar consulta' : '📋 Nueva consulta'}
+                {reservaCompletada ? '📋 Consulta registrada' : modoEdicion ? '✏️ Editar consulta' : '📋 Nueva consulta'}
               </h4>
 
               {guardadoOk && (
@@ -307,21 +322,24 @@ const VetFichaMascota = () => {
                 <label>Diagnóstico *</label>
                 <textarea rows={3} value={form.diagnostico}
                   onChange={(e) => setF('diagnostico', e.target.value)}
-                  placeholder="Describe el diagnóstico..." />
+                  placeholder="Describe el diagnóstico..."
+                  disabled={reservaCompletada} />
               </div>
 
               <div className="vet-modal__field">
                 <label>Observaciones</label>
                 <textarea rows={2} value={form.observaciones}
                   onChange={(e) => setF('observaciones', e.target.value)}
-                  placeholder="Notas internas..." />
+                  placeholder="Notas internas..."
+                  disabled={reservaCompletada} />
               </div>
 
               <div className="vet-modal__field">
                 <label>Tratamiento</label>
                 <textarea rows={2} value={form.tratamiento}
                   onChange={(e) => setF('tratamiento', e.target.value)}
-                  placeholder="Describe el tratamiento..." />
+                  placeholder="Describe el tratamiento..."
+                  disabled={reservaCompletada} />
               </div>
 
               <div className="vet-modal__grid">
@@ -329,13 +347,15 @@ const VetFichaMascota = () => {
                   <label>Indicaciones</label>
                   <textarea rows={2} value={form.indicaciones}
                     onChange={(e) => setF('indicaciones', e.target.value)}
-                    placeholder="Para el propietario..." />
+                    placeholder="Para el propietario..."
+                    disabled={reservaCompletada} />
                 </div>
                 <div className="vet-modal__field">
                   <label>Duración</label>
                   <input type="text" value={form.duracion}
                     onChange={(e) => setF('duracion', e.target.value)}
-                    placeholder="Ej: 7 días" />
+                    placeholder="Ej: 7 días"
+                    disabled={reservaCompletada} />
                 </div>
               </div>
 
@@ -343,7 +363,8 @@ const VetFichaMascota = () => {
                 <label>Receta</label>
                 <textarea rows={2} value={form.receta}
                   onChange={(e) => setF('receta', e.target.value)}
-                  placeholder="Medicamentos recetados..." />
+                  placeholder="Medicamentos recetados..."
+                  disabled={reservaCompletada} />
               </div>
 
               <div className="vet-modal__divider" />
@@ -353,43 +374,51 @@ const VetFichaMascota = () => {
                 <div className="vet-modal__field">
                   <label>Peso (kg)</label>
                   <input type="number" min="0" step="0.1" value={form.peso}
-                    onChange={(e) => setF('peso', e.target.value)} placeholder="Ej: 12.5" />
+                    onChange={(e) => setF('peso', e.target.value)} placeholder="Ej: 12.5"
+                    disabled={reservaCompletada} />
                 </div>
                 <div className="vet-modal__field">
                   <label>Temperatura (°C)</label>
                   <input type="number" min="35" max="42" step="0.1" value={form.temperatura}
-                    onChange={(e) => setF('temperatura', e.target.value)} placeholder="Ej: 38.5" />
+                    onChange={(e) => setF('temperatura', e.target.value)} placeholder="Ej: 38.5"
+                    disabled={reservaCompletada} />
                 </div>
                 <div className="vet-modal__field">
                   <label>Frec. cardíaca (lpm)</label>
                   <input type="number" min="0" value={form.frecuenciaCardiaca}
-                    onChange={(e) => setF('frecuenciaCardiaca', e.target.value)} placeholder="Ej: 80" />
+                    onChange={(e) => setF('frecuenciaCardiaca', e.target.value)} placeholder="Ej: 80"
+                    disabled={reservaCompletada} />
                 </div>
                 <div className="vet-modal__field">
                   <label>Frec. respiratoria (rpm)</label>
                   <input type="number" min="0" value={form.frecuenciaRespiratoria}
-                    onChange={(e) => setF('frecuenciaRespiratoria', e.target.value)} placeholder="Ej: 20" />
+                    onChange={(e) => setF('frecuenciaRespiratoria', e.target.value)} placeholder="Ej: 20"
+                    disabled={reservaCompletada} />
                 </div>
                 <div className="vet-modal__field">
                   <label>Saturación O₂ (%)</label>
                   <input type="number" min="0" max="100" value={form.saturacionOxigeno}
-                    onChange={(e) => setF('saturacionOxigeno', e.target.value)} placeholder="Ej: 98" />
+                    onChange={(e) => setF('saturacionOxigeno', e.target.value)} placeholder="Ej: 98"
+                    disabled={reservaCompletada} />
                 </div>
               </div>
 
               <div className="vet-modal__divider" />
 
-              <div className="vet-modal__checkbox">
-                <input type="checkbox" id="incluirVacuna" checked={form.incluirVacuna}
-                  onChange={(e) => setF('incluirVacuna', e.target.checked)} />
-                <label htmlFor="incluirVacuna">¿Aplicar vacuna en esta consulta?</label>
-              </div>
+              {!reservaCompletada && (
+                <div className="vet-modal__checkbox">
+                  <input type="checkbox" id="incluirVacuna" checked={form.incluirVacuna}
+                    onChange={(e) => setF('incluirVacuna', e.target.checked)} />
+                  <label htmlFor="incluirVacuna">¿Aplicar vacuna en esta consulta?</label>
+                </div>
+              )}
 
               {form.incluirVacuna && (
                 <div className="vet-modal__grid">
                   <div className="vet-modal__field">
                     <label>Vacuna *</label>
-                    <select value={form.idVacuna} onChange={(e) => setF('idVacuna', e.target.value)}>
+                    <select value={form.idVacuna} onChange={(e) => setF('idVacuna', e.target.value)}
+                      disabled={reservaCompletada}>
                       <option value="">Seleccionar...</option>
                       {vacunasCatalogo.map((v) => (
                         <option key={v.idVacuna} value={v.idVacuna}>{v.nombre}</option>
@@ -399,30 +428,35 @@ const VetFichaMascota = () => {
                   <div className="vet-modal__field">
                     <label>Fecha aplicación</label>
                     <input type="date" value={form.fechaAplicacion}
-                      onChange={(e) => setF('fechaAplicacion', e.target.value)} />
+                      onChange={(e) => setF('fechaAplicacion', e.target.value)}
+                      disabled={reservaCompletada} />
                   </div>
                   <div className="vet-modal__field">
                     <label>Próxima dosis</label>
                     <input type="date" value={form.fechaProxima}
-                      onChange={(e) => setF('fechaProxima', e.target.value)} />
+                      onChange={(e) => setF('fechaProxima', e.target.value)}
+                      disabled={reservaCompletada} />
                   </div>
                   <div className="vet-modal__field">
                     <label>Lote</label>
                     <input type="text" value={form.lote}
-                      onChange={(e) => setF('lote', e.target.value)} placeholder="LOT-2024-001" />
+                      onChange={(e) => setF('lote', e.target.value)} placeholder="LOT-2024-001"
+                      disabled={reservaCompletada} />
                   </div>
                 </div>
               )}
 
               {errorForm && <p className="vet-modal__error">{errorForm}</p>}
 
-              <button
-                className="vet-btn-primary vet-btn-primary--full"
-                onClick={handleGuardar}
-                disabled={guardando}
-              >
-                {guardando ? 'Guardando...' : modoEdicion ? '💾 Actualizar consulta' : '💾 Guardar consulta'}
-              </button>
+              {!reservaCompletada && (
+                <button
+                  className="vet-btn-primary vet-btn-primary--full"
+                  onClick={handleGuardar}
+                  disabled={guardando}
+                >
+                  {guardando ? 'Guardando...' : modoEdicion ? '💾 Actualizar consulta' : '💾 Guardar consulta'}
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -530,9 +564,9 @@ const VetFichaMascota = () => {
         <div className="vet-confirm-overlay" onClick={() => setConfirmCerrar(false)}>
           <div className="vet-confirm-modal" onClick={(e) => e.stopPropagation()}>
             <p className="vet-confirm-modal__icon">✓</p>
-            <p className="vet-confirm-modal__title">¿Cerrar ficha y completar la reserva?</p>
+            <p className="vet-confirm-modal__title">¿Finalizar la atención?</p>
             <p className="vet-confirm-modal__desc">
-              La reserva pasará a estado COMPLETADA. Esta acción no se puede deshacer.
+              La reserva pasará a estado Completada. La ficha quedará en modo solo lectura.
             </p>
             <div className="vet-confirm-modal__footer">
               <button className="vet-btn-secondary" onClick={() => setConfirmCerrar(false)}>

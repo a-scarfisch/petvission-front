@@ -340,6 +340,20 @@
 
 .vet-btn-cerrar-ficha:hover { background: #047857; }
 
+.vet-ficha-estado-badge {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.vet-ficha-estado-badge--completada {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
 .vet-ficha-layout {
   display: grid;
   grid-template-columns: 260px 1fr 220px;

@@ -29,7 +29,7 @@ const VetCitas = () => {
     try {
       const { data } = await apiClient.patch(`/reservas/${cita.idReserva}/iniciarAtencion`)
       updateCita(data.data)
-      navigate(`/vet/ficha-mascota?mascotaId=${cita.idMascota}&reservaId=${cita.idReserva}`)
+      navigate(`/vet/ficha-mascota?mascotaId=${cita.idMascota}&reservaId=${cita.idReserva}&estado=${data.data.estado}`)
     } catch (err) {
       alert(handleError(err))
     } finally {
