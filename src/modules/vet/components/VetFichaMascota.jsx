@@ -246,13 +246,15 @@ const VetFichaMascota = () => {
         {/* ── Col 1: info mascota ── */}
         <div className="vet-ficha-col-left">
           <div className="vet-ficha-avatar-lg">{especieEmoji(mascota?.especie)}</div>
-          <h3 className="vet-ficha-nombre">{mascota?.nombre}</h3>
+          <h3 className="vet-ficha-nombre">
+            {mascota?.nombre}
+            {mascota?.animalGuia && (
+              <span className="vet-guia-icon" title="Animal guía o de apoyo emocional">🦮</span>
+            )}
+          </h3>
           <p className="vet-ficha-especie">
             {mascota?.especie}{mascota?.raza ? ` · ${mascota.raza}` : ''}
           </p>
-          {mascota?.animalGuia && (
-            <span className="vet-guia-badge">🦮 Animal guía</span>
-          )}
 
           <div className="vet-ficha-datos">
             {mascota?.sexo && <div className="vet-ficha-dato"><span>Sexo</span><strong>{mascota.sexo}</strong></div>}

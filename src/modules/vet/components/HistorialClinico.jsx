@@ -178,7 +178,7 @@ const HistorialClinico = () => {
           <div>
             <div className="vet-ficha-header-row">
               <h3 className="vet-ficha__nombre">{mascota.nombre}</h3>
-              {mascota.animalGuia && <span className="vet-guia-badge">🦮 Animal guía</span>}
+              {mascota.animalGuia && <span className="vet-guia-icon" title="Animal guía o de apoyo emocional">🦮</span>}
             </div>
             <p className="vet-ficha__meta">
               {mascota.especie}{mascota.raza ? ` · ${mascota.raza}` : ''} · Dueño: {mascota.nombreUsuario}

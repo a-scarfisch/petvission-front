@@ -123,11 +123,10 @@
 .vet-estado--REPROGRAMADA { background: #e0e7ff; color: #3730a3; }
 
 /* ===== ANIMAL GUÍA BADGE ===== */
-.vet-guia-badge {
-  display: inline-block; margin-top: 3px;
-  background: #f0faf8; border: 1px solid #1a9e8f;
-  color: #1a9e8f; border-radius: 20px;
-  padding: 2px 8px; font-size: 11px; font-weight: 500;
+.vet-guia-icon {
+  margin-left: 6px;
+  font-size: 13px;
+  cursor: default;
 }
 
 /* ===== EMPTY STATE ===== */
@@ -748,7 +747,6 @@
 
 .vet-btn-volver             { font-size: 13px; margin-bottom: 6px; }
 .vet-ficha-header-row       { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.vet-ficha-col-left .vet-guia-badge { margin-bottom: 8px; }
 
 .vet-section-label {
   font-size: 12px;

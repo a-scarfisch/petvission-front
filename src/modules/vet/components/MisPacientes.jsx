@@ -85,10 +85,12 @@ const MisPacientes = () => {
                     <div className="vet-mascota-cell">
                       <div className="vet-mascota-avatar">{especieEmoji(p.especie)}</div>
                       <div className="vet-mascota-nombre-col">
-                        <span className="vet-mascota-nombre">{p.nombreMascota}</span>
-                        {p.animalGuia && (
-                          <span className="vet-guia-badge">🦮 Animal guía</span>
-                        )}
+                        <span className="vet-mascota-nombre">
+                          {p.nombreMascota}
+                          {p.animalGuia && (
+                            <span className="vet-guia-icon" title="Animal guía o de apoyo emocional">🦮</span>
+                          )}
+                        </span>
                       </div>
                     </div>
                   </td>
