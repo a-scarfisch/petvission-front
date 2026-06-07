@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import { useNavigate } from 'react-router-dom'
 import ClientLayout from './ClientLayout'
-import { cancelarCita, reprogramarCita, getDisponibilidadParaReprogramar } from '../services/citasService'
+import { confirmarCita, cancelarCita, reprogramarCita, getDisponibilidadParaReprogramar } from '../services/citasService'
 import '@/styles/global.css'
 import '@/styles/modules/reservas.css'
 
@@ -59,6 +59,19 @@ const MisReservas = () => {
       setSlotsDisponibles([])
     } finally {
       setLoadingSlots(false)
+    }
+  }
+
+  const handleConfirmar = async (cita) => {
+    setLoadingId(cita.idReserva)
+    try {
+      const updated = await confirmarCita(cita.idReserva)
+      updateCita(updated)
+      showToast('Reserva confirmada')
+    } catch {
+      showToast('Error al confirmar la reserva', true)
+    } finally {
+      setLoadingId(null)
     }
   }
 
@@ -205,21 +218,30 @@ const MisReservas = () => {
                 </span>
 
                 <div className="res-acciones">
+                  {c.estado === 'PENDIENTE' && (
                     <button
-                      className="res-btn-reprog"
-                      onClick={() => openReprog(c)}
+                      className="res-btn-confirmar"
+                      onClick={() => handleConfirmar(c)}
                       disabled={loadingId === c.idReserva}
                     >
-                      🔄 Reprogramar
+                      ✓ Confirmar
                     </button>
-                    <button
-                      className="res-btn-cancel"
-                      onClick={() => openCancel(c)}
-                      disabled={loadingId === c.idReserva}
-                    >
-                      ✕ Cancelar
-                    </button>
-                  </div>
+                  )}
+                  <button
+                    className="res-btn-reprog"
+                    onClick={() => openReprog(c)}
+                    disabled={loadingId === c.idReserva}
+                  >
+                    🔄 Reprogramar
+                  </button>
+                  <button
+                    className="res-btn-cancel"
+                    onClick={() => openCancel(c)}
+                    disabled={loadingId === c.idReserva}
+                  >
+                    ✕ Cancelar
+                  </button>
+                </div>
               </div>
             )
           })

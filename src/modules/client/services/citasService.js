@@ -20,6 +20,11 @@ export const agendarCita = async (citaData) => {
   return data
 }
 
+export const confirmarCita = async (idCita) => {
+  const { data } = await apiClient.patch(`/reservas/${idCita}/confirmar`)
+  return data.data
+}
+
 export const cancelarCita = async (idCita) => {
   const { data } = await apiClient.patch(`/reservas/${idCita}/cancelar`)
   return data.data

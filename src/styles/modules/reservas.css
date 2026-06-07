@@ -81,8 +81,19 @@
   font-size: 13px;
   font-weight: 500;
 }
+.res-btn-confirmar {
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  background: #059669;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
 .res-btn-reprog:disabled,
-.res-btn-cancel:disabled { opacity: 0.5; cursor: default; }
+.res-btn-cancel:disabled,
+.res-btn-confirmar:disabled { opacity: 0.5; cursor: default; }
 
 /* ── Toast ── */
 .res-toast {
