@@ -21,7 +21,7 @@ const VetCitas = () => {
   const [nuevaHora, setNuevaHora] = useState('')
 
   const citasFiltradas = filtro === 'Todas'
-    ? citas
+    ? citas.filter((c) => c.estado !== 'CANCELADA')
     : citas.filter((c) => c.estado === filtro)
 
   const handleAbrirFicha = async (cita) => {
