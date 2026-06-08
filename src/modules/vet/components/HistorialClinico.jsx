@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { handleError } from '@/modules/core/lib/errorHandler'
 import apiClient from '@/modules/core/lib/apiClient'
-import { getHistorialMascota, crearConsulta } from '../services/historialService'
+import { getHistorialMascota, crearConsulta, getVacunasMascota } from '../services/historialService'
 import { getVacunasCatalogo } from '../services/vetService'
 import VetLayout from './VetLayout'
+import '@/styles/modules/historial.css'
 
 const especieEmoji = (especie) => {
   const map = { GATO: '🐱', AVE: '🐦', OTRO: '🐹' }
@@ -47,6 +48,13 @@ const HistorialClinico = () => {
   const [loadingPage, setLoadingPage] = useState(true)
   const [errorPage, setErrorPage] = useState(null)
 
+  const [activeTab, setActiveTab] = useState('historial')
+  const [vacunas, setVacunas] = useState([])
+  const [catalogo, setCatalogo] = useState([])
+  const [loadingVacunas, setLoadingVacunas] = useState(false)
+  const [errorVacunas, setErrorVacunas] = useState(null)
+  const [vacunasCargadas, setVacunasCargadas] = useState(false)
+
   const [mostrarModal, setMostrarModal] = useState(false)
   const [form, setForm] = useState(FORM_INICIAL)
   const [vacunasCatalogo, setVacunasCatalogo] = useState([])
@@ -75,6 +83,23 @@ const HistorialClinico = () => {
     }
     load()
   }, [mascotaId])
+
+  useEffect(() => {
+    if (!mascotaId || activeTab !== 'vacunas' || vacunasCargadas || !mascota) return
+    const espVacuna = mascota.especie === 'GATO' ? 'FELINA'
+      : mascota.especie === 'PERRO' ? 'CANINA'
+      : null
+    setLoadingVacunas(true)
+    setErrorVacunas(null)
+    Promise.all([getVacunasMascota(mascotaId), getVacunasCatalogo(espVacuna)])
+      .then(([vacsData, catData]) => {
+        setVacunas(vacsData)
+        setCatalogo(catData)
+        setVacunasCargadas(true)
+      })
+      .catch((err) => setErrorVacunas(handleError(err)))
+      .finally(() => setLoadingVacunas(false))
+  }, [activeTab, mascotaId, vacunasCargadas, mascota])
 
   const handleAbrirModal = async () => {
     setForm(FORM_INICIAL)
@@ -195,81 +220,196 @@ const HistorialClinico = () => {
         </div>
       )}
 
-      {/* Timeline historial */}
-      {historial.length === 0 ? (
-        <div className="vet-section">
-          <div className="vet-empty">
-            <p className="vet-empty__icon">📋</p>
-            <p>No hay registros en el historial clínico.</p>
+      {/* Tabs */}
+      <div className="vet-tabs">
+        <button
+          className={`vet-tab-btn${activeTab === 'historial' ? ' vet-tab-btn--active' : ''}`}
+          onClick={() => setActiveTab('historial')}
+        >
+          📋 Historial Clínico
+        </button>
+        <button
+          className={`vet-tab-btn${activeTab === 'vacunas' ? ' vet-tab-btn--active' : ''}`}
+          onClick={() => setActiveTab('vacunas')}
+        >
+          💉 Vacunación
+        </button>
+      </div>
+
+      {/* ── Tab: Historial Clínico ── */}
+      {activeTab === 'historial' && (
+        historial.length === 0 ? (
+          <div className="vet-section">
+            <div className="vet-empty">
+              <p className="vet-empty__icon">📋</p>
+              <p>No hay registros en el historial clínico.</p>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="vet-timeline">
-          {historial.map((h) => (
-            <div key={h.idHistorial} className="vet-timeline-item">
-              <div className="vet-timeline-item__meta">
-                <span className="vet-timeline-item__fecha">{formatFecha(h.fechaRegistro)}</span>
-                <span className="vet-timeline-item__vet">Dr. {h.nombreVeterinario}</span>
-              </div>
-
-              <p className="vet-timeline-item__titulo">Diagnóstico</p>
-              <p className="vet-timeline-item__body">{h.diagnostico}</p>
-
-              {h.tratamientos?.length > 0 && h.tratamientos.map((t) => (
-                <div key={t.idTratamiento} className="vet-timeline-item__section">
-                  <p className="vet-timeline-item__section-label">Tratamiento</p>
-                  <p className="vet-timeline-item__body">{t.descripcion}</p>
-                  {t.indicaciones && (
-                    <p className="vet-timeline-item__body vet-timeline-item__body--muted">
-                      Indicaciones: {t.indicaciones}
-                    </p>
-                  )}
-                  {t.duracion && (
-                    <p className="vet-timeline-item__body vet-timeline-item__body--muted">
-                      Duración: {t.duracion}
-                    </p>
-                  )}
+        ) : (
+          <div className="vet-timeline">
+            {historial.map((h) => (
+              <div key={h.idHistorial} className="vet-timeline-item">
+                <div className="vet-timeline-item__meta">
+                  <span className="vet-timeline-item__fecha">{formatFecha(h.fechaRegistro)}</span>
+                  <span className="vet-timeline-item__vet">Dr. {h.nombreVeterinario}</span>
                 </div>
-              ))}
 
-              {h.receta && (
-                <div className="vet-timeline-item__section">
-                  <p className="vet-timeline-item__section-label">Receta</p>
-                  <p className="vet-timeline-item__body">{h.receta}</p>
-                </div>
-              )}
+                <p className="vet-timeline-item__titulo">Diagnóstico</p>
+                <p className="vet-timeline-item__body">{h.diagnostico}</p>
 
-              {h.observaciones && (
-                <div className="vet-timeline-item__section">
-                  <p className="vet-timeline-item__section-label">Observaciones</p>
-                  <p className="vet-timeline-item__body">{h.observaciones}</p>
-                </div>
-              )}
-
-              {h.peso && (
-                <div className="vet-timeline-item__section">
-                  <p className="vet-timeline-item__section-label">Peso registrado</p>
-                  <p className="vet-timeline-item__body">{h.peso} kg</p>
-                </div>
-              )}
-
-              {h.vacunas?.length > 0 && (
-                <div className="vet-timeline-item__section">
-                  <p className="vet-timeline-item__section-label">Vacunas aplicadas</p>
-                  <div className="vet-vacunas-row">
-                    {h.vacunas.map((v) => (
-                      <span key={v.idVacunacion} className="vet-vacuna-tag">
-                        💉 {v.nombreVacuna}
-                        {v.lote && ` · lote: ${v.lote}`}
-                        {v.proximaDosis && ` · próxima: ${v.proximaDosis}`}
-                      </span>
-                    ))}
+                {h.tratamientos?.length > 0 && h.tratamientos.map((t) => (
+                  <div key={t.idTratamiento} className="vet-timeline-item__section">
+                    <p className="vet-timeline-item__section-label">Tratamiento</p>
+                    <p className="vet-timeline-item__body">{t.descripcion}</p>
+                    {t.indicaciones && (
+                      <p className="vet-timeline-item__body vet-timeline-item__body--muted">
+                        Indicaciones: {t.indicaciones}
+                      </p>
+                    )}
+                    {t.duracion && (
+                      <p className="vet-timeline-item__body vet-timeline-item__body--muted">
+                        Duración: {t.duracion}
+                      </p>
+                    )}
                   </div>
+                ))}
+
+                {h.receta && (
+                  <div className="vet-timeline-item__section">
+                    <p className="vet-timeline-item__section-label">Receta</p>
+                    <p className="vet-timeline-item__body">{h.receta}</p>
+                  </div>
+                )}
+
+                {h.observaciones && (
+                  <div className="vet-timeline-item__section">
+                    <p className="vet-timeline-item__section-label">Observaciones</p>
+                    <p className="vet-timeline-item__body">{h.observaciones}</p>
+                  </div>
+                )}
+
+                {h.peso && (
+                  <div className="vet-timeline-item__section">
+                    <p className="vet-timeline-item__section-label">Peso registrado</p>
+                    <p className="vet-timeline-item__body">{h.peso} kg</p>
+                  </div>
+                )}
+
+                {h.vacunas?.length > 0 && (
+                  <div className="vet-timeline-item__section">
+                    <p className="vet-timeline-item__section-label">Vacunas aplicadas</p>
+                    <div className="vet-vacunas-row">
+                      {h.vacunas.map((v) => (
+                        <span key={v.idVacunacion} className="vet-vacuna-tag">
+                          💉 {v.nombreVacuna}
+                          {v.lote && ` · lote: ${v.lote}`}
+                          {v.proximaDosis && ` · próxima: ${v.proximaDosis}`}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )
+      )}
+
+      {/* ── Tab: Vacunación ── */}
+      {activeTab === 'vacunas' && (
+        loadingVacunas ? (
+          <p className="vet-loading">Cargando vacunas...</p>
+        ) : errorVacunas ? (
+          <div className="vet-section">
+            <div className="vet-empty">
+              <p className="vet-empty__icon">⚠️</p>
+              <p>{errorVacunas}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="historial-vacunacion">
+            <div className="historial-seccion">
+              <h3 className="historial-seccion__titulo">
+                Vacunas aplicadas
+                {vacunas.length > 0 && (
+                  <span className="historial-seccion__badge">
+                    {vacunas.length} registro{vacunas.length !== 1 ? 's' : ''}
+                  </span>
+                )}
+              </h3>
+              {vacunas.length === 0 ? (
+                <div className="historial-empty" style={{ padding: '32px' }}>
+                  <p className="historial-empty__icon" style={{ fontSize: '28px' }}>💉</p>
+                  <p style={{ fontSize: '14px' }}>No hay vacunas registradas para esta mascota.</p>
+                </div>
+              ) : (
+                <div className="historial-vacunas-lista">
+                  {vacunas.map((v) => (
+                    <div key={v.idVacunacion} className="historial-vacuna-card">
+                      <div className="historial-vacuna-card__icon">💉</div>
+                      <div className="historial-vacuna-card__body">
+                        <p className="historial-vacuna-card__nombre">{v.nombreVacuna}</p>
+                        <p className="historial-vacuna-card__meta">
+                          Aplicada: {formatFecha(v.fechaAplicacion)}
+                          {v.nombreVeterinario && ` · Dr. ${v.nombreVeterinario}`}
+                        </p>
+                        {v.lote && (
+                          <p className="historial-vacuna-card__meta">Lote: {v.lote}</p>
+                        )}
+                        {v.proximaDosis && (
+                          <p className="historial-vacuna-card__proxima">
+                            Próxima dosis: {formatFecha(v.proximaDosis)}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-          ))}
-        </div>
+
+            <div className="historial-seccion">
+              <h3 className="historial-seccion__titulo">
+                Catálogo recomendado
+                {mascota?.especie && (
+                  <span className="historial-seccion__badge">
+                    {mascota.especie === 'PERRO' ? '🐶 Canino' : mascota.especie === 'GATO' ? '🐱 Felino' : mascota.especie}
+                  </span>
+                )}
+              </h3>
+              {catalogo.length === 0 ? (
+                <div className="historial-empty" style={{ padding: '32px' }}>
+                  <p style={{ fontSize: '14px' }}>No hay vacunas en el catálogo para esta especie.</p>
+                </div>
+              ) : (
+                <div className="historial-catalogo-grid">
+                  {catalogo.map((c) => {
+                    const yaAplicada = vacunas.some((v) => v.nombreVacuna === c.nombre)
+                    return (
+                      <div
+                        key={c.idVacuna}
+                        className={`historial-catalogo-item${yaAplicada ? ' historial-catalogo-item--aplicada' : ''}`}
+                      >
+                        <div className="historial-catalogo-item__header">
+                          <span className="historial-catalogo-item__nombre">{c.nombre}</span>
+                          {yaAplicada && (
+                            <span className="historial-catalogo-item__check">✓ Aplicada</span>
+                          )}
+                        </div>
+                        {c.descripcion && (
+                          <p className="historial-catalogo-item__desc">{c.descripcion}</p>
+                        )}
+                        {c.dosis && (
+                          <p className="historial-catalogo-item__dosis">Dosis: {c.dosis}</p>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )
       )}
 
       {/* Modal nueva consulta */}

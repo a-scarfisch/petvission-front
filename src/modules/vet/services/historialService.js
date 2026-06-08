@@ -20,6 +20,11 @@ export const actualizarConsulta = async (idHistorial, consultaData) => {
   return data.data
 }
 
+export const getVacunasMascota = async (idMascota) => {
+  const { data } = await apiClient.get(`/vacunacion/mascota/${idMascota}`)
+  return data.data ?? []
+}
+
 export const registrarVacunacion = async (vacunaData) => {
   const { data } = await apiClient.post('/vacunacion/desde-consulta', vacunaData)
   return data.data
