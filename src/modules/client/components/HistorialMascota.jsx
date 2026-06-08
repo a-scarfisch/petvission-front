@@ -208,6 +208,7 @@ const HistorialMascota = () => {
                       {h.vacunas.map((v) => (
                         <span key={v.idVacunacion} className="historial-vacuna-tag">
                           💉 {v.nombreVacuna}
+                          {v.lote && ` · lote: ${v.lote}`}
                           {v.proximaDosis && ` · próxima: ${v.proximaDosis}`}
                         </span>
                       ))}
@@ -252,6 +253,9 @@ const HistorialMascota = () => {
                           Aplicada: {formatFecha(v.fechaAplicacion)}
                           {v.nombreVeterinario && ` · Dr. ${v.nombreVeterinario}`}
                         </p>
+                        {v.lote && (
+                          <p className="historial-vacuna-card__meta">Lote: {v.lote}</p>
+                        )}
                         {v.proximaDosis && (
                           <p className="historial-vacuna-card__proxima">
                             Próxima dosis: {formatFecha(v.proximaDosis)}

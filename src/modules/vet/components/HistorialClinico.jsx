@@ -260,6 +260,7 @@ const HistorialClinico = () => {
                     {h.vacunas.map((v) => (
                       <span key={v.idVacunacion} className="vet-vacuna-tag">
                         💉 {v.nombreVacuna}
+                        {v.lote && ` · lote: ${v.lote}`}
                         {v.proximaDosis && ` · próxima: ${v.proximaDosis}`}
                       </span>
                     ))}
