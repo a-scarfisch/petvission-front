@@ -13,29 +13,43 @@ const DIA_LABEL = {
   SABADO:    'Sábado',
 }
 
+const TURNO_CONFIG = {
+  MANANA: { label: 'Mañana', icon: '☀️',  hrs: '08:00 – 14:00' },
+  TARDE:  { label: 'Tarde',  icon: '🌤️', hrs: '14:00 – 20:00' },
+  NOCHE:  { label: 'Noche',  icon: '🌙',  hrs: '20:00 – 00:00' },
+}
+
 const formatHora = (hora) => hora?.toString().slice(0, 5) ?? '—'
 
-const turnoLabel = (horaInicio) => {
-  if (!horaInicio) return ''
+const derivarTurno = (horaInicio) => {
+  if (!horaInicio) return null
   const h = parseInt(horaInicio.toString().slice(0, 2))
-  if (h >= 6 && h < 14) return { label: 'Mañana', color: '#f59e0b' }
-  if (h >= 14 && h < 20) return { label: 'Tarde', color: '#6366f1' }
-  return { label: 'Noche', color: '#1e3a5f' }
+  if (h >= 6 && h < 14) return 'MANANA'
+  if (h >= 14 && h < 20) return 'TARDE'
+  return 'NOCHE'
 }
+
+const getInitials = (nombre) =>
+  (nombre ?? '').split(' ').slice(0, 2).map((s) => s[0]).join('').toUpperCase()
 
 const FORM_VACIO = { idVeterinario: '', diaSemana: '', horaInicio: '', horaFin: '' }
 
 const AdminHorarios = () => {
-  const [plantillas, setPlantillas]   = useState([])
-  const [veterinarios, setVeterinarios] = useState([])
-  const [loading, setLoading]         = useState(true)
-  const [busqueda, setBusqueda]       = useState('')
-  const [loadingId, setLoadingId]     = useState(null)
-  const [mostrarForm, setMostrarForm] = useState(false)
-  const [form, setForm]               = useState(FORM_VACIO)
-  const [guardando, setGuardando]     = useState(false)
-  const [generando, setGenerando]     = useState(false)
+  const [plantillas, setPlantillas]       = useState([])
+  const [veterinarios, setVeterinarios]   = useState([])
+  const [loading, setLoading]             = useState(true)
+  const [busqueda, setBusqueda]           = useState('')
+  const [filtroTurno, setFiltroTurno]     = useState('TODOS')
+  const [vista, setVista]                 = useState('tabla')
+  const [loadingId, setLoadingId]         = useState(null)
+  const [mostrarForm, setMostrarForm]     = useState(false)
+  const [form, setForm]                   = useState(FORM_VACIO)
+  const [guardando, setGuardando]         = useState(false)
+  const [generando, setGenerando]         = useState(false)
   const [msgGeneracion, setMsgGeneracion] = useState(null)
+  const [modalVet, setModalVet]           = useState(null)
+  const [turnoModal, setTurnoModal]       = useState(null)
+  const [cambiando, setCambiando]         = useState(false)
 
   useEffect(() => {
     Promise.all([cargar(), cargarVets()])
@@ -123,20 +137,70 @@ const AdminHorarios = () => {
     }
   }
 
-  const filtradas = plantillas.filter((p) =>
-    p.nombreVeterinario?.toLowerCase().includes(busqueda.toLowerCase())
-  )
+  const handleCambiarTurno = async () => {
+    if (!turnoModal || !modalVet) return
+    setCambiando(true)
+    try {
+      const { data } = await apiClient.patch(
+        `/turnos/horario-plantilla/veterinario/${modalVet.idVet}/turno`,
+        { tipoTurno: turnoModal }
+      )
+      setPlantillas((prev) =>
+        prev.map((p) => {
+          const updated = (data.data ?? []).find((u) => u.id === p.id)
+          return updated ?? p
+        })
+      )
+      setModalVet(null)
+      setTurnoModal(null)
+    } catch (err) {
+      alert(handleError(err))
+    } finally {
+      setCambiando(false)
+    }
+  }
+
+  const cerrarModal = () => { setModalVet(null); setTurnoModal(null) }
+
+  // ── Derived ──────────────────────────────────────────────────────
+  const plantillasFiltradas = plantillas.filter((p) => {
+    const matchBusq  = p.nombreVeterinario?.toLowerCase().includes(busqueda.toLowerCase())
+    const matchTurno = filtroTurno === 'TODOS' || derivarTurno(p.horaInicio) === filtroTurno
+    return matchBusq && matchTurno
+  })
+
+  const turnoSummary = ['MANANA', 'TARDE', 'NOCHE'].map((turno) => {
+    const seen = new Set()
+    const vets = []
+    for (const p of plantillas) {
+      if (derivarTurno(p.horaInicio) === turno && !seen.has(p.idVeterinario)) {
+        seen.add(p.idVeterinario)
+        vets.push(p.nombreVeterinario)
+      }
+    }
+    return { turno, vets }
+  })
+
+  const porVet = []
+  const vetMap = new Map()
+  for (const p of plantillasFiltradas) {
+    if (!vetMap.has(p.idVeterinario)) {
+      const entry = { idVet: p.idVeterinario, nombre: p.nombreVeterinario, plantillas: [] }
+      vetMap.set(p.idVeterinario, entry)
+      porVet.push(entry)
+    }
+    vetMap.get(p.idVeterinario).plantillas.push(p)
+  }
 
   if (loading) return <AdminLayout><p className="adm-empty">Cargando...</p></AdminLayout>
 
   return (
     <AdminLayout>
-      <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+      {/* Page header */}
+      <div className="adm-page-header adm-page-header--row" style={{ marginBottom: 20 }}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '22px' }}>🕐 Horarios</h2>
-          <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: '14px' }}>
-            Plantillas de horario de todos los veterinarios
-          </p>
+          <h2 className="adm-page-header__title">🕐 Horarios</h2>
+          <p className="adm-page-header__sub">Gestión de turnos y plantillas de horario</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
@@ -156,21 +220,46 @@ const AdminHorarios = () => {
         </div>
       </div>
 
+      {/* Turno summary cards */}
+      <div className="adm-turno-grid">
+        {turnoSummary.map(({ turno, vets }) => {
+          const cfg = TURNO_CONFIG[turno]
+          return (
+            <div key={turno} className={`adm-turno-card adm-turno-card--${turno}`}>
+              <div className="adm-turno-card__header">
+                <span className="adm-turno-card__icon">{cfg.icon}</span>
+                <span className="adm-turno-card__label">{cfg.label}</span>
+              </div>
+              <p className="adm-turno-card__count">{vets.length} vets</p>
+              <p className="adm-turno-card__hrs">{cfg.hrs}</p>
+              <div className="adm-turno-card__vets">
+                {vets.slice(0, 3).map((n) => (
+                  <span key={n} className="adm-turno-card__vet">· {n}</span>
+                ))}
+                {vets.length > 3 && (
+                  <span className="adm-turno-card__more">y {vets.length - 3} más...</span>
+                )}
+                {vets.length === 0 && (
+                  <span className="adm-turno-card__more">Sin veterinarios asignados</span>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
       {msgGeneracion && (
-        <div style={{
-          padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '14px',
-          background: msgGeneracion.startsWith('✓') ? '#f0fdf4' : '#fef2f2',
-          color: msgGeneracion.startsWith('✓') ? '#166534' : '#b91c1c',
-          border: `1px solid ${msgGeneracion.startsWith('✓') ? '#bbf7d0' : '#fecaca'}`,
-        }}>
+        <div className={msgGeneracion.startsWith('✓') ? 'adm-msg-success' : 'adm-msg-error'}>
           {msgGeneracion}
         </div>
       )}
 
+      {/* Form agregar plantilla */}
       {mostrarForm && (
         <form onSubmit={handleCrear} style={{
           background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '10px',
-          padding: '20px', marginBottom: '20px', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'flex-end',
+          padding: '20px', marginBottom: '20px',
+          display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'flex-end',
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: '180px' }}>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151' }}>Veterinario</label>
@@ -187,7 +276,6 @@ const AdminHorarios = () => {
               ))}
             </select>
           </div>
-
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151' }}>Día</label>
             <select
@@ -199,7 +287,6 @@ const AdminHorarios = () => {
               {DIAS.map((d) => <option key={d} value={d}>{DIA_LABEL[d]}</option>)}
             </select>
           </div>
-
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151' }}>Hora inicio</label>
             <input
@@ -209,7 +296,6 @@ const AdminHorarios = () => {
               style={{ padding: '8px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px' }}
             />
           </div>
-
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151' }}>Hora fin</label>
             <input
@@ -219,18 +305,13 @@ const AdminHorarios = () => {
               style={{ padding: '8px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px' }}
             />
           </div>
-
-          <button
-            type="submit"
-            className="adm-btn-primary"
-            disabled={guardando}
-            style={{ padding: '8px 20px' }}
-          >
+          <button type="submit" className="adm-btn-primary" disabled={guardando} style={{ padding: '8px 20px' }}>
             {guardando ? 'Guardando…' : 'Agregar'}
           </button>
         </form>
       )}
 
+      {/* Toolbar: search + turno filter + vista toggle */}
       <div className="adm-toolbar">
         <input
           className="adm-search"
@@ -239,75 +320,199 @@ const AdminHorarios = () => {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
         />
+        {['TODOS', 'MANANA', 'TARDE', 'NOCHE'].map((t) => (
+          <button
+            key={t}
+            className={`adm-filtro-btn${filtroTurno === t ? ' adm-filtro-btn--active' : ''}`}
+            onClick={() => setFiltroTurno(t)}
+          >
+            {t === 'TODOS' ? 'Todos' : `${TURNO_CONFIG[t].icon} ${TURNO_CONFIG[t].label}`}
+          </button>
+        ))}
+        <div className="adm-vista-toggle" style={{ marginLeft: 'auto' }}>
+          <button
+            className={`adm-vista-btn${vista === 'tabla' ? ' adm-vista-btn--active' : ''}`}
+            onClick={() => setVista('tabla')}
+          >
+            📋 Tabla
+          </button>
+          <button
+            className={`adm-vista-btn${vista === 'porvet' ? ' adm-vista-btn--active' : ''}`}
+            onClick={() => setVista('porvet')}
+          >
+            👤 Por veterinario
+          </button>
+        </div>
       </div>
 
-      <div className="adm-table-wrapper">
-        {filtradas.length === 0 ? (
+      {/* Vista: Tabla */}
+      {vista === 'tabla' && (
+        <div className="adm-table-wrapper">
+          {plantillasFiltradas.length === 0 ? (
+            <div className="adm-empty">
+              <p className="adm-empty__icon">🕐</p>
+              <p>No hay plantillas de horario registradas.</p>
+            </div>
+          ) : (
+            <table className="adm-table">
+              <thead>
+                <tr>
+                  {['Veterinario', 'Día', 'Horario', 'Turno', 'Estado', 'Acciones'].map((h) => (
+                    <th key={h}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {plantillasFiltradas.map((p) => {
+                  const turno = derivarTurno(p.horaInicio)
+                  const cfg   = TURNO_CONFIG[turno] ?? {}
+                  return (
+                    <tr key={p.id}>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div className="adm-avatar">{getInitials(p.nombreVeterinario)}</div>
+                          <span style={{ fontWeight: 600 }}>{p.nombreVeterinario}</span>
+                        </div>
+                      </td>
+                      <td>{DIA_LABEL[p.diaSemana] ?? p.diaSemana}</td>
+                      <td style={{ fontWeight: 700 }}>{formatHora(p.horaInicio)} – {formatHora(p.horaFin)}</td>
+                      <td>
+                        <span className={`adm-chip-turno adm-chip-turno--${turno}`}>
+                          {cfg.icon} {cfg.label}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`adm-badge adm-badge--${p.activo ? 'activo' : 'inactivo'}`}>
+                          {p.activo ? 'Activo' : 'Inactivo'}
+                        </span>
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button
+                            onClick={() => handleToggle(p)}
+                            disabled={loadingId === p.id}
+                            className={p.activo ? 'adm-btn-secondary' : 'adm-btn-primary'}
+                            style={{ fontSize: '12px', padding: '4px 10px' }}
+                          >
+                            {loadingId === p.id ? '…' : p.activo ? 'Desactivar' : 'Activar'}
+                          </button>
+                          <button
+                            onClick={() => handleEliminar(p)}
+                            disabled={loadingId === p.id}
+                            className="adm-btn-danger"
+                            style={{ fontSize: '12px', padding: '4px 10px' }}
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+
+      {/* Vista: Por Veterinario */}
+      {vista === 'porvet' && (
+        porVet.length === 0 ? (
           <div className="adm-empty">
-            <p className="adm-empty__icon">🕐</p>
-            <p>No hay plantillas de horario registradas.</p>
+            <p className="adm-empty__icon">👤</p>
+            <p>No hay veterinarios que coincidan.</p>
           </div>
         ) : (
-          <table className="adm-table">
-            <thead>
-              <tr>
-                {['Veterinario', 'Día', 'Horario', 'Turno', 'Estado', 'Acciones'].map((h) => (
-                  <th key={h}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtradas.map((p) => {
-                const turno = turnoLabel(p.horaInicio)
-                return (
-                  <tr key={p.id}>
-                    <td style={{ fontWeight: 600 }}>{p.nombreVeterinario}</td>
-                    <td>{DIA_LABEL[p.diaSemana] ?? p.diaSemana}</td>
-                    <td style={{ fontWeight: 700, color: '#374151' }}>
-                      {formatHora(p.horaInicio)} – {formatHora(p.horaFin)}
-                    </td>
-                    <td>
-                      <span style={{
-                        background: turno.color + '22',
-                        color: turno.color,
-                        fontWeight: 600,
-                        fontSize: '12px',
-                        padding: '2px 8px',
-                        borderRadius: '20px',
-                      }}>
-                        {turno.label}
+          <div className="adm-vet-grid">
+            {porVet.map(({ idVet, nombre, plantillas: ps }) => {
+              const turno = derivarTurno(ps[0]?.horaInicio)
+              const cfg   = TURNO_CONFIG[turno] ?? {}
+              const diasOrdenados = DIAS.filter((d) => ps.some((p) => p.diaSemana === d))
+              return (
+                <div key={idVet} className="adm-vet-card">
+                  <div className="adm-vet-card__header">
+                    <div className="adm-avatar">{getInitials(nombre)}</div>
+                    <div>
+                      <p className="adm-vet-card__name">{nombre}</p>
+                      <span className={`adm-chip-turno adm-chip-turno--${turno}`}>
+                        {cfg.icon} {cfg.label}
                       </span>
-                    </td>
-                    <td>
-                      <span className={`adm-badge adm-badge--${p.activo ? 'activo' : 'inactivo'}`}>
-                        {p.activo ? 'Activo' : 'Inactivo'}
+                    </div>
+                  </div>
+                  <div className="adm-vet-card__dias">
+                    {diasOrdenados.map((dia) => {
+                      const p = ps.find((x) => x.diaSemana === dia)
+                      return (
+                        <div key={dia} className="adm-vet-card__dia">
+                          <span className="adm-vet-card__dia-name">{DIA_LABEL[dia]}</span>
+                          <span>{formatHora(p.horaInicio)} – {formatHora(p.horaFin)}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className="adm-vet-card__footer">
+                    <button
+                      className="adm-btn-secondary"
+                      style={{ width: '100%', textAlign: 'center' }}
+                      onClick={() => {
+                        setModalVet({ idVet, nombre, turnoActual: turno })
+                        setTurnoModal(turno)
+                      }}
+                    >
+                      Cambiar turno
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )
+      )}
+
+      {/* Modal cambiar turno */}
+      {modalVet && (
+        <div className="adm-modal-overlay" onClick={cerrarModal}>
+          <div className="adm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="adm-modal__header">
+              <h3 className="adm-modal__title">Cambiar turno — {modalVet.nombre}</h3>
+              <button className="adm-modal__close" onClick={cerrarModal}>✕</button>
+            </div>
+            <div className="adm-modal__body">
+              <p style={{ marginTop: 0, fontSize: 13, color: '#6b7280' }}>
+                Se actualizarán todos los días del veterinario al horario estándar del turno seleccionado.
+              </p>
+              <div className="adm-turno-opciones">
+                {['MANANA', 'TARDE', 'NOCHE'].map((t) => {
+                  const cfg = TURNO_CONFIG[t]
+                  return (
+                    <button
+                      key={t}
+                      className={`adm-turno-opcion${turnoModal === t ? ' adm-turno-opcion--active' : ''}`}
+                      onClick={() => setTurnoModal(t)}
+                    >
+                      <span className="adm-turno-opcion__icon">{cfg.icon}</span>
+                      <span className="adm-turno-opcion__body">
+                        <span className="adm-turno-opcion__label">{cfg.label}</span>
+                        <span className="adm-turno-opcion__hrs">{cfg.hrs}</span>
                       </span>
-                    </td>
-                    <td style={{ display: 'flex', gap: '6px' }}>
-                      <button
-                        onClick={() => handleToggle(p)}
-                        disabled={loadingId === p.id}
-                        className={p.activo ? 'adm-btn-secondary' : 'adm-btn-primary'}
-                        style={{ fontSize: '12px', padding: '4px 10px' }}
-                      >
-                        {loadingId === p.id ? '…' : p.activo ? 'Desactivar' : 'Activar'}
-                      </button>
-                      <button
-                        onClick={() => handleEliminar(p)}
-                        disabled={loadingId === p.id}
-                        className="adm-btn-danger"
-                        style={{ fontSize: '12px', padding: '4px 10px' }}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            <div className="adm-modal__footer">
+              <button className="adm-btn-secondary" onClick={cerrarModal}>Cancelar</button>
+              <button
+                className="adm-btn-primary"
+                onClick={handleCambiarTurno}
+                disabled={cambiando || !turnoModal}
+              >
+                {cambiando ? 'Guardando…' : 'Confirmar cambio'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   )
 }
