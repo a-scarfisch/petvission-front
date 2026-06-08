@@ -127,7 +127,7 @@
 .adm-badge--CONFIRMADA    { background: #d1fae5; color: #065f46; }
 .adm-badge--PENDIENTE     { background: #fef3c7; color: #92400e; }
 .adm-badge--CANCELADA     { background: #fee2e2; color: #991b1b; }
-.adm-badge--REPROGRAMADA  { background: #e0e7ff; color: #3730a3; }
+.adm-badge--EN_ATENCION   { background: #dbeafe; color: #1e40af; }
 .adm-badge--COMPLETADA    { background: #f3f4f6; color: #374151; }
 
 /* ===== BOTONES ===== */

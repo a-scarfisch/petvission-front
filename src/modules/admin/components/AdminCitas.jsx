@@ -3,7 +3,16 @@ import { useAdminContext } from '@/modules/admin/states/AdminContext'
 import AdminLayout from './AdminLayout'
 import TablaResponsiva from './TablaResponsiva'
 
-const ESTADOS = ['Todas', 'CONFIRMADA', 'PENDIENTE', 'CANCELADA', 'REPROGRAMADA']
+const ESTADOS = ['Todas', 'PENDIENTE', 'CONFIRMADA', 'EN_ATENCION', 'COMPLETADA', 'CANCELADA']
+
+const ESTADO_LABEL = {
+  Todas:       'Todas',
+  PENDIENTE:   'Pendiente',
+  CONFIRMADA:  'Confirmada',
+  EN_ATENCION: 'En atención',
+  COMPLETADA:  'Completada',
+  CANCELADA:   'Cancelada',
+}
 
 const formatHora = (hora) => hora?.slice(0, 5) ?? '—'
 
@@ -81,7 +90,7 @@ const AdminCitas = () => {
             onClick={() => setFiltro(e)}
             className={`adm-filtro-btn${filtro === e ? ' adm-filtro-btn--active' : ''}`}
           >
-            {e}
+            {ESTADO_LABEL[e]}
           </button>
         ))}
       </div>
