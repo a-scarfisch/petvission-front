@@ -1,5 +1,6 @@
 import { useAdminContext } from '@/modules/admin/states/AdminContext'
 import AdminLayout from './AdminLayout'
+import Skeleton from '@/modules/core/components/Skeleton'
 
 const AdminDashboard = () => {
   const { usuarios, citas, loading } = useAdminContext()
@@ -31,7 +32,50 @@ const AdminDashboard = () => {
     { label: 'Canceladas',  value: canceladas,  color: '#ef4444' },
   ]
 
-  if (loading) return <AdminLayout><p>Cargando...</p></AdminLayout>
+  if (loading) return (
+    <AdminLayout>
+      <div className="adm-page-header">
+        <Skeleton height="24px" width="25%" style={{ marginBottom: '8px' }} />
+        <Skeleton height="14px" width="50%" />
+      </div>
+      <div className="adm-stats-grid">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="adm-stat-card">
+            <Skeleton height="13px" width="55%" style={{ marginBottom: '14px' }} />
+            <Skeleton height="30px" width="40%" />
+          </div>
+        ))}
+      </div>
+      <div className="adm-dash-grid">
+        <div className="adm-panel">
+          <Skeleton height="16px" width="50%" style={{ marginBottom: '20px' }} />
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 0', borderBottom: '1px solid #f3f4f6' }}>
+              <Skeleton height="32px" width="32px" radius="50%" />
+              <div style={{ flex: 1 }}>
+                <Skeleton height="13px" width="60%" style={{ marginBottom: '6px' }} />
+                <Skeleton height="11px" width="40%" />
+              </div>
+              <Skeleton height="20px" width="72px" radius="12px" />
+            </div>
+          ))}
+        </div>
+        <div className="adm-panel">
+          <Skeleton height="16px" width="40%" style={{ marginBottom: '24px' }} />
+          {[1, 2, 3].map((i) => (
+            <div key={i} style={{ marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <Skeleton height="13px" width="30%" />
+                <Skeleton height="13px" width="20%" />
+              </div>
+              <Skeleton height="8px" radius="4px" />
+            </div>
+          ))}
+          <Skeleton height="64px" radius="8px" style={{ marginTop: '16px' }} />
+        </div>
+      </div>
+    </AdminLayout>
+  )
 
   return (
     <AdminLayout>

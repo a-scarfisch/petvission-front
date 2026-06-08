@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import ClientLayout from './ClientLayout'
+import Skeleton from '@/modules/core/components/Skeleton'
 import '@/styles/global.css'
 
 const especieEmoji = (especie) =>
@@ -20,7 +21,41 @@ const ClientDashboard = () => {
     .filter((c) => c.estado === 'CONFIRMADA' || c.estado === 'PENDIENTE')
     .slice(0, 3)
 
-  if (loading) return <ClientLayout><p style={{ padding: '32px', color: '#9ca3af' }}>Cargando...</p></ClientLayout>
+  if (loading) return (
+    <ClientLayout>
+      <div className="pv-banner" style={{ gap: '12px' }}>
+        <div style={{ flex: 1 }}>
+          <Skeleton height="22px" width="40%" style={{ marginBottom: '10px' }} />
+          <Skeleton height="14px" width="60%" />
+        </div>
+        <Skeleton height="40px" width="130px" radius="10px" />
+      </div>
+      <div className="pv-stat-grid">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="pv-stat-card">
+            <Skeleton height="13px" width="55%" style={{ marginBottom: '14px' }} />
+            <Skeleton height="30px" width="40%" />
+          </div>
+        ))}
+      </div>
+      <div className="pv-grid-2">
+        {[1, 2].map((i) => (
+          <div key={i} className="pv-card">
+            <Skeleton height="16px" width="45%" style={{ marginBottom: '18px' }} />
+            {[1, 2, 3].map((j) => (
+              <div key={j} className="pv-list-row">
+                <Skeleton height="40px" width="40px" radius="50%" />
+                <div style={{ flex: 1 }}>
+                  <Skeleton height="13px" width="65%" style={{ marginBottom: '7px' }} />
+                  <Skeleton height="11px" width="45%" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </ClientLayout>
+  )
 
   const stats = [
     { label: 'Mis mascotas',  value: mascotas.length,                                      icon: '🐾' },
