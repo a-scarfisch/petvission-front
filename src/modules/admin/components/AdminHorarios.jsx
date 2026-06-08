@@ -175,6 +175,17 @@ const AdminHorarios = () => {
 
   const cerrarModal = () => { setModalVet(null); setTurnoModal(null) }
 
+  // Detecta duplicado mientras el admin llena el form
+  const conflicto = (form.idVeterinario && form.diaSemana && form.horaInicio)
+    ? plantillas.find((p) => {
+        if (String(p.idVeterinario) !== String(form.idVeterinario)) return false
+        if (p.diaSemana !== form.diaSemana) return false
+        const [fh, fm] = form.horaInicio.split(':').map(Number)
+        const [ah, am] = Array.isArray(p.horaInicio) ? p.horaInicio : [parseInt(p.horaInicio), 0]
+        return fh === ah && fm === (am ?? 0)
+      }) ?? null
+    : null
+
   // ── Derived ──────────────────────────────────────────────────────
   const plantillasFiltradas = plantillas.filter((p) => {
     const matchBusq  = p.nombreVeterinario?.toLowerCase().includes(busqueda.toLowerCase())
@@ -318,7 +329,14 @@ const AdminHorarios = () => {
               style={{ padding: '8px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px' }}
             />
           </div>
-          <button type="submit" className="adm-btn-primary" disabled={guardando} style={{ padding: '8px 20px' }}>
+          <div style={{ width: '100%' }}>
+            {conflicto && (
+              <div className="adm-msg-error" style={{ marginBottom: 0, marginTop: 4 }}>
+                Ya existe una plantilla para {conflicto.nombreVeterinario} el {DIA_LABEL[conflicto.diaSemana]} a las {formatHora(conflicto.horaInicio)}.
+              </div>
+            )}
+          </div>
+          <button type="submit" className="adm-btn-primary" disabled={guardando || !!conflicto} style={{ padding: '8px 20px' }}>
             {guardando ? 'Guardando…' : 'Agregar'}
           </button>
         </form>
