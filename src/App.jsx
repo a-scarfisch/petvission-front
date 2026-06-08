@@ -8,6 +8,7 @@ import { ClientProvider } from '@/modules/client/states/ClientContext'
 import MascotaList from '@/modules/mascotas/components/MascotaList'
 import Agendamiento from '@/modules/client/pages/Agendamiento'
 import VetDashboard from '@/modules/vet/components/VetDashboard'
+import VetFichaMascota from '@/modules/vet/components/VetFichaMascota'
 import { VetProvider } from '@/modules/vet/states/VetContext'
 import VetCitas from '@/modules/vet/components/VetCitas'
 import VetHorarios from '@/modules/vet/components/VetHorarios'
@@ -20,11 +21,14 @@ import AdminCitas from '@/modules/admin/components/AdminCitas'
 import AdminHorarios from '@/modules/admin/components/AdminHorarios'
 import AdminMascotas from '@/modules/admin/components/AdminMascotas'
 import AdminVeterinarios from '@/modules/admin/components/AdminVeterinarios'
+import AdminSeguridad from '@/modules/admin/components/AdminSeguridad'
 import LandingPage from '@/modules/landing/components/LandingPage'
+import ConfirmarCita from '@/modules/public/ConfirmarCita'
 import MiPerfil from '@/modules/client/components/MiPerfil'
 import MisReservas from '@/modules/client/components/MisReservas'
 import NuevaMascota from '@/modules/mascotas/components/NuevaMascota'
 import MiConfiguracion from '@/modules/client/components/MiConfiguracion'
+import HistorialMascota from '@/modules/client/components/HistorialMascota'
 
 
 function App() {
@@ -37,6 +41,9 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />
 
         <Route path="/" element={<LandingPage />} />
+
+        {/* Confirmación de cita desde enlace de email — pública, sin JWT */}
+        <Route path="/confirmar-cita/:id" element={<ConfirmarCita />} />
 
         {/* Rutas cliente envueltas en ClientProvider */}
         <Route
@@ -53,6 +60,7 @@ function App() {
                   <Route path="reservas" element={<MisReservas />} />
                   <Route path="configuracion" element={<MiConfiguracion />} />
                   <Route path="perfil" element={<MiPerfil />} />
+                  <Route path="historial" element={<HistorialMascota />} />
                 </Routes>
               </ClientProvider>
             </PrivateRoute>
@@ -70,6 +78,7 @@ function App() {
                   <Route path="horarios" element={<VetHorarios />} />
                   <Route path="pacientes" element={<MisPacientes />} />
                   <Route path="historial" element={<HistorialClinico />} />
+                  <Route path="ficha-mascota" element={<VetFichaMascota />} />
                 </Routes>
               </VetProvider>
             </PrivateRoute>
@@ -88,6 +97,7 @@ function App() {
                   <Route path="horarios" element={<AdminHorarios />} />
                   <Route path="mascotas" element={<AdminMascotas />} />
                   <Route path="veterinarios" element={<AdminVeterinarios />} />
+                  <Route path="seguridad" element={<AdminSeguridad />} />
                 </Routes>
               </AdminProvider>
             </PrivateRoute>

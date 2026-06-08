@@ -2,7 +2,16 @@ import { Link } from 'react-router-dom'
 import { useAuthContext } from '@/modules/auth/states/AuthContext'
 import { useClientContext } from '@/modules/client/states/ClientContext'
 import ClientLayout from './ClientLayout'
-import '@/styles/modules/client-layout.css'
+import Skeleton from '@/modules/core/components/Skeleton'
+import '@/styles/global.css'
+
+const especieEmoji = (especie) =>
+  especie?.toUpperCase() === 'GATO' ? '🐱' : '🐶'
+
+const calcularEdad = (fechaNacimiento) => {
+  if (!fechaNacimiento) return null
+  return new Date().getFullYear() - new Date(fechaNacimiento).getFullYear()
+}
 
 const ClientDashboard = () => {
   const { user } = useAuthContext()
@@ -12,80 +21,126 @@ const ClientDashboard = () => {
     .filter((c) => c.estado === 'CONFIRMADA' || c.estado === 'PENDIENTE')
     .slice(0, 3)
 
-  const calcularEdad = (fechaNacimiento) => {
-    if (!fechaNacimiento) return null
-    const hoy = new Date()
-    const nacimiento = new Date(fechaNacimiento)
-    return hoy.getFullYear() - nacimiento.getFullYear()
-  }
+  if (loading) return (
+    <ClientLayout>
+      <div className="pv-banner" style={{ gap: '12px' }}>
+        <div style={{ flex: 1 }}>
+          <Skeleton height="22px" width="40%" style={{ marginBottom: '10px' }} />
+          <Skeleton height="14px" width="60%" />
+        </div>
+        <Skeleton height="40px" width="130px" radius="10px" />
+      </div>
+      <div className="pv-stat-grid">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="pv-stat-card">
+            <Skeleton height="13px" width="55%" style={{ marginBottom: '14px' }} />
+            <Skeleton height="30px" width="40%" />
+          </div>
+        ))}
+      </div>
+      <div className="pv-grid-2">
+        {[1, 2].map((i) => (
+          <div key={i} className="pv-card">
+            <Skeleton height="16px" width="45%" style={{ marginBottom: '18px' }} />
+            {[1, 2, 3].map((j) => (
+              <div key={j} className="pv-list-row">
+                <Skeleton height="40px" width="40px" radius="50%" />
+                <div style={{ flex: 1 }}>
+                  <Skeleton height="13px" width="65%" style={{ marginBottom: '7px' }} />
+                  <Skeleton height="11px" width="45%" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </ClientLayout>
+  )
 
-  if (loading) return <ClientLayout><p>Cargando...</p></ClientLayout>
+  const stats = [
+    { label: 'Mis mascotas',  value: mascotas.length,                                      icon: '🐾' },
+    { label: 'Total citas',   value: citas.length,                                          icon: '📋' },
+    { label: 'Pendientes',    value: citas.filter((c) => c.estado === 'PENDIENTE').length,  icon: '🔔' },
+    { label: 'Confirmadas',   value: citas.filter((c) => c.estado === 'CONFIRMADA').length, icon: '✅' },
+  ]
+
+  if (mascotas.length === 0) {
+    return (
+      <ClientLayout>
+        <div className="pv-banner">
+          <div>
+            <p className="pv-banner__title">¡Hola, {user?.nombres}! 👋</p>
+            <p className="pv-banner__sub">Bienvenido a PetVission</p>
+          </div>
+        </div>
+        <div className="pv-card" style={{ textAlign: 'center', padding: '48px 32px' }}>
+          <p style={{ fontSize: '48px', margin: '0 0 16px' }}>🐾</p>
+          <p style={{ fontWeight: 700, fontSize: '18px', margin: '0 0 8px' }}>
+            Agrega tu primera mascota para comenzar
+          </p>
+          <p style={{ color: '#6b7280', fontSize: '14px', margin: '0 0 24px' }}>
+            Una vez registrada podrás agendar citas y ver su historial clínico.
+          </p>
+          <Link to="/client/mascotas" className="pv-btn-primary">
+            + Registrar mascota
+          </Link>
+        </div>
+      </ClientLayout>
+    )
+  }
 
   return (
     <ClientLayout>
-      {/* Saludo */}
-      <div className="cl-banner">
+      {/* Banner */}
+      <div className="pv-banner">
         <div>
-          <h2 style={{ margin: 0, fontSize: '22px' }}>¡Hola, {user?.nombres}! 👋</h2>
-          <p style={{ margin: '4px 0 0', opacity: 0.85, fontSize: '14px' }}>
-            Aquí tienes un resumen del estado de tus mascotas
-          </p>
+          <p className="pv-banner__title">¡Hola, {user?.nombres}! 👋</p>
+          <p className="pv-banner__sub">Aquí tienes un resumen del estado de tus mascotas</p>
         </div>
-        <Link to="/client/citas/nueva" className="cl-banner__btn">
-          📅 Nueva cita
-        </Link>
+        <Link to="/client/citas/nueva" className="pv-banner__btn">📅 Nueva cita</Link>
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-        {[
-          { label: 'Mis mascotas', value: mascotas.length, icon: '🐾' },
-          { label: 'Cita próxima', value: proximasCitas.length > 0 ? 1 : 0, icon: '📅' },
-          { label: 'Total citas', value: citas.length, icon: '📋' },
-          { label: 'Pendientes', value: citas.filter(c => c.estado === 'PENDIENTE').length, icon: '🔔' },
-        ].map((stat) => (
-          <div key={stat.label} style={{
-            background: '#fff', borderRadius: '12px',
-            padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-          }}>
-            <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#6b7280' }}>{stat.label}</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '24px' }}>{stat.icon}</span>
-              <span style={{ fontSize: '28px', fontWeight: 700 }}>{stat.value}</span>
+      <div className="pv-stat-grid">
+        {stats.map((s) => (
+          <div key={s.label} className="pv-stat-card">
+            <p className="pv-stat-card__label">{s.label}</p>
+            <div className="pv-stat-card__row">
+              <span className="pv-stat-card__icon">{s.icon}</span>
+              <span className="pv-stat-card__value">{s.value}</span>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Bottom grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+      {/* Grid inferior */}
+      <div className="pv-grid-2">
         {/* Mis mascotas */}
-        <div style={{ background: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ margin: 0, fontSize: '16px' }}>🐾 Mis Mascotas</h3>
-            <Link to="/client/mascotas" style={{ color: '#2a9d8f', fontSize: '13px', textDecoration: 'none' }}>
-              + Agregar
-            </Link>
+        <div className="pv-card">
+          <div className="pv-section-header">
+            <p className="pv-section-title">🐾 Mis Mascotas</p>
+            <Link to="/client/mascotas" className="pv-section-link">+ Agregar</Link>
           </div>
           {mascotas.length === 0 ? (
-            <p style={{ color: '#9ca3af', fontSize: '14px' }}>No tienes mascotas registradas aún.</p>
+            <div className="pv-empty">
+              <p className="pv-empty__icon">🐾</p>
+              <p className="pv-empty__text">No tienes mascotas registradas aún.</p>
+            </div>
           ) : (
             mascotas.map((m) => (
-              <div key={m.idMascota} style={{
-                display: 'flex', alignItems: 'center', gap: '12px',
-                padding: '10px 0', borderBottom: '1px solid #f3f4f6',
-              }}>
+              <div key={m.idMascota} className="pv-list-row">
                 <div style={{
                   width: '40px', height: '40px', borderRadius: '50%',
                   background: '#e8f5f0', display: 'flex',
                   alignItems: 'center', justifyContent: 'center', fontSize: '20px',
+                  flexShrink: 0,
                 }}>
-                  {m.especie?.toUpperCase() === 'GATO' ? '🐱' : '🐶'}
+                  {especieEmoji(m.especie)}
                 </div>
                 <div>
                   <p style={{ margin: 0, fontWeight: 600, fontSize: '14px' }}>{m.nombre}</p>
                   <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>
-                    {m.raza} · {calcularEdad(m.fechaNacimiento) ?? '?'} años
+                    {m.raza ?? m.especie}{calcularEdad(m.fechaNacimiento) != null ? ` · ${calcularEdad(m.fechaNacimiento)} años` : ''}
                   </p>
                 </div>
               </div>
@@ -94,36 +149,35 @@ const ClientDashboard = () => {
         </div>
 
         {/* Próximas citas */}
-        <div style={{ background: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ margin: 0, fontSize: '16px' }}>📅 Próximas Citas</h3>
-            <Link to="/client/reservas" style={{ color: '#2a9d8f', fontSize: '13px', textDecoration: 'none' }}>
-              Ver todas
-            </Link>
+        <div className="pv-card">
+          <div className="pv-section-header">
+            <p className="pv-section-title">📅 Próximas Citas</p>
+            <Link to="/client/reservas" className="pv-section-link">Ver todas</Link>
           </div>
           {proximasCitas.length === 0 ? (
-            <p style={{ color: '#9ca3af', fontSize: '14px' }}>No tienes citas próximas.</p>
+            <div className="pv-empty">
+              <p className="pv-empty__icon">📅</p>
+              <p className="pv-empty__text">No tienes citas activas.</p>
+              <p style={{ color: '#6b7280', fontSize: '13px', margin: '4px 0 0' }}>
+                ¿Todo bien? Agenda un control rutinario para mantener a tu mascota saludable.
+              </p>
+            </div>
           ) : (
             proximasCitas.map((c) => (
-              <div key={c.idReserva} style={{ padding: '12px 0', borderBottom: '1px solid #f3f4f6' }}>
-                <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '14px' }}>{c.motivo ?? 'Consulta'}</p>
-                <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>{c.fecha} · {c.hora}</p>
-                <span style={{
-                  display: 'inline-block', marginTop: '4px',
-                  padding: '2px 8px', borderRadius: '99px', fontSize: '11px',
-                  background: c.estado === 'CONFIRMADA' ? '#d1fae5' : '#fef3c7',
-                  color: c.estado === 'CONFIRMADA' ? '#065f46' : '#92400e',
-                }}>
-                  {c.estado}
-                </span>
+              <div key={c.idReserva} className="pv-list-row">
+                <div style={{ flex: 1 }}>
+                  <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '14px' }}>
+                    {c.motivo ?? 'Consulta'}
+                  </p>
+                  <p style={{ margin: 0, fontSize: '12px', color: '#6b7280' }}>
+                    {c.fecha} · {c.hora?.slice(0, 5)}
+                  </p>
+                </div>
+                <span className={`pv-badge pv-badge--${c.estado}`}>{c.estado}</span>
               </div>
             ))
           )}
-          <Link to="/client/citas/nueva" style={{
-            display: 'block', marginTop: '16px', textAlign: 'center',
-            padding: '10px', borderRadius: '8px', border: '1px solid #2a9d8f',
-            color: '#2a9d8f', textDecoration: 'none', fontSize: '13px', fontWeight: 600,
-          }}>
+          <Link to="/client/citas/nueva" className="pv-btn-outline" style={{ marginTop: '16px', width: '100%', justifyContent: 'center' }}>
             📅 Agendar nueva cita
           </Link>
         </div>

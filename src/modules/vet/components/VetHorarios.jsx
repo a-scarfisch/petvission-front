@@ -15,7 +15,14 @@ const DIA_LABEL = {
 
 const DIA_ORDER = ['LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO']
 
-const formatHora = (hora) => hora?.toString().slice(0, 5) ?? '—'
+const formatHora = (hora) => {
+  if (!hora) return '—'
+  if (Array.isArray(hora)) {
+    const [h, m = 0] = hora
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+  }
+  return hora.toString().slice(0, 5)
+}
 
 const VetHorarios = () => {
   const { user } = useAuthContext()
@@ -79,7 +86,7 @@ const VetHorarios = () => {
             <tbody>
               {plantillas.map((p) => (
                 <tr key={p.id}>
-                  <td style={{ fontWeight: 600 }}>
+                  <td className="vet-td-bold">
                     {DIA_LABEL[p.diaSemana] ?? p.diaSemana}
                   </td>
                   <td className="vet-hora">

@@ -1,64 +1,82 @@
-const formatCLP = (precio) =>
-  precio != null ? `$${Number(precio).toLocaleString('es-CL')}` : 'Consultar precio'
+const MOTIVOS_CONSULTA = [
+  { key: '',                      label: '— Selecciona el motivo (opcional) —' },
+  { key: 'Control rutinario',     label: 'Control rutinario / chequeo general' },
+  { key: 'Problema digestivo',    label: 'Problema digestivo (vómito, diarrea)' },
+  { key: 'Problema de piel',      label: 'Problema de piel o pelaje' },
+  { key: 'Problema respiratorio', label: 'Problema respiratorio (tos, estornudos)' },
+  { key: 'Problema locomotor',    label: 'Problema locomotor (cojera, dolor)' },
+  { key: 'Herida o traumatismo',  label: 'Herida o traumatismo' },
+  { key: 'Otra consulta',         label: 'Otra consulta' },
+]
 
-const FILTROS_VACUNA = {
-  PERRO: (nombre) => /Canina|Cachorro|KC|Óctuple|Séxtuple|Plan|Refuerzo/i.test(nombre),
-  GATO:  (nombre) => /Felina|Leucemia|Plan|Refuerzo/i.test(nombre),
-}
+const SUBTIPOS = [
+  { key: 'PROCEDIMIENTO', icono: '🔧', label: 'Procedimiento', desc: 'Limpieza dental, curaciones, aplicación de medicamentos' },
+  { key: 'LABORATORIO',   icono: '🔬', label: 'Laboratorio',   desc: 'Exámenes de sangre, imagenología, diagnóstico avanzado' },
+  { key: 'PELUQUERIA',    icono: '✂️', label: 'Peluquería',    desc: 'Baño, corte, uñas y cuidado estético' },
+]
 
-const filtrarPorEspecie = (servicios, especie) => {
-  const fn = FILTROS_VACUNA[especie?.toUpperCase()]
-  return fn ? servicios.filter((s) => fn(s.nombre)) : servicios
-}
-
-const PasoServicio = ({ categoriaReserva, mascota, servicios, seleccion, motivo, onSelect, onMotivo }) => {
-  if (categoriaReserva === 'CONSULTA') {
+const PasoServicio = ({
+  tipoAtencion,
+  categoriaReserva,
+  motivoKey,
+  observacion,
+  onSubtipo,
+  onMotivoKey,
+  onObservacion,
+}) => {
+  if (tipoAtencion === 'CONSULTA') {
     return (
       <div>
         <p className="ag-section-title">¿Cuál es el motivo de la consulta?</p>
+
+        <select
+          className="ag-select"
+          value={motivoKey ?? ''}
+          onChange={(e) => onMotivoKey(e.target.value)}
+        >
+          {MOTIVOS_CONSULTA.map((m) => (
+            <option key={m.key} value={m.key}>{m.label}</option>
+          ))}
+        </select>
+
+        <label className="ag-obs-label">
+          Observación adicional <span className="ag-obs-opcional">(opcional)</span>
+        </label>
         <textarea
-          className="ag-motivo-textarea"
-          placeholder="Describe brevemente qué le ocurre a tu mascota..."
-          value={motivo ?? ''}
-          onChange={(e) => onMotivo(e.target.value)}
-          rows={4}
+          className="ag-motivo-textarea ag-obs-textarea"
+          placeholder="Agrega detalles breves si lo necesitas..."
+          value={observacion ?? ''}
+          onChange={(e) => {
+            if (e.target.value.length <= 150) onObservacion(e.target.value)
+          }}
+          rows={3}
+          maxLength={150}
         />
+        <p className="ag-obs-counter">{(observacion ?? '').length}/150</p>
       </div>
     )
   }
 
-  const serviciosVisibles = categoriaReserva === 'VACUNACION'
-    ? filtrarPorEspecie(servicios, mascota?.especie)
-    : servicios
-
   return (
     <div>
-      <p className="ag-section-title">Selecciona el servicio</p>
-
-      {serviciosVisibles.length === 0 ? (
-        <div className="ag-empty">
-          <span className="ag-empty__icon">🏥</span>
-          <p>No hay servicios disponibles.</p>
-        </div>
-      ) : (
-        <div className="ag-servicio-grid">
-          {serviciosVisibles.map((s) => (
-            <div
-              key={s.idServicio}
-              onClick={() => onSelect(s)}
-              className={[
-                'ag-card',
-                'ag-servicio-tile',
-                seleccion?.idServicio === s.idServicio ? 'ag-card--selected' : '',
-              ].join(' ').trim()}
-            >
-              <p className="ag-servicio-tile__name">{s.nombre}</p>
-              <p className="ag-servicio-tile__desc">{s.descripcion}</p>
-              <p className="ag-servicio-tile__price">{formatCLP(s.precio)}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      <p className="ag-section-title">¿Qué tipo de servicio necesitas?</p>
+      <div className="ag-categoria-grid">
+        {SUBTIPOS.map((s) => (
+          <div
+            key={s.key}
+            onClick={() => onSubtipo(s.key)}
+            className={[
+              'ag-card',
+              'ag-categoria-card',
+              categoriaReserva === s.key ? 'ag-card--selected ag-categoria-card--selected' : '',
+            ].join(' ').trim()}
+          >
+            <span className="ag-categoria-card__icono">{s.icono}</span>
+            <p className="ag-categoria-card__titulo">{s.label}</p>
+            <p className="ag-categoria-card__desc">{s.desc}</p>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

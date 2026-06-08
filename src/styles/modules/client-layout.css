@@ -13,13 +13,23 @@
   flex-direction: column;
   padding: 24px 0;
   flex-shrink: 0;
+  position: sticky; top: 0;
+  height: 100vh; overflow-y: auto;
 }
 
 .cl-sidebar__logo {
-  padding: 0 24px 24px;
+  padding: 0 24px 8px;
+}
+.cl-sidebar__logo-title {
+  margin: 0;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   color: #2a9d8f;
+}
+.cl-sidebar__logo-sub {
+  margin: 2px 0 16px;
+  font-size: 11px;
+  color: #9ca3af;
 }
 
 .cl-sidebar__nav-label {

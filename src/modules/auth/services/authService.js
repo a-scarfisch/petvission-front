@@ -21,3 +21,8 @@ export const loginConGoogle = async (accessToken) => {
   const { data } = await apiClient.post('/auth/google', { token: accessToken })
   return data.data
 }
+
+export const verifyTotp = async (idUsuario, codigo) => {
+  const { data } = await apiClient.post('/auth/2fa/verify', { idUsuario, codigo })
+  return data.data
+}

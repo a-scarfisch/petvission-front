@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useGoogleLogin } from '@react-oauth/google'
 import { useAuthContext } from '../states/AuthContext'
 import { useAuth } from '../hooks/useAuth'
+import { verifyTotp } from '../services/authService'
 import '@/styles/global.css'
 import '@/styles/modules/auth.css'
 
@@ -38,8 +39,14 @@ const LoginForm = () => {
   const [globalError, setGlobalError] = useState(null)
   const [googleLoading, setGoogleLoading] = useState(false)
 
+  // Paso 2FA
+  const [paso2fa, setPaso2fa]       = useState(false)
+  const [userId2fa, setUserId2fa]   = useState(null)
+  const [codigo2fa, setCodigo2fa]   = useState('')
+  const [loading2fa, setLoading2fa] = useState(false)
+
   const redirect = (rol) => {
-    if (rol === 'CLIENTE')       navigate('/client/dashboard')
+    if (rol === 'CLIENTE')            navigate('/client/dashboard')
     else if (rol === 'VETERINARIO')   navigate('/vet/dashboard')
     else if (rol === 'ADMINISTRADOR') navigate('/admin/dashboard')
   }
@@ -52,11 +59,34 @@ const LoginForm = () => {
     setFieldErrors({})
 
     const data = await handleLogin(email, password)
-    if (data) {
+    if (!data) {
+      setGlobalError('Correo o contraseña incorrectos.')
+      return
+    }
+    if (data.requiresTwoFactor) {
+      setUserId2fa(data.idUsuario)
+      setPaso2fa(true)
+      return
+    }
+    saveUser(data)
+    redirect(data.rol)
+  }
+
+  const handleVerify2fa = async (e) => {
+    e.preventDefault()
+    if (!codigo2fa.trim()) return
+    setLoading2fa(true)
+    setGlobalError(null)
+    try {
+      const data = await verifyTotp(userId2fa, codigo2fa)
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data))
       saveUser(data)
       redirect(data.rol)
-    } else {
-      setGlobalError('Correo o contraseña incorrectos.')
+    } catch {
+      setGlobalError('Código incorrecto o expirado. Intenta de nuevo.')
+    } finally {
+      setLoading2fa(false)
     }
   }
 
@@ -109,12 +139,55 @@ const LoginForm = () => {
 
           <div className="au-brand-mobile">🐾 PetVission</div>
 
-          <h3 className="au-form-title">Bienvenido de vuelta</h3>
-          <p className="au-form-sub">Ingresa a tu cuenta para continuar</p>
+          {paso2fa ? (
+            <>
+              <h3 className="au-form-title">Verificación en dos pasos</h3>
+              <p className="au-form-sub">Ingresa el código de 6 dígitos de tu aplicación autenticadora</p>
 
-          {globalError && <div className="au-error-global">{globalError}</div>}
+              {globalError && <div className="au-error-global">{globalError}</div>}
 
-          <form onSubmit={handleSubmit} noValidate>
+              <form onSubmit={handleVerify2fa} noValidate>
+                <div className="au-field">
+                  <label className="au-label">Código de verificación</label>
+                  <div className="au-input-group">
+                    <span className="au-input-icon">🔐</span>
+                    <input
+                      className="au-input"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]{6}"
+                      maxLength={6}
+                      placeholder="000000"
+                      value={codigo2fa}
+                      onChange={(e) => setCodigo2fa(e.target.value.replace(/\D/g, ''))}
+                      autoFocus
+                      autoComplete="one-time-code"
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" className="au-btn-primary" disabled={loading2fa || codigo2fa.length < 6}>
+                  {loading2fa ? 'Verificando...' : 'Verificar →'}
+                </button>
+
+                <button
+                  type="button"
+                  className="au-btn-google"
+                  style={{ marginTop: '10px' }}
+                  onClick={() => { setPaso2fa(false); setCodigo2fa(''); setGlobalError(null) }}
+                >
+                  ← Volver al login
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <h3 className="au-form-title">Bienvenido de vuelta</h3>
+              <p className="au-form-sub">Ingresa a tu cuenta para continuar</p>
+
+              {globalError && <div className="au-error-global">{globalError}</div>}
+
+              <form onSubmit={handleSubmit} noValidate>
 
             {/* Correo */}
             <div className="au-field">
@@ -185,6 +258,8 @@ const LoginForm = () => {
             </p>
 
           </form>
+            </>
+          )}
         </div>
       </div>
 

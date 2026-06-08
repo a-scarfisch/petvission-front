@@ -1,0 +1,318 @@
+/* ───── Vista historial clínico (cliente, read-only) ───── */
+
+.historial-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.historial-page-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.historial-ficha {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.historial-ficha__avatar {
+  font-size: 40px;
+  flex-shrink: 0;
+}
+
+.historial-ficha__nombre {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.historial-ficha__meta {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.historial-ficha__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.historial-chip {
+  background: #f3f4f6;
+  color: #374151;
+  border-radius: 99px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ── Timeline ── */
+
+.historial-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.historial-timeline-item {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #2a9d8f;
+}
+
+.historial-timeline-item__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.historial-timeline-item__fecha {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2a9d8f;
+}
+
+.historial-timeline-item__vet {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.historial-timeline-item__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+  margin: 0 0 4px;
+}
+
+.historial-timeline-item__body {
+  font-size: 14px;
+  color: #374151;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.historial-timeline-item__section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.historial-vacuna-tag {
+  display: inline-block;
+  background: #ede9fe;
+  color: #5b21b6;
+  border-radius: 99px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.historial-empty {
+  background: #fff;
+  border-radius: 14px;
+  padding: 48px;
+  text-align: center;
+  color: #9ca3af;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.historial-empty__icon {
+  font-size: 40px;
+  margin: 0 0 8px;
+}
+
+.historial-loading {
+  text-align: center;
+  color: #9ca3af;
+  padding: 48px;
+}
+
+.historial-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.historial-btn-back:hover {
+  background: #f9fafb;
+}
+
+/* ── Tabs ── */
+
+.historial-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.historial-tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.historial-tab-btn--active {
+  color: #2a9d8f;
+  font-weight: 600;
+  border-bottom-color: #2a9d8f;
+}
+
+/* ── Secciones vacunación ── */
+
+.historial-seccion {
+  margin-bottom: 32px;
+}
+
+.historial-seccion__titulo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.historial-seccion__badge {
+  font-size: 12px;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: #374151;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+/* ── Vacunas aplicadas ── */
+
+.historial-vacunas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.historial-vacuna-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.historial-vacuna-card__icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.historial-vacuna-card__nombre {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.historial-vacuna-card__meta {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.historial-vacuna-card__proxima {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #d97706;
+  font-weight: 500;
+}
+
+/* ── Catálogo ── */
+
+.historial-catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.historial-catalogo-item {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.historial-catalogo-item--aplicada {
+  border-color: #6ee7b7;
+  background: #f0fdf4;
+}
+
+.historial-catalogo-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.historial-catalogo-item__nombre {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.historial-catalogo-item__check {
+  font-size: 11px;
+  font-weight: 600;
+  color: #059669;
+  white-space: nowrap;
+}
+
+.historial-catalogo-item__desc {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.historial-catalogo-item__dosis {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}

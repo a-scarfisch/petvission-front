@@ -11,6 +11,8 @@
   flex-direction: column;
   padding: 24px 0;
   flex-shrink: 0;
+  position: sticky; top: 0;
+  height: 100vh; overflow-y: auto;
 }
 
 .vet-sidebar__logo { padding: 0 24px 8px; }
@@ -123,11 +125,10 @@
 .vet-estado--REPROGRAMADA { background: #e0e7ff; color: #3730a3; }
 
 /* ===== ANIMAL GUÍA BADGE ===== */
-.vet-guia-badge {
-  display: inline-block; margin-top: 3px;
-  background: #f0faf8; border: 1px solid #1a9e8f;
-  color: #1a9e8f; border-radius: 20px;
-  padding: 2px 8px; font-size: 11px; font-weight: 500;
+.vet-guia-icon {
+  margin-left: 6px;
+  font-size: 13px;
+  cursor: default;
 }
 
 /* ===== EMPTY STATE ===== */
@@ -272,7 +273,7 @@
 }
 .vet-modal__checkbox label { font-size: 14px; color: #374151; cursor: pointer; }
 .vet-modal__error { margin: 0; font-size: 13px; color: #ef4444; }
-.vet-modal__divider { height: 1px; background: #f3f4f6; }
+.vet-modal__divider { height: 1px; background: #f3f4f6; margin: 16px 0; }
 
 /* ===== LOADING ===== */
 .vet-loading { padding: 48px; text-align: center; color: #6b7280; }
@@ -313,4 +314,524 @@
     height: 60px; background: #1a2332;
     border-top: 1px solid #2d3561; z-index: 100; align-items: stretch;
   }
+}
+
+/* ===== FICHA DE ATENCIÓN ===== */
+
+.vet-ficha-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vet-btn-cerrar-ficha {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  background: #059669;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.vet-btn-cerrar-ficha:hover { background: #047857; }
+
+.vet-ficha-estado-badge {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.vet-ficha-estado-badge--completada {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.vet-ficha-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 220px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ── Col 1: mascota ── */
+.vet-ficha-col-left {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.vet-ficha-avatar-lg { font-size: 56px; line-height: 1; }
+.vet-ficha-nombre { margin: 8px 0 0; font-size: 18px; font-weight: 700; color: #111827; }
+.vet-ficha-especie { margin: 2px 0 8px; font-size: 13px; color: #6b7280; }
+
+.vet-ficha-datos {
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vet-ficha-dato {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.vet-ficha-dato span { color: #9ca3af; }
+.vet-ficha-dato strong { color: #111827; }
+
+.vet-ficha-notas {
+  width: 100%;
+  margin-top: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+}
+
+.vet-ficha-notas-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.vet-ficha-notas-body {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* ── Col 2: historial ── */
+.vet-ficha-col-center {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.vet-ficha-acciones {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.vet-ficha-historial-title {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.vet-ficha-historial-vacio {
+  font-size: 13px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.vet-ficha-historial-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vet-ficha-historial-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.vet-ficha-historial-item__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 13px;
+}
+
+.vet-ficha-historial-item__header:hover { background: #f9fafb; }
+
+.vet-ficha-historial-item__fecha {
+  font-weight: 600;
+  color: #2a9d8f;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.vet-ficha-historial-item__dx {
+  flex: 1;
+  color: #374151;
+}
+
+.vet-ficha-historial-item__body {
+  padding: 12px 16px;
+  border-top: 1px solid #f3f4f6;
+  background: #f9fafb;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.vet-ficha-historial-item__body p { margin: 0 0 4px; }
+
+/* ── Col 3: panel formulario ── */
+.vet-ficha-col-right {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.vet-ficha-panel-vacio {
+  padding: 48px 24px;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.vet-ficha-panel {
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.vet-ficha-panel-title {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.vet-ficha-panel-ok {
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ── Col 3: sidebar historial ── */
+.vet-ficha-col-historial {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 20px;
+}
+
+.vet-ficha-historial-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vet-ficha-historial-nav__item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.vet-ficha-historial-nav__item:hover {
+  background: #f0fdfa;
+  border-color: #2a9d8f;
+}
+
+.vet-ficha-historial-nav__dx {
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+/* ── Modal detalle consulta histórica ── */
+.vet-historial-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+}
+
+.vet-historial-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.vet-historial-modal__fecha {
+  margin: 0 0 2px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.vet-historial-modal__vet {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.vet-historial-modal__body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vet-historial-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vet-historial-modal__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.vet-historial-modal__field p {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.vet-historial-modal__vitales {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.vet-historial-modal__footer {
+  padding: 16px 24px;
+  border-top: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1000px) {
+  .vet-ficha-layout {
+    grid-template-columns: 240px 1fr;
+  }
+  .vet-ficha-col-historial {
+    grid-column: 1 / -1;
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .vet-ficha-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CITAS — VetCitas
+   ═══════════════════════════════════════════════════════ */
+.vet-lista { display: flex; flex-direction: column; gap: 12px; }
+
+.vet-cita-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.vet-fecha {
+  min-width: 56px;
+  text-align: center;
+  background: #e8f5f0;
+  border-radius: 10px;
+  padding: 10px 8px;
+  flex-shrink: 0;
+}
+.vet-fecha__dia { margin: 0; font-size: 22px; font-weight: 700; color: #2a9d8f; }
+.vet-fecha__mes { margin: 0; font-size: 11px; color: #2a9d8f; text-transform: uppercase; }
+
+.vet-cita-info { flex: 1; min-width: 0; }
+.vet-cita-info__titulo { margin: 0 0 4px; font-weight: 600; font-size: 15px; }
+.vet-cita-info__sub    { margin: 0; font-size: 13px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.vet-cita-acciones { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+
+/* ── Botones pequeños de acción ── */
+.vet-btn-sm {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.vet-btn-sm:disabled          { opacity: 0.6; cursor: default; }
+.vet-btn-sm--primary          { background: #2a9d8f; color: #fff; border: none; font-weight: 600; }
+.vet-btn-sm--outline          { background: #fff; border: 1px solid #2a9d8f; color: #2a9d8f; }
+.vet-btn-sm--danger           { background: #fff; border: 1px solid #ef4444; color: #ef4444; }
+.vet-btn-sm--indigo           { background: #fff; border: 1px solid #6366f1; color: #6366f1; }
+
+/* ── Formulario reprogramar inline ── */
+.vet-reprog-form {
+  background: #f9fafb;
+  border-radius: 0 0 12px 12px;
+  padding: 16px 24px;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.vet-reprog-form__field { display: flex; flex-direction: column; gap: 4px; }
+.vet-reprog-form__label { font-size: 12px; color: #6b7280; }
+.vet-reprog-form__input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════
+   FICHA — VetFichaMascota / HistorialClinico
+   ═══════════════════════════════════════════════════════ */
+
+.vet-btn-volver             { font-size: 13px; margin-bottom: 6px; }
+.vet-ficha-header-row       { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.vet-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 0 0 10px;
+  letter-spacing: 0.05em;
+}
+.vet-btn-primary--full        { width: 100%; margin-top: 16px; padding: 12px !important; }
+.vet-ficha-panel-vacio__icon  { font-size: 32px; margin: 0 0 8px; }
+.vet-ficha-panel-msg          { font-size: 13px; color: #6b7280; margin: 0 0 16px; }
+
+/* ── Modal confirmación ── */
+.vet-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vet-confirm-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.vet-confirm-modal__icon   { font-size: 32px; text-align: center; margin: 0 0 8px; }
+.vet-confirm-modal__title  { text-align: center; font-weight: 700; font-size: 17px; margin: 0 0 8px; }
+.vet-confirm-modal__desc   { text-align: center; font-size: 13px; color: #6b7280; margin: 0 0 24px; }
+.vet-confirm-modal__footer { display: flex; gap: 10px; justify-content: flex-end; }
+.vet-confirm-modal .vet-btn-secondary { padding: 9px 20px; font-size: 14px; }
+.vet-confirm-modal .vet-btn-primary   { padding: 9px 20px; font-size: 14px; }
+.vet-confirm-modal .vet-btn-primary:disabled { opacity: 0.6; }
+
+/* ── Timeline muted ── */
+.vet-timeline-item__body--muted { color: #6b7280; margin-top: 4px; }
+
+/* ── Vacunas tags row ── */
+.vet-vacunas-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+/* ── Tabs (HistorialClinico) ── */
+.vet-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.vet-tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: inherit;
+}
+
+.vet-tab-btn--active {
+  color: #2a9d8f;
+  font-weight: 600;
+  border-bottom-color: #2a9d8f;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MISC
+   ═══════════════════════════════════════════════════════ */
+.vet-row-clickable              { cursor: pointer; }
+.vet-td-bold                    { font-weight: 600; }
+.vet-page-subtitle--capitalize  { text-transform: capitalize; }
+
+@media (max-width: 768px) {
+  .vet-cita-card    { flex-wrap: wrap; }
+  .vet-cita-acciones { width: 100%; }
+  .vet-cita-acciones button { flex: 1; }
+  .vet-reprog-form  { flex-direction: column; }
+  .vet-reprog-form__input { width: 100%; }
 }

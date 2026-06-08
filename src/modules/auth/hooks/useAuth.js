@@ -11,6 +11,8 @@ export const useAuth = () => {
     setError(null)
     try {
       const data = await login(email, password)
+      // Si el admin tiene 2FA activo, el backend no devuelve token todavía
+      if (data.requiresTwoFactor) return data
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data))
       return data
