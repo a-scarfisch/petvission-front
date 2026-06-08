@@ -4,7 +4,14 @@ import { useVetContext } from '@/modules/vet/states/VetContext'
 import VetLayout from './VetLayout'
 import Skeleton from '@/modules/core/components/Skeleton'
 
-const formatHora = (hora) => hora?.toString().slice(0, 5) ?? '—'
+const formatHora = (hora) => {
+  if (!hora) return '—'
+  if (Array.isArray(hora)) {
+    const [h, m = 0] = hora
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+  }
+  return hora.toString().slice(0, 5)
+}
 
 const turnoActual = () => {
   const h = new Date().getHours()

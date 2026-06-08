@@ -19,11 +19,24 @@ const TURNO_CONFIG = {
   NOCHE:  { label: 'Noche',  icon: '🌙',  hrs: '20:00 – 00:00' },
 }
 
-const formatHora = (hora) => hora?.toString().slice(0, 5) ?? '—'
+const formatHora = (hora) => {
+  if (!hora) return '—'
+  if (Array.isArray(hora)) {
+    const [h, m = 0] = hora
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+  }
+  return hora.toString().slice(0, 5)
+}
+
+const getHour = (hora) => {
+  if (!hora) return -1
+  if (Array.isArray(hora)) return hora[0]
+  return parseInt(hora.toString().slice(0, 2))
+}
 
 const derivarTurno = (horaInicio) => {
-  if (!horaInicio) return null
-  const h = parseInt(horaInicio.toString().slice(0, 2))
+  const h = getHour(horaInicio)
+  if (h < 0) return null
   if (h >= 6 && h < 14) return 'MANANA'
   if (h >= 14 && h < 20) return 'TARDE'
   return 'NOCHE'
