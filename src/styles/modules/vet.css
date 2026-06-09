@@ -1,7 +1,8 @@
 /* ===== LAYOUT ===== */
 .vet-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .vet-sidebar {
@@ -51,7 +52,7 @@
   cursor: pointer; text-align: left; font-size: 13px;
 }
 
-.vet-main { flex: 1; background: #f0f4f8; padding: 32px; overflow-y: auto; }
+.vet-main { flex: 1; background: #f0f4f8; padding: 32px; overflow-y: auto; height: 100vh; box-sizing: border-box; }
 
 /* ===== PAGE HEADER ===== */
 .vet-page-header {
