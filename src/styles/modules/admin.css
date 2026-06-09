@@ -1,5 +1,5 @@
 /* ===== LAYOUT ===== */
-.adm-layout { display: flex; min-height: 100vh; }
+.adm-layout { display: flex; height: 100vh; overflow: hidden; }
 
 /* ===== SIDEBAR ===== */
 .adm-sidebar {
@@ -48,7 +48,7 @@
 }
 
 /* ===== MAIN ===== */
-.adm-main { flex: 1; background: #f9fafb; padding: 32px; min-width: 0; }
+.adm-main { flex: 1; background: #f9fafb; padding: 32px; min-width: 0; overflow-y: auto; height: 100vh; box-sizing: border-box; }
 
 /* ===== BOTTOM NAV (hidden on desktop) ===== */
 .adm-bottom-nav { display: none; }

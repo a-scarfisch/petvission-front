@@ -1,7 +1,8 @@
 /* ===== LAYOUT ===== */
 .cl-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* ===== SIDEBAR (desktop) ===== */
@@ -118,6 +119,9 @@
   background: #f9fafb;
   padding: 32px;
   min-width: 0;
+  overflow-y: auto;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
 /* ===== BOTTOM NAV — oculta en desktop ===== */
