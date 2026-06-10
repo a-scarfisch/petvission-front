@@ -209,7 +209,8 @@ const MisReservas = () => {
                 </div>
 
                 <div className="res-info">
-                  <p className="res-info__titulo">🐾 {c.nombreMascota ?? 'Mascota'} · {c.motivo ?? 'Consulta'}</p>
+                  <p className="res-info__titulo">🐾 {c.nombreMascota ?? 'Mascota'}</p>
+                  <p className="res-info__subtipo">{c.motivo ?? 'Consulta'}</p>
                   <p className="res-info__vet">👨‍⚕️ {c.nombreVeterinario ?? '—'}</p>
                 </div>
 

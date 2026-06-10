@@ -6,36 +6,30 @@ const formatFecha = (fechaStr) => {
   return `${parseInt(d)} ${MESES[parseInt(m) - 1]} ${y}`
 }
 
-const formatPrecio = (precio) =>
-  precio != null ? `$${Number(precio).toLocaleString('es-CL')}` : 'Consultar precio'
-
-const labelCategoria = (cat) => ({
-  CONSULTA:     'Consulta General',
-  LABORATORIO:  'Laboratorio',
+const LABEL_SUBTIPO = {
+  LABORATORIO:   'Laboratorio',
   PROCEDIMIENTO: 'Procedimiento',
-  PELUQUERIA:   'Peluquería',
-}[cat] ?? cat)
+  PELUQUERIA:    'Peluquería',
+}
 
 const PasoConfirmar = ({ seleccion, error, loading, onConfirmar }) => {
-  const { categoriaReserva, motivoKey, observacion, servicio, veterinario, fecha, hora, mascota } = seleccion
+  const { categoriaReserva, motivoKey, observacion, veterinario, fecha, hora, mascota } = seleccion
 
-  const motivoTexto = (() => {
-    if (categoriaReserva === 'CONSULTA') {
-      const partes = [motivoKey, observacion?.trim()].filter(Boolean)
-      return partes.length ? partes.join(' — ') : 'Sin especificar'
-    }
-    if (categoriaReserva === 'LABORATORIO') return 'El veterinario determinará los estudios necesarios'
-    return servicio?.nombre ?? '—'
+  const esServicio = categoriaReserva !== 'CONSULTA'
+
+  const detalleConsulta = (() => {
+    const partes = [motivoKey, observacion?.trim()].filter(Boolean)
+    return partes.length ? partes.join(' — ') : 'Sin especificar'
   })()
 
   const filas = [
     ['🐾 Mascota',         mascota?.nombre],
-    ['📋 Tipo de atención', labelCategoria(categoriaReserva)],
-    categoriaReserva === 'CONSULTA' || categoriaReserva === 'LABORATORIO'
-      ? ['🩺 Detalle', motivoTexto]
-      : ['🏥 Servicio', motivoTexto],
-    categoriaReserva !== 'CONSULTA' && categoriaReserva !== 'LABORATORIO' && servicio?.precio !== undefined
-      ? ['💰 Precio', formatPrecio(servicio?.precio)]
+    ['📋 Tipo de atención', esServicio ? 'Servicio' : 'Consulta General'],
+    esServicio
+      ? ['🔖 Subtipo', LABEL_SUBTIPO[categoriaReserva] ?? categoriaReserva]
+      : ['🩺 Detalle', detalleConsulta],
+    esServicio && categoriaReserva === 'LABORATORIO'
+      ? ['🩺 Nota', 'El veterinario determinará los estudios necesarios']
       : null,
     ['👨‍⚕️ Veterinario', veterinario ? `${veterinario.nombres ?? ''} ${veterinario.apellidos ?? ''}` : '—'],
     ['📅 Fecha',           formatFecha(fecha)],
