@@ -41,6 +41,16 @@ export const ClientProvider = ({ children }) => {
     prev.filter((m) => m.idMascota !== id)
   )
 
+  const refreshCitas = async () => {
+    if (!user?.idUsuario) return
+    try {
+      const res = await apiClient.get(`/reservas/usuario/${user.idUsuario}`)
+      setCitas(res.data.data ?? [])
+    } catch (err) {
+      console.error('Error refreshing citas:', handleError(err))
+    }
+  }
+
   const addCita = (cita) => setCitas((prev) => [...prev, cita])
   const updateCita = (updated) => setCitas((prev) =>
     prev.map((c) => c.idReserva === updated.idReserva ? updated : c)
@@ -50,7 +60,7 @@ export const ClientProvider = ({ children }) => {
     <ClientContext.Provider value={{
       mascotas, citas, loading,
       addMascota, updateMascota, removeMascota,
-      addCita, updateCita,
+      addCita, updateCita, refreshCitas,
     }}>
       {children}
     </ClientContext.Provider>
