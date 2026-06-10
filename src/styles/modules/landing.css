@@ -470,7 +470,7 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .lp-nav { padding: 12px 20px; }
-  .lp-nav__links a:not(.lp-nav__dropdown) { display: none; }
+  .lp-nav__links > a { display: none; }
 
   .lp-hero {
     flex-direction: column;
