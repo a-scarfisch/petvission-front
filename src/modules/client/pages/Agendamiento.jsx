@@ -32,7 +32,7 @@ const INIT = {
 const Agendamiento = () => {
   const navigate = useNavigate()
   const { user } = useAuthContext()
-  const { mascotas, addCita } = useClientContext()
+  const { mascotas, refreshCitas } = useClientContext()
 
   const [paso, setPaso]           = useState(0)
   const [seleccion, setSeleccion] = useState(INIT)
@@ -114,7 +114,7 @@ const Agendamiento = () => {
         ? (motivoPartes.length ? motivoPartes.join(' — ') : 'Consulta general')
         : LABEL_SUBTIPO[cat] ?? cat
 
-      const res = await agendarReserva({
+      await agendarReserva({
         idUsuario:        user.idUsuario,
         idVeterinario:    seleccion.veterinario.idUsuario,
         idMascota:        seleccion.mascota.idMascota,
@@ -125,7 +125,7 @@ const Agendamiento = () => {
         hora:             seleccion.hora,
         motivo,
       })
-      addCita(res)
+      await refreshCitas()
       setExito(true)
     } catch (err) {
       setError(handleError(err))
