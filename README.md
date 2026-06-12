@@ -1,3 +1,5 @@
+![EAM TEAM](https://github.com/DiegoPenaG/Proyecto-Integrador-Pet-vission/blob/main/Gemini_Generated_Image_hosw91hosw91hosw.png?raw=true)
+
 # 🐾 PetVission — Frontend
 
 Aplicación web del sistema PetVission, construida con React + Vite siguiendo una arquitectura por dominio (Screaming Architecture). Desplegada en Vercel.
